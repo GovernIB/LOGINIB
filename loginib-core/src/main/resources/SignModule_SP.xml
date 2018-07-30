@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+
+	<!--
+		Certificado para firmar peticiones hacia Clave (con certificado sello APB)
+		Hay que establecer path y pass jks, pass, DN y serial number cert
+	-->
+	<comment>Clave</comment>
+
+	<entry key="keystorePath">/conf/loginib/keystoreClave.jks</entry>
+	<entry key="keyStorePassword">123456</entry>
+
+	<entry key="keyPassword">123456</entry>
+	<entry key="serialNumber">PENDIENTE</entry>
+
+	<entry key="issuer">PENDIENTE</entry>
+
+	<entry key="keystoreType">JKS</entry>
+
+</properties>

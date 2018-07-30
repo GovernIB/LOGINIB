@@ -1,0 +1,41 @@
+package es.caib.loginib.core.api.exception.login;
+
+import es.caib.loginib.core.api.exception.ServiceRollbackException;
+
+/**
+ * 
+ * Excepcion al interpretar respuesta Clave.
+ * 
+ * @author Indra
+ * 
+ */
+@SuppressWarnings("serial")
+public final class ErrorRespuestaClaveException extends ServiceRollbackException {
+	
+	@Override
+	public final String getCodigoError() {	
+		return "0100";
+	}
+	
+
+  /**
+   * Constructor GenerarPeticionClaveException.
+   * 
+   * @param cause
+   *          Causa
+   */
+  public ErrorRespuestaClaveException(final Throwable cause) {
+    super("Error al interpretar respuesta Clave: " + cause.getMessage(), cause);
+  }
+
+  /**
+   * Constructor GenerarPeticionClaveException.
+   * 
+   * @param cause
+   *          Causa
+   */
+  public ErrorRespuestaClaveException(final String cause) {
+    super("Error al interpretar respuesta Clave: " + cause);
+  }
+
+}

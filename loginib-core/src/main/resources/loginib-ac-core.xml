@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/jee
+		http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+		http://www.springframework.org/schema/aop
+	    http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+	    http://www.springframework.org/schema/tx
+	    http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+	    http://www.springframework.org/schema/cache
+		http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+	<!-- Configuracion properties aplicacion -->
+	<context:property-placeholder location="file:#{systemProperties['es.caib.loginib.properties.path']}"/>
+
+	<!-- Scans the classpath of this application for @Components to deploy as beans -->
+    <context:component-scan base-package="es.caib.loginib.core" />
+
+    <!-- Anotaciones AOP -->
+    <context:annotation-config />
+    <aop:aspectj-autoproxy />
+
+    <!-- Anotaciones para tx -->
+    <tx:annotation-driven transaction-manager="transactionManager" order="2" />
+
+
+    <!-- Configuracion -->
+    <bean id="negocioModuleConfig" class="es.caib.loginib.core.service.ModuleConfig">
+        <property name="qaa" value="${qaa}" />
+        <property name="spId" value="${spId}" />
+        <property name="providerName" value="${providerName}" />
+        <property name="spSector" value="${spSector}" />
+        <property name="spApplication" value="${spApplication}" />
+        <property name="pepsUrl" value="${pepsUrl}" />
+        <property name="pepsLogout" value="${pepsLogout}" />
+
+        <property name="inicioUrlExterna" value="${inicioUrlExterna}" />
+        <property name="returnUrlExterna" value="${returnUrlExterna}" />
+        <property name="inicioLogoutExterna" value="${inicioLogoutExterna}" />
+        <property name="returnLogoutUrlExterna" value="${returnLogoutUrlExterna}" />
+        <property name="timeoutTicketExterna" value="${timeoutTicketExterna}" />
+        <property name="timeoutSesionExterna" value="${timeoutSesionExterna}" />
+        <property name="accesoClaveDeshabilitado" value="${deshabilitado}" />
+        <property name="accesoClaveSimulado" value="${simulado}" />
+
+    </bean>
+
+    <!-- Conexion a datasource -->
+    <jee:jndi-lookup id="dataSource" jndi-name="${db.datasource}" resource-ref="true" />
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="jpaVendorAdapter" ref="hibernateJpaAdapter" />
+        <property name="persistenceUnitName" value="loginIB-PU" />
+        <property name="packagesToScan">
+            <list>
+                <value>es.caib.loginib.core.service.repository.model</value>
+            </list>
+        </property>
+
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="hibernateJpaAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+
+</beans>

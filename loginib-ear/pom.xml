@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>es.caib.loginib</groupId>
+    <artifactId>loginib</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>loginib-ear</artifactId>
+  <packaging>ear</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>es.caib.loginib</groupId>
+			<artifactId>loginib-lib</artifactId>
+			<version>${loginib.version}</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>es.caib.loginib</groupId>
+			<artifactId>loginib-core</artifactId>
+			<version>${loginib.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>es.caib.loginib</groupId>
+			<artifactId>loginib-frontend</artifactId>
+			<version>${loginib.version}</version>
+			<type>war</type>
+		</dependency>
+
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>${maven.ear.version}</version>
+				<configuration>
+					<finalName>loginib</finalName>
+					<version>5</version>
+					<modules>
+<!-- 						<ejbModule> -->
+<!-- 							<groupId>es.caib.loginib</groupId> -->
+<!-- 							<artifactId>loginib-core</artifactId> -->
+<!-- 							<bundleFileName>loginib-core.jar</bundleFileName> -->
+<!-- 						</ejbModule> -->
+						<webModule>
+							<groupId>es.caib.loginib</groupId>
+							<artifactId>loginib-frontend</artifactId>
+							<contextRoot>/loginib</contextRoot>
+							<bundleFileName>loginib-frontend.war</bundleFileName>
+						</webModule>
+					</modules>
+					<defaultLibBundleDir>lib/</defaultLibBundleDir>
+					<skinnyWars>true</skinnyWars>
+					<!-- Anyadir dependencia Hibernate de JBoss en MANIFEST -->
+					<archive>
+					    <manifestEntries>
+					        <Dependencies>org.hibernate</Dependencies>
+					    </manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<compilerVersion>${java.version}</compilerVersion>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+		<finalName>loginib</finalName>
+	</build>
+
+</project>
