@@ -5,9 +5,10 @@ create sequence LIB_LGO_SEQ;
 /*==============================================================*/
 /* Table: LIB_LOGIN                                             */
 /*==============================================================*/
-create table LIB_LOGIN 
+create table LIB_LOGIN
 (
    LGI_CODIGO           NUMBER(20)           not null,
+   LGI_ENTIDA           VARCHAR2(100 CHAR)   not null,
    LGI_FCSES            DATE                 not null,
    LGI_IDIOMA           VARCHAR2(2 CHAR)     not null,
    LGI_IDPS             VARCHAR2(100 CHAR)   not null,
@@ -21,6 +22,11 @@ create table LIB_LOGIN
    LGI_APE              VARCHAR2(1000 CHAR),
    LGI_APE1             VARCHAR2(1000 CHAR),
    LGI_APE2             VARCHAR2(1000 CHAR),
+   LGI_NIFRPT           VARCHAR2(10 CHAR),
+   LGI_NOMRPT           VARCHAR2(1000 CHAR),
+   LGI_APERPT           VARCHAR2(1000 CHAR),
+   LGI_AP1RPT           VARCHAR2(1000 CHAR),
+   LGI_AP2RPT           VARCHAR2(1000 CHAR),
    LGI_SESION           VARCHAR2(100 CHAR),
    LGI_QAA              NUMBER(1),
    LGI_SAMLID           VARCHAR2(100 CHAR),
@@ -33,8 +39,11 @@ comment on table LIB_LOGIN is
 comment on column LIB_LOGIN.LGI_CODIGO is
 'Codigo interno secuencial';
 
+comment on column LIB_LOGIN.LGI_ENTIDA is
+'Código entidad';
+
 comment on column LIB_LOGIN.LGI_FCSES is
-'Fecha inicio sesion';
+'Fecha inicio sesion (desde webservice)';
 
 comment on column LIB_LOGIN.LGI_IDIOMA is
 'Idioma';
@@ -72,6 +81,21 @@ comment on column LIB_LOGIN.LGI_APE1 is
 comment on column LIB_LOGIN.LGI_APE2 is
 'Apellido 2';
 
+comment on column LIB_LOGIN.LGI_NIFRPT is
+'Nif representante';
+
+comment on column LIB_LOGIN.LGI_NOMRPT is
+'Nombre representante';
+
+comment on column LIB_LOGIN.LGI_APERPT is
+'Apellidos representante';
+
+comment on column LIB_LOGIN.LGI_AP1RPT is
+'Apellido 1 representante';
+
+comment on column LIB_LOGIN.LGI_AP2RPT is
+'Apellido 2 representante';
+
 comment on column LIB_LOGIN.LGI_SESION is
 'Identificador aleatorio de sesion';
 
@@ -79,7 +103,7 @@ comment on column LIB_LOGIN.LGI_QAA is
 'Nivel de seguridad';
 
 comment on column LIB_LOGIN.LGI_SAMLID is
-'SAML ID petici�n Clave';
+'SAML ID petición Clave';
 
 /*==============================================================*/
 /* Index: LIB_LGI_AK                                            */
@@ -98,9 +122,10 @@ create unique index LIB_LGI_AK2 on LIB_LOGIN (
 /*==============================================================*/
 /* Table: LIB_LOGOUT                                            */
 /*==============================================================*/
-create table LIB_LOGOUT 
+create table LIB_LOGOUT
 (
    LGO_CODIGO           NUMBER(20)           not null,
+   LGO_ENTIDA           VARCHAR2(100 CHAR)   not null,
    LGO_FCSES            DATE                 not null,
    LGO_IDIOMA           VARCHAR2(2 CHAR)     not null,
    LGO_URLCBK           VARCHAR2(4000 CHAR)  not null,
@@ -115,6 +140,9 @@ comment on table LIB_LOGOUT is
 
 comment on column LIB_LOGOUT.LGO_CODIGO is
 'Codigo interno secuencial';
+
+comment on column LIB_LOGOUT.LGO_ENTIDA is
+'Código entidad';
 
 comment on column LIB_LOGOUT.LGO_FCSES is
 'Fecha inicio sesion';

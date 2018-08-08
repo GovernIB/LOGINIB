@@ -2,20 +2,16 @@ package es.caib.loginib.frontend.model;
 
 /**
  * Codigos error.
- * 
+ *
  * @author Indra
- * 
+ *
  */
 public enum ErrorCodes {
 
   /** Error general. */
   ERROR_GENERAL("errorGeneral"),
   /** Clave autenticacion deshabilitado. */
-  CLAVE_DESHABILITADO("deshabilitado"),
-  /** Clave firma deshabilitado. */
-  CLAVEFIRMA_DESHABILITADO ("deshabilitadoClaveFirma"),
-  /** Clave deshabilitado. */
-  FIRE_DESHABILITADO("deshabilitadoFire");
+  CLAVE_DESHABILITADO("deshabilitado");
 
   /**
    * Valor como string.
@@ -24,7 +20,7 @@ public enum ErrorCodes {
 
   /**
    * Constructor.
-   * 
+   *
    * @param value
    *          Valor como string.
    */
@@ -34,7 +30,7 @@ public enum ErrorCodes {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see java.lang.Enum#toString()
    */
   @Override
@@ -44,7 +40,7 @@ public enum ErrorCodes {
 
   /**
    * Método para From string de la clase ErrorCodes.
-   * 
+   *
    * @param text
    *          Parámetro text
    * @return el type autenticacion

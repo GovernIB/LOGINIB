@@ -34,28 +34,6 @@
     <!-- Anotaciones para tx -->
     <tx:annotation-driven transaction-manager="transactionManager" order="2" />
 
-
-    <!-- Configuracion -->
-    <bean id="negocioModuleConfig" class="es.caib.loginib.core.service.ModuleConfig">
-        <property name="qaa" value="${qaa}" />
-        <property name="spId" value="${spId}" />
-        <property name="providerName" value="${providerName}" />
-        <property name="spSector" value="${spSector}" />
-        <property name="spApplication" value="${spApplication}" />
-        <property name="pepsUrl" value="${pepsUrl}" />
-        <property name="pepsLogout" value="${pepsLogout}" />
-
-        <property name="inicioUrlExterna" value="${inicioUrlExterna}" />
-        <property name="returnUrlExterna" value="${returnUrlExterna}" />
-        <property name="inicioLogoutExterna" value="${inicioLogoutExterna}" />
-        <property name="returnLogoutUrlExterna" value="${returnLogoutUrlExterna}" />
-        <property name="timeoutTicketExterna" value="${timeoutTicketExterna}" />
-        <property name="timeoutSesionExterna" value="${timeoutSesionExterna}" />
-        <property name="accesoClaveDeshabilitado" value="${deshabilitado}" />
-        <property name="accesoClaveSimulado" value="${simulado}" />
-
-    </bean>
-
     <!-- Conexion a datasource -->
     <jee:jndi-lookup id="dataSource" jndi-name="${db.datasource}" resource-ref="true" />
 

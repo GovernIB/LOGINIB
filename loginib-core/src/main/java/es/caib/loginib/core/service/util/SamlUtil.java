@@ -13,7 +13,7 @@ import org.dom4j.Node;
 import org.dom4j.XPath;
 import org.dom4j.io.SAXReader;
 
-import es.caib.loginib.core.api.exception.login.GenerarPeticionClaveException;
+import es.caib.loginib.core.api.exception.GenerarPeticionClaveException;
 
 /**
  * Utilidades SamlUtil.

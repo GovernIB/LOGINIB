@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import es.caib.loginib.core.api.ClaveService;
+import es.caib.loginib.core.api.service.ClaveService;
 
 /**
  * Producer Siraj Task.

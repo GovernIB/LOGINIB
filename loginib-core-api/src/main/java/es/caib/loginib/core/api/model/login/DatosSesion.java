@@ -1,152 +1,199 @@
 package es.caib.loginib.core.api.model.login;
 
 import java.util.Date;
+import java.util.List;
+
+import es.caib.loginib.core.api.model.login.types.TypeIdp;
 
 /**
  * Datos sesion.
- * 
+ *
  * @author Indra
- * 
+ *
  */
 public final class DatosSesion {
 
-	/** Idps. */
-	private String idps;
+    /** Id sesion. */
+    private String idSesion;
 
-	/** Fecha inicio sesion. */
-	private Date fechaInicioSesion;
+    /** Idps. */
+    private List<TypeIdp> idps;
 
-	/** Fecha ticket (nulo si no se ha iniciado sesion en clave). */
-	private Date fechaTicket;
+    /** Entidad. */
+    private String entidad;
 
-	/** Idioma. */
-	private String idioma;
+    /** Fecha inicio sesion. */
+    private Date fechaInicioSesion;
 
-	/** QAA. */
-	private Integer qaa;
+    /** Fecha ticket (nulo si no se ha iniciado sesion en clave). */
+    private Date fechaTicket;
 
-	/** Force auth. */
-	private boolean forceAuth;
+    /** Idioma. */
+    private String idioma;
 
-	/** Saml id peticion.*/
-	private String samlIdPeticion;
-	
-	/**
-	 * Gets the idps.
-	 * 
-	 * @return the idps
-	 */
-	public String getIdps() {
-		return idps;
-	}
+    /** QAA. */
+    private Integer qaa;
 
-	/**
-	 * Sets the idps.
-	 * 
-	 * @param pIdps
-	 *            the idps to set
-	 */
-	public void setIdps(final String pIdps) {
-		idps = pIdps;
-	}
+    /** Force auth. */
+    private boolean forceAuth;
 
-	/**
-	 * Gets the fecha.
-	 * 
-	 * @return the fecha
-	 */
-	public Date getFechaInicioSesion() {
-		return fechaInicioSesion;
-	}
+    /** Saml id peticion. */
+    private String samlIdPeticion;
 
-	/**
-	 * Sets the fecha.
-	 * 
-	 * @param pFecha
-	 *            the fecha to set
-	 */
-	public void setFechaInicioSesion(final Date pFecha) {
-		fechaInicioSesion = pFecha;
-	}
+    /**
+     * Gets the fecha.
+     *
+     * @return the fecha
+     */
+    public Date getFechaInicioSesion() {
+        return fechaInicioSesion;
+    }
 
-	/**
-	 * Gets the idioma.
-	 * 
-	 * @return the idioma
-	 */
-	public String getIdioma() {
-		return idioma;
-	}
+    /**
+     * Sets the fecha.
+     *
+     * @param pFecha
+     *            the fecha to set
+     */
+    public void setFechaInicioSesion(final Date pFecha) {
+        fechaInicioSesion = pFecha;
+    }
 
-	/**
-	 * Sets the idioma.
-	 * 
-	 * @param pIdioma
-	 *            the idioma to set
-	 */
-	public void setIdioma(final String pIdioma) {
-		idioma = pIdioma;
-	}
+    /**
+     * Gets the idioma.
+     *
+     * @return the idioma
+     */
+    public String getIdioma() {
+        return idioma;
+    }
 
-	/**
-	 * Gets the fecha ticket.
-	 * 
-	 * @return the fechaTicket
-	 */
-	public Date getFechaTicket() {
-		return fechaTicket;
-	}
+    /**
+     * Sets the idioma.
+     *
+     * @param pIdioma
+     *            the idioma to set
+     */
+    public void setIdioma(final String pIdioma) {
+        idioma = pIdioma;
+    }
 
-	/**
-	 * Sets the fecha ticket.
-	 * 
-	 * @param pFechaTicket
-	 *            the fechaTicket to set
-	 */
-	public void setFechaTicket(final Date pFechaTicket) {
-		fechaTicket = pFechaTicket;
-	}
+    /**
+     * Gets the fecha ticket.
+     *
+     * @return the fechaTicket
+     */
+    public Date getFechaTicket() {
+        return fechaTicket;
+    }
 
-	/**
-	 * @return the qaa
-	 */
-	public Integer getQaa() {
-		return qaa;
-	}
+    /**
+     * Sets the fecha ticket.
+     *
+     * @param pFechaTicket
+     *            the fechaTicket to set
+     */
+    public void setFechaTicket(final Date pFechaTicket) {
+        fechaTicket = pFechaTicket;
+    }
 
-	/**
-	 * @param qaa
-	 *            the qaa to set
-	 */
-	public void setQaa(Integer qaa) {
-		this.qaa = qaa;
-	}
+    /**
+     * @return the qaa
+     */
+    public Integer getQaa() {
+        return qaa;
+    }
 
-	/**
-	 * Checks if is force auth.
-	 *
-	 * @return true, if is force auth
-	 */
-	public boolean isForceAuth() {
-		return forceAuth;
-	}
+    /**
+     * @param qaa
+     *            the qaa to set
+     */
+    public void setQaa(Integer qaa) {
+        this.qaa = qaa;
+    }
 
-	/**
-	 * Sets the force auth.
-	 *
-	 * @param forceAuth
-	 *            the new force auth
-	 */
-	public void setForceAuth(boolean forceAuth) {
-		this.forceAuth = forceAuth;
-	}
+    /**
+     * Checks if is force auth.
+     *
+     * @return true, if is force auth
+     */
+    public boolean isForceAuth() {
+        return forceAuth;
+    }
 
-	public String getSamlIdPeticion() {
-		return samlIdPeticion;
-	}
+    /**
+     * Sets the force auth.
+     *
+     * @param forceAuth
+     *            the new force auth
+     */
+    public void setForceAuth(boolean forceAuth) {
+        this.forceAuth = forceAuth;
+    }
 
-	public void setSamlIdPeticion(String samlIdPeticion) {
-		this.samlIdPeticion = samlIdPeticion;
-	}
+    public String getSamlIdPeticion() {
+        return samlIdPeticion;
+    }
+
+    public void setSamlIdPeticion(String samlIdPeticion) {
+        this.samlIdPeticion = samlIdPeticion;
+    }
+
+    /**
+     * Método de acceso a entidad.
+     *
+     * @return entidad
+     */
+    public String getEntidad() {
+        return entidad;
+    }
+
+    /**
+     * Método para establecer entidad.
+     *
+     * @param entidad
+     *            entidad a establecer
+     */
+    public void setEntidad(String entidad) {
+        this.entidad = entidad;
+    }
+
+    /**
+     * Método de acceso a idSesion.
+     *
+     * @return idSesion
+     */
+    public String getIdSesion() {
+        return idSesion;
+    }
+
+    /**
+     * Método para establecer idSesion.
+     *
+     * @param idSesion
+     *            idSesion a establecer
+     */
+    public void setIdSesion(String idSesion) {
+        this.idSesion = idSesion;
+    }
+
+    /**
+     * Método de acceso a idps.
+     * 
+     * @return idps
+     */
+    public List<TypeIdp> getIdps() {
+        return idps;
+    }
+
+    /**
+     * Método para establecer idps.
+     * 
+     * @param idps
+     *            idps a establecer
+     */
+    public void setIdps(List<TypeIdp> idps) {
+        this.idps = idps;
+    }
 
 }

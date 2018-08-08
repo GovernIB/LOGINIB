@@ -36,6 +36,11 @@
 		<hibernate-jpa-2.1-api.version>1.0.0.Final</hibernate-jpa-2.1-api.version>
 
 		<slf4j.version>1.5.8</slf4j.version>
+
+		<jaxen.version>1.1.6</jaxen.version>
+
+		<jackson.version>2.9.5</jackson.version>
+		<swagger.version>2.7.0</swagger.version>
 	</properties>
 
   <modules>
@@ -43,8 +48,8 @@
     <module>loginib-core-api</module>
   	<module>loginib-core</module>
   	<module>loginib-frontend</module>
-<!--   	<module>loginib-rest-api</module> -->
-<!--   	<module>loginib-rest-ws</module> -->
-  	 <module>loginib-ear</module>
+	<module>loginib-rest-api</module>
+  	<module>loginib-rest-ws</module>
+  	<module>loginib-ear</module>
   </modules>
 </project>

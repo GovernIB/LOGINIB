@@ -4,32 +4,34 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.caib.loginib.core.api.ClaveService;
 import es.caib.loginib.core.api.exception.ErrorNoControladoException;
-import es.caib.loginib.core.api.exception.login.ErrorRespuestaClaveException;
-import es.caib.loginib.core.api.exception.login.GenerarPeticionClaveException;
-import es.caib.loginib.core.api.exception.login.TicketNoValidoException;
+import es.caib.loginib.core.api.exception.ErrorRespuestaClaveException;
+import es.caib.loginib.core.api.exception.GenerarPeticionClaveException;
+import es.caib.loginib.core.api.exception.TicketNoValidoException;
 import es.caib.loginib.core.api.model.comun.ConstantesNumero;
 import es.caib.loginib.core.api.model.login.DatosLogoutSesion;
+import es.caib.loginib.core.api.model.login.DatosRepresentante;
 import es.caib.loginib.core.api.model.login.DatosSesion;
 import es.caib.loginib.core.api.model.login.DatosUsuario;
 import es.caib.loginib.core.api.model.login.PeticionClave;
 import es.caib.loginib.core.api.model.login.PeticionClaveLogout;
 import es.caib.loginib.core.api.model.login.RespuestaClaveLogout;
 import es.caib.loginib.core.api.model.login.TicketClave;
+import es.caib.loginib.core.api.model.login.types.TypeIdp;
+import es.caib.loginib.core.api.service.ClaveService;
+import es.caib.loginib.core.api.util.ClaveLoginUtil;
 import es.caib.loginib.core.interceptor.NegocioInterceptor;
 import es.caib.loginib.core.service.repository.dao.ClaveDao;
 import es.caib.loginib.core.service.util.AFirmaUtil;
-import es.caib.loginib.core.service.util.ClaveLoginUtil;
 import es.caib.loginib.core.service.util.SamlUtil;
 import eu.stork.peps.auth.commons.IPersonalAttributeList;
 import eu.stork.peps.auth.commons.PEPSUtil;
@@ -55,37 +57,23 @@ public final class ClaveServiceImpl implements ClaveService {
     private final org.slf4j.Logger log = LoggerFactory
             .getLogger(ClaveServiceImpl.class);
 
-    /** Fichero configuracion Clave. */
-    private static final String SP_CONF = "SP";
-
     /** Configuracion. */
-    @Resource(name = "negocioModuleConfig")
+    @Autowired
     private ModuleConfig config;
 
     /** Dao. */
-    @Resource(name = "claveDao")
+    @Autowired
     private ClaveDao claveDao;
 
-    /**
-     * @see es.caib.loginib.core.ClaveService#crearSesionClave(java.lang.String,
-     *      java.lang.String, java.lang.String, java.lang.Integer)
-     */
     @Override
     @NegocioInterceptor
-    public String crearSesionClave(final String pUrlCallback,
-            final String idioma, final String idps, final Integer qaa,
-            final boolean forceAuth) {
+    public String iniciarLoginClave(final String entidad,
+            final String pUrlCallback, final String idioma,
+            final List<TypeIdp> idps, final int qaa, final boolean forceAuth) {
         log.debug(" Crea sesion clave: [idps = " + idps + "] [urlCallback = "
                 + pUrlCallback + "]");
-
-        // Validamos IDPs
-        if (!ClaveLoginUtil.validarIDPs(idps)) {
-            throw new GenerarPeticionClaveException(
-                    "No se ha indicado lista de IDPs válidos: " + idps);
-        }
-
-        final String idSesion = claveDao.crearSesion(pUrlCallback, idioma, idps,
-                qaa, forceAuth);
+        final String idSesion = claveDao.crearSesionLogin(entidad, pUrlCallback,
+                idioma, idps, qaa, forceAuth);
         log.debug(
                 " Creada sesion clave:  [idSesion = " + idSesion + "] [idps = "
                         + idps + "] [urlCallback = " + pUrlCallback + "]");
@@ -94,39 +82,37 @@ public final class ClaveServiceImpl implements ClaveService {
 
     @Override
     @NegocioInterceptor
-    public String crearLogoutSesionClave(final String pUrlCallback,
-            final String idioma) {
+    public String iniciarLogoutClave(final String entidad,
+            final String pUrlCallback, final String idioma) {
         log.debug(" Crea logout sesion clave...");
-
-        // TODO DAO SESION LOGOUT
-        final String idSesion = claveDao.crearLogutSesion(pUrlCallback, idioma);
-        // final String idSesion = "PENDIENTE";
+        final String idSesion = claveDao.crearSesionLogut(entidad, pUrlCallback,
+                idioma);
         log.debug(" Creada logout sesion clave: " + idSesion);
         return idSesion;
     }
 
-    /**
-     * @see es.caib.loginib.core.ClaveService#generarPeticionClave(java.lang.String)
-     */
     @Override
     @NegocioInterceptor
-    public PeticionClave generarPeticionClave(final String idSesion) {
+    public DatosSesion obtenerDatosSesionLogin(String idSesion) {
+        // Obtener datos sesion
+        final DatosSesion datosSesion = claveDao
+                .obtenerDatosSesionLogin(idSesion);
+        return datosSesion;
+    }
+
+    @Override
+    @NegocioInterceptor
+    public PeticionClave generarPeticionLoginClave(final String idSesion) {
 
         log.debug(" Generar peticion clave: [idSesion = " + idSesion + "]");
 
         // Obtener datos sesion
-        final DatosSesion datosSesion = claveDao.obtenerDatosSesion(idSesion);
+        final DatosSesion datosSesion = claveDao
+                .obtenerDatosSesionLogin(idSesion);
         if (datosSesion.getFechaTicket() != null) {
             throw new GenerarPeticionClaveException(
-                    "Sesion ya ha sido autenticada en clave [idSesion = "
-                            + idSesion + "]");
-        }
-        final Date ahora = new Date();
-        if (ahora.getTime() - datosSesion.getFechaInicioSesion()
-                .getTime() > (config.getTimeoutSesionExterna()
-                        * ConstantesNumero.N1000)) {
-            throw new GenerarPeticionClaveException(
-                    "Sesion ha expirado [idSesion = " + idSesion + "]");
+                    "Sesion ya ha sido autenticada [idSesion = "
+                            + datosSesion.getIdSesion() + "]");
         }
 
         // Atributos a consultar
@@ -160,24 +146,25 @@ public final class ClaveServiceImpl implements ClaveService {
         // Parametros peticion
         STORKAuthnRequest authnRequest = new STORKAuthnRequest();
         authnRequest.setDestination(config.getPepsUrl());
-        authnRequest.setProviderName(config.getProviderName());
+        authnRequest.setProviderName(
+                config.getProviderName(datosSesion.getEntidad()));
         authnRequest.setForceAuthN(datosSesion.isForceAuth());
-
-        if (datosSesion.getQaa() == null) {
-            authnRequest.setQaa(Integer.parseInt(config.getQaa()));
-        } else {
-            authnRequest.setQaa(datosSesion.getQaa());
-        }
-
+        authnRequest.setQaa(datosSesion.getQaa());
         authnRequest.setPersonalAttributeList(pAttList);
         authnRequest.setAssertionConsumerServiceURL(
-                (config.getReturnUrlExterna()) + "/" + idSesion + ".html");
-        authnRequest.setSpSector(config.getSpSector());
-        authnRequest.setSpApplication(config.getSpApplication());
-        authnRequest.setSPID(config.getSpId());
+                (config.getLoginCallbackClave()) + "/" + idSesion + ".html");
+        authnRequest.setSpSector(config.getSpSector(datosSesion.getEntidad()));
+        authnRequest.setSpApplication(
+                config.getSpApplication(datosSesion.getEntidad()));
+        authnRequest.setSPID(config.getSpId(datosSesion.getEntidad()));
 
         // Generamos peticion SAML
-        final STORKSAMLEngine engine = STORKSAMLEngine.getInstance(SP_CONF);
+        final STORKSAMLEngine engine = STORKSAMLEngine
+                .getInstance(datosSesion.getEntidad());
+        if (engine == null) {
+            throw new GenerarPeticionClaveException(
+                    "Error creando engine STORK. Revise localizacion fichero SignModule_<entidad>.xml (segun SamlEngine.xml)");
+        }
         try {
             authnRequest = engine.generateSTORKAuthnRequest(authnRequest);
         } catch (final STORKSAMLEngineException e) {
@@ -198,33 +185,44 @@ public final class ClaveServiceImpl implements ClaveService {
                     "No se ha podido extraer SamlId de la peticion [idSesion = "
                             + idSesion + "]");
         }
-        claveDao.establecerSamlIdPeticion(idSesion, samlId);
+        claveDao.establecerSamlIdSesionLogin(idSesion, samlId);
 
         // Devolvemos datos necesarios para invocar a Clave
         final PeticionClave peticionClave = new PeticionClave();
         peticionClave.setSamlRequestB64(samlRequestB64);
         peticionClave.setUrlClave(config.getPepsUrl());
         peticionClave.setIdioma(datosSesion.getIdioma());
-        peticionClave.setIdps(datosSesion.getIdps());
+        peticionClave.setIdps(
+                ClaveLoginUtil.removeAnonimoFromIdps(datosSesion.getIdps()));
         return peticionClave;
     }
 
-    /**
-     * @see es.caib.loginib.core.ClaveService#procesarRespuestaClave(java.lang.String,
-     *      java.lang.String)
-     */
     @Override
     @NegocioInterceptor
-    public TicketClave procesarRespuestaClave(final String pIdSesion,
+    public TicketClave procesarRespuestaLoginClave(final String pIdSesion,
             final String pSamlResponseB64) {
 
         log.debug(" Procesando respuesta clave [idSesion = " + pIdSesion + "]");
+
+        // Recuperamos datos sesion
+        final DatosSesion datosSesion = claveDao
+                .obtenerDatosSesionLogin(pIdSesion);
+        if (datosSesion.getFechaTicket() != null) {
+            throw new GenerarPeticionClaveException(
+                    "Sesion ya ha sido autenticada [idSesion = "
+                            + datosSesion.getIdSesion() + "]");
+        }
 
         // Decodifica respuesta Clave
         STORKAuthnResponse authnResponse = null;
         // final IPersonalAttributeList personalAttributeList = null;
         final byte[] decSamlToken = PEPSUtil.decodeSAMLToken(pSamlResponseB64);
-        final STORKSAMLEngine engine = STORKSAMLEngine.getInstance(SP_CONF);
+        final STORKSAMLEngine engine = STORKSAMLEngine
+                .getInstance(datosSesion.getEntidad());
+        if (engine == null) {
+            throw new GenerarPeticionClaveException(
+                    "Error creando engine STORK. Revise localizacion fichero SignModule_<entidad>.xml (segun SamlEngine.xml)");
+        }
         try {
             authnResponse = engine.validateSTORKAuthnResponse(decSamlToken, "");
         } catch (final STORKSAMLEngineException e) {
@@ -241,7 +239,6 @@ public final class ClaveServiceImpl implements ClaveService {
         }
 
         // Verificamos que la peticion se corresponde a la sesion
-        final DatosSesion datosSesion = claveDao.obtenerDatosSesion(pIdSesion);
         if (!StringUtils.equals(datosSesion.getSamlIdPeticion(),
                 authnResponse.getInResponseTo())) {
             log.debug(
@@ -257,11 +254,8 @@ public final class ClaveServiceImpl implements ClaveService {
         log.debug(" Idp retornado de Clave [idSesion = " + pIdSesion + "]: "
                 + idpClave);
 
-        final String idp = ClaveLoginUtil.convertirAnteriorIDP(idpClave)
-                .toUpperCase();
-        log.debug(" Idp a devolver [idSesion = " + pIdSesion + "]: " + idp);
-
-        if (!ClaveLoginUtil.validarIDP(idp)) {
+        final TypeIdp idp = ClaveLoginUtil.traduceIdpClaveToIdp(idpClave);
+        if (idp == null) {
             throw new ErrorRespuestaClaveException(
                     "Idp retornado no contemplado [idSesion = " + pIdSesion
                             + "]: " + idpClave);
@@ -317,13 +311,22 @@ public final class ClaveServiceImpl implements ClaveService {
         }
 
         // Verificamos si son certificados de tipo 11 y 12 para extraer la
-        // persona
-        // juridica
+        // persona juridica
+        DatosRepresentante representante = null;
         if (afirmaResponse != null) {
             final Map<String, String> infoCertificado = AFirmaUtil
                     .extraerInfoCertificado(afirmaResponse);
             final String clasificacion = infoCertificado.get("clasificacion");
             if ("11".equals(clasificacion) || "12".equals(clasificacion)) {
+                // Datos representante
+                representante = new DatosRepresentante();
+                representante.setNif(nif);
+                representante.setNombre(nombre);
+                representante.setApellidos(apellidos);
+                representante.setApellido1(apellido1);
+                representante.setApellido2(apellido2);
+
+                // Datos persona juridica
                 nif = infoCertificado.get("NIF-CIF");
                 nombre = infoCertificado.get("razonSocial");
                 apellidos = null;
@@ -337,8 +340,9 @@ public final class ClaveServiceImpl implements ClaveService {
                 + "]: Nivel=" + idp + ", Nif=" + nif + ", Nombre=" + nombre
                 + " " + apellidos);
 
-        final TicketClave respuesta = claveDao.generateTicket(pIdSesion, idp,
-                nif, nombre, apellidos, apellido1, apellido2);
+        final TicketClave respuesta = claveDao.generateTicketSesionLogin(
+                pIdSesion, idp, nif, nombre, apellidos, apellido1, apellido2,
+                representante);
 
         log.debug(" Ticket generado [idSesion = " + pIdSesion + "]: "
                 + respuesta.getTicket());
@@ -346,60 +350,59 @@ public final class ClaveServiceImpl implements ClaveService {
         return respuesta;
     }
 
-    /**
-     * @see es.caib.loginib.core.ClaveService#simularRespuestaClave(java.lang.String,
-     *      java.lang.String, java.lang.String, java.lang.String,
-     *      java.lang.String, java.lang.String, java.lang.String)
-     */
     @Override
     @NegocioInterceptor
     public TicketClave simularRespuestaClave(final String pIdSesion,
-            final String pIdp, final String pNif, final String pNombre,
+            final TypeIdp pIdp, final String pNif, final String pNombre,
             final String pApellidos, final String pApellido1,
             final String pApellido2) {
 
-        // if (!isAccesoClaveSimulado()) {
-        // throw new TicketNoValidoException("No se puede simular sesion.");
-        // }
-
-        return claveDao.generateTicket(pIdSesion, pIdp, pNif, pNombre,
-                pApellidos, pApellido1, pApellido2);
+        return claveDao.generateTicketSesionLogin(pIdSesion, pIdp, pNif,
+                pNombre, pApellidos, pApellido1, pApellido2, null);
     }
 
-    /**
-     * @see es.caib.loginib.core.ClaveService#isAccesoClaveDeshabilitado()
-     */
+    @Override
+    @NegocioInterceptor
+    public TicketClave loginAnonimo(final String pIdSesion) {
+
+        // Recuperamos datos sesion
+        final DatosSesion datosSesion = claveDao
+                .obtenerDatosSesionLogin(pIdSesion);
+        if (datosSesion.getFechaTicket() != null) {
+            throw new GenerarPeticionClaveException(
+                    "Sesion ya ha sido autenticada [idSesion = "
+                            + datosSesion.getIdSesion() + "]");
+        }
+
+        // Genera ticket para acceso sin autenticacion
+        return claveDao.generateTicketSesionLogin(pIdSesion, TypeIdp.ANONIMO,
+                null, null, null, null, null, null);
+    }
+
     @Override
     @NegocioInterceptor
     public boolean isAccesoClaveDeshabilitado() {
         return config.isAccesoClaveDeshabilitado();
     }
 
-    /**
-     * @see es.caib.loginib.core.ClaveService#purgar()
-     */
     @Override
     @NegocioInterceptor
     public void purgar() {
         // Procesos de login
-        claveDao.purgaTicketSesionExterna(config.getTimeoutSesionExterna(),
-                config.getTimeoutTicketExterna());
+        claveDao.purgaTicketSesionLogin(config.getTimeoutProcesoAutenticacion(),
+                config.getTimeoutTicketAutenticacion());
         // Procesos de logout
-        claveDao.purgaTicketLogoutSesionExterna(
-                config.getTimeoutSesionExterna(),
-                config.getTimeoutTicketExterna());
+        claveDao.purgaTicketSesionLogout(
+                config.getTimeoutProcesoAutenticacion(),
+                config.getTimeoutTicketAutenticacion());
 
     }
 
-    /**
-     * @see es.caib.loginib.core.ClaveService#obtenerDatosUsuarioAplicacionExterna(java.lang.String)
-     */
     @Override
     @NegocioInterceptor
-    public DatosUsuario obtenerDatosUsuarioAplicacionExterna(
-            final String pTicket) {
+    public DatosUsuario obtenerDatosAutenticacion(final String pTicket) {
 
-        final DatosUsuario t = claveDao.consumirTicketSesionExterna(pTicket);
+        final DatosUsuario t = claveDao.consumirTicketSesionLogin(pTicket);
 
         // No existe ticket
         if (t == null || t.getFechaTicket() == null) {
@@ -407,9 +410,10 @@ public final class ClaveServiceImpl implements ClaveService {
         }
 
         // Ticket caducado
-        if (t.getFechaTicket() != null && (new Date()).getTime() - t
-                .getFechaTicket().getTime() > (config.getTimeoutTicketExterna()
-                        * ConstantesNumero.N1000)) {
+        if (t.getFechaTicket() != null
+                && (new Date()).getTime() - t.getFechaTicket()
+                        .getTime() > (config.getTimeoutTicketAutenticacion()
+                                * ConstantesNumero.N1000)) {
             throw new TicketNoValidoException("Ticket caducado");
         }
 
@@ -417,14 +421,11 @@ public final class ClaveServiceImpl implements ClaveService {
         return t;
     }
 
-    /**
-     * @see es.caib.loginib.core.ClaveService#obtenerUrlInicioExterna(java.lang.String)
-     */
     @Override
     @NegocioInterceptor
-    public String obtenerUrlInicioExterna(final String pIdSesion) {
+    public String obtenerUrlRedireccionLoginClave(final String pIdSesion) {
         try {
-            return config.getInicioUrlExterna() + "?idSesion="
+            return config.getLoginRedireccionClave() + "?idSesion="
                     + URLEncoder.encode(pIdSesion, "UTF-8");
         } catch (final UnsupportedEncodingException e) {
             throw new ErrorNoControladoException(e);
@@ -433,30 +434,25 @@ public final class ClaveServiceImpl implements ClaveService {
 
     @Override
     @NegocioInterceptor
-    public String obtenerUrlLogoutExterna(final String pIdSesion) {
+    public String obtenerUrlRedireccionLogoutClave(final String pIdSesion) {
         try {
-            return config.getInicioLogoutExterna() + "?idSesion="
+            return config.getLogoutRedireccionClave() + "?idSesion="
                     + URLEncoder.encode(pIdSesion, "UTF-8");
         } catch (final UnsupportedEncodingException e) {
             throw new ErrorNoControladoException(e);
         }
     }
 
-    /**
-     * @see es.caib.loginib.core.ClaveService#isAccesoClaveSimulado()
-     */
     @Override
     @NegocioInterceptor
     public boolean isAccesoClaveSimulado() {
         return config.isAccesoClaveSimulado();
     }
 
-    /**
-     * @see es.caib.loginib.core.ClaveService#generarPeticioLogout()
-     */
     @Override
     @NegocioInterceptor
-    public PeticionClaveLogout generarPeticionLogout(final String idSesion) {
+    public PeticionClaveLogout generarPeticionLogoutClave(
+            final String idSesion) {
         log.debug(" Generar peticion logout... ");
 
         // TODO DAO PARA SESION LOGOUT (DatosSesionLogout)
@@ -470,12 +466,17 @@ public final class ClaveServiceImpl implements ClaveService {
         // Parametros peticion
         final STORKLogoutRequest req = new STORKLogoutRequest();
         req.setDestination(config.getPepsLogout());
-        req.setSpProvidedId(config.getProviderName());
+        req.setSpProvidedId(config.getProviderName(datosSesion.getEntidad()));
         req.setIssuer(
-                config.getReturnLogoutUrlExterna() + "/" + idSesion + ".html");
+                config.getLogoutCallbackClave() + "/" + idSesion + ".html");
 
         // Generamos peticion SAML
-        final STORKSAMLEngine engine = STORKSAMLEngine.getInstance(SP_CONF);
+        final STORKSAMLEngine engine = STORKSAMLEngine
+                .getInstance(datosSesion.getEntidad());
+        if (engine == null) {
+            throw new GenerarPeticionClaveException(
+                    "Error creando engine STORK. Revise localizacion fichero SignModule_<entidad>.xml (segun SamlEngine.xml)");
+        }
         STORKLogoutRequest logoutReq = null;
         try {
             logoutReq = engine.generateSTORKLogoutRequest(req);
@@ -497,7 +498,7 @@ public final class ClaveServiceImpl implements ClaveService {
             throw new GenerarPeticionClaveException(
                     "No se ha podido extraer SamlId de la peticion");
         }
-        claveDao.establecerSamlIdLogoutPeticion(idSesion, samlId);
+        claveDao.establecerSamlIdSesionLogout(idSesion, samlId);
 
         // Devolvemos datos necesarios para invocar a Clave
         final PeticionClaveLogout peticionClave = new PeticionClaveLogout();
@@ -506,26 +507,25 @@ public final class ClaveServiceImpl implements ClaveService {
         return peticionClave;
     }
 
-    /**
-     * @see es.caib.loginib.core.ClaveService#procesarRespuestaLogout()
-     */
     @Override
     @NegocioInterceptor
-    public RespuestaClaveLogout procesarRespuestaLogout(final String pIdSesion,
-            final String pSamlResponseB64) {
+    public RespuestaClaveLogout procesarRespuestaLogoutClave(
+            final String pIdSesion, final String pSamlResponseB64) {
 
         log.debug(" Procesando respuesta clave logout");
-
-        // TODO DAO PARA SESION LOGOUT (DatosSesionLogout)
         final DatosLogoutSesion datosSesion = claveDao
                 .obtenerDatosSesionLogout(pIdSesion);
-        // TODO Recoger de DAO
         final String urlCallback = datosSesion.getUrlCallback();
         final String samlIdPeticion = datosSesion.getSamlIdPeticion();
 
         // Decodifica respuesta Clave
         final byte[] decSamlToken = PEPSUtil.decodeSAMLToken(pSamlResponseB64);
-        final STORKSAMLEngine engine = STORKSAMLEngine.getInstance(SP_CONF);
+        final STORKSAMLEngine engine = STORKSAMLEngine
+                .getInstance(datosSesion.getEntidad());
+        if (engine == null) {
+            throw new GenerarPeticionClaveException(
+                    "Error creando engine STORK. Revise localizacion fichero <entidad>_SignModule.xml (segun SamlEngine.xml)");
+        }
         STORKLogoutResponse logoutReq = null;
         try {
             logoutReq = engine.validateSTORKLogoutResponse(decSamlToken, null);

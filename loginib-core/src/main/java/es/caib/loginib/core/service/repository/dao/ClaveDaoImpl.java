@@ -11,16 +11,20 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
-import es.caib.loginib.core.api.exception.login.NoExisteSesionException;
+import es.caib.loginib.core.api.exception.NoExisteSesionException;
 import es.caib.loginib.core.api.model.comun.ConstantesNumero;
 import es.caib.loginib.core.api.model.login.DatosLogoutSesion;
+import es.caib.loginib.core.api.model.login.DatosRepresentante;
 import es.caib.loginib.core.api.model.login.DatosSesion;
 import es.caib.loginib.core.api.model.login.DatosUsuario;
 import es.caib.loginib.core.api.model.login.TicketClave;
-import es.caib.loginib.core.service.repository.model.LogoutSesionExterna;
-import es.caib.loginib.core.service.repository.model.TicketSesionExterna;
+import es.caib.loginib.core.api.model.login.types.TypeIdp;
+import es.caib.loginib.core.api.util.ClaveLoginUtil;
+import es.caib.loginib.core.service.repository.model.JSesionLogin;
+import es.caib.loginib.core.service.repository.model.JSesionLogout;
 import es.caib.loginib.core.service.util.GeneradorId;
 
 /**
@@ -32,275 +36,333 @@ import es.caib.loginib.core.service.util.GeneradorId;
 @Repository("claveDao")
 public final class ClaveDaoImpl implements ClaveDao {
 
-	/** EntityManager. */
-	@PersistenceContext
-	private EntityManager entityManager;
+    /** EntityManager. */
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	@Override
-	public String crearSesion(final String pUrlCallback, final String idioma, final String idps, final Integer qaa,
-			final boolean forceAuth) {
-		String idTicket = null;
+    @Override
+    public String crearSesionLogin(final String entidad,
+            final String pUrlCallback, final String idioma,
+            final List<TypeIdp> idps, final Integer qaa,
+            final boolean forceAuth) {
+        String idTicket = null;
 
-		// Crea sesion para aplicacion externa
-		final TicketSesionExterna ticketExterna = new TicketSesionExterna();
-		ticketExterna.setFechaInicioSesion(new Date());
-		ticketExterna.setUrlCallback(pUrlCallback);
-		ticketExterna.setIdioma(idioma);
-		ticketExterna.setIdps(idps);
-		ticketExterna.setSesion(GeneradorId.generarId());
-		ticketExterna.setQaa(qaa);
-		ticketExterna.setForceAuthentication(forceAuth);
+        // Crea sesion para aplicacion externa
+        final JSesionLogin ticketExterna = new JSesionLogin();
+        ticketExterna.setEntidad(entidad);
+        ticketExterna.setFechaInicioSesion(new Date());
+        ticketExterna.setUrlCallback(pUrlCallback);
+        ticketExterna.setIdioma(idioma);
+        ticketExterna.setIdps(ClaveLoginUtil.convertToStringIdps(idps));
+        ticketExterna.setSesion(GeneradorId.generarId());
+        ticketExterna.setQaa(qaa);
+        ticketExterna.setForceAuthentication(forceAuth);
 
-		entityManager.persist(ticketExterna);
-		idTicket = ticketExterna.getSesion();
+        entityManager.persist(ticketExterna);
+        idTicket = ticketExterna.getSesion();
 
-		return idTicket;
-	}
+        return idTicket;
+    }
 
-	@Override
-	public DatosSesion obtenerDatosSesion(final String idSesion) {
-		final DatosSesion ds = new DatosSesion();
+    @Override
+    public DatosSesion obtenerDatosSesionLogin(final String idSesion) {
+        // Recupera sesion
+        final JSesionLogin ticket = getSesionLogin(idSesion);
+        if (ticket == null) {
+            throw new NoExisteSesionException();
+        }
+        // Devuelve datos
+        final DatosSesion ds = new DatosSesion();
+        ds.setIdSesion(idSesion);
+        ds.setEntidad(ticket.getEntidad());
+        ds.setFechaInicioSesion(ticket.getFechaInicioSesion());
+        ds.setIdioma(ticket.getIdioma());
+        ds.setIdps(ClaveLoginUtil.convertToListIdps(ticket.getIdps()));
+        ds.setFechaTicket(ticket.getFechaTicket());
+        ds.setQaa(ticket.getQaa());
+        ds.setForceAuth(ticket.isForceAuthentication());
+        ds.setSamlIdPeticion(ticket.getSamlIdPeticion());
 
-		// Recupera sesion
-		final TicketSesionExterna ticket = getTicketBySesion(idSesion);
+        return ds;
+    }
 
-		if (ticket == null) {
-			throw new NoExisteSesionException();
-		}
-		ds.setFechaInicioSesion(ticket.getFechaInicioSesion());
-		ds.setIdioma(ticket.getIdioma());
-		ds.setIdps(ticket.getIdps());
-		ds.setFechaTicket(ticket.getFechaTicket());
-		ds.setQaa(ticket.getQaa());
-		ds.setForceAuth(ticket.isForceAuthentication());
-		ds.setSamlIdPeticion(ticket.getSamlIdPeticion());
+    @Override
+    public DatosLogoutSesion obtenerDatosSesionLogout(final String idSesion) {
+        // Recupera sesion
+        final JSesionLogout ticket = getSesionLogout(idSesion);
+        if (ticket == null) {
+            throw new NoExisteSesionException();
+        }
+        // Devuelve datos
+        final DatosLogoutSesion ds = new DatosLogoutSesion();
+        ds.setEntidad(ticket.getEntidad());
+        ds.setUrlCallback(ticket.getUrlCallback());
+        ds.setSamlIdPeticion(ticket.getSamlIdPeticion());
+        ds.setFechaTicket(ticket.getFechaTicket());
 
-		return ds;
-	}
+        // Guardamos la fecha para no volver a usar el ticket
+        if (ticket.getFechaTicket() == null) {
+            ticket.setFechaTicket(new Date());
+            entityManager.merge(ticket);
+        }
+        return ds;
+    }
 
-	@Override
-	public DatosLogoutSesion obtenerDatosSesionLogout(final String idSesion) {
-		final DatosLogoutSesion ds = new DatosLogoutSesion();
+    @Override
+    public TicketClave generateTicketSesionLogin(final String idSesion,
+            final TypeIdp idp, final String pNif, final String pNombre,
+            final String pApellidos, final String pApellido1,
+            final String pApellido2, DatosRepresentante representante) {
+        TicketClave ticket;
+        ticket = generaTicketExterna(idSesion, idp, pNif, pNombre, pApellidos,
+                pApellido1, pApellido2, representante);
+        return ticket;
+    }
 
-		// Recupera sesion
-		final LogoutSesionExterna ticket = getTicketBySesionLogout(idSesion);
+    /**
+     * Genera ticket para aplicacion externa.
+     *
+     * @param idSesion
+     *            id sesion
+     * @param pIdp
+     *            nivel autenticacion (C: certificado / U: usuario)
+     * @param pNif
+     *            Nif
+     * @param pNombre
+     *            Nombre
+     * @param pApellidos
+     *            Apelllidos
+     * @param pApellido2
+     *            Apellido 2
+     * @param pApellido1
+     *            Apellido 1
+     * @param representante
+     *            representante
+     * @return Ticket
+     */
+    private TicketClave generaTicketExterna(final String idSesion,
+            final TypeIdp pIdp, final String pNif, final String pNombre,
+            final String pApellidos, final String pApellido1,
+            final String pApellido2, DatosRepresentante representante) {
 
-		if (ticket == null) {
-			throw new NoExisteSesionException();
-		}
-		ds.setUrlCallback(ticket.getUrlCallback());
-		ds.setSamlIdPeticion(ticket.getSamlIdPeticion());
-		ds.setFechaTicket(ticket.getFechaTicket());
+        // Recupera sesion
+        final JSesionLogin ticket = getSesionLogin(idSesion);
 
-		// Guardamos la fecha para no volver a usar el ticket
-		if (ticket.getFechaTicket() == null) {
-			ticket.setFechaTicket(new Date());
-			entityManager.merge(ticket);
-		}
-		return ds;
-	}
+        if (ticket == null) {
+            throw new NoExisteSesionException();
+        }
 
-	@Override
-	public TicketClave generateTicket(final String idSesion, final String idp, final String pNif, final String pNombre,
-			final String pApellidos, final String pApellido1, final String pApellido2) {
-		TicketClave ticket;
-		ticket = generaTicketExterna(idSesion, idp, pNif, pNombre, pApellidos, pApellido1, pApellido2);
-		return ticket;
-	}
+        // Genera ticket y almacena en sesion
+        final String ticketId = GeneradorId.generarId();
+        ticket.setTicket(ticketId);
+        ticket.setFechaTicket(new Date());
+        ticket.setNif(pNif);
+        ticket.setNombre(pNombre);
+        ticket.setApellidos(pApellidos);
+        ticket.setApellido1(pApellido1);
+        ticket.setApellido2(pApellido2);
+        ticket.setIdp(pIdp.toString());
 
-	/**
-	 * Genera ticket para aplicacion externa.
-	 *
-	 * @param idSesion
-	 *            id sesion
-	 * @param pIdp
-	 *            nivel autenticacion (C: certificado / U: usuario)
-	 * @param pNif
-	 *            Nif
-	 * @param pNombre
-	 *            Nombre
-	 * @param pApellidos
-	 *            Apelllidos
-	 * @param pApellido2
-	 *            Apellido 2
-	 * @param pApellido1
-	 *            Apellido 1
-	 * @return Ticket
-	 */
-	private TicketClave generaTicketExterna(final String idSesion, final String pIdp, final String pNif,
-			final String pNombre, final String pApellidos, final String pApellido1, final String pApellido2) {
+        if (representante != null) {
+            ticket.setRepresentanteNif(representante.getNif());
+            ticket.setRepresentanteNombre(representante.getNombre());
+            ticket.setRepresentanteApellidos(representante.getApellidos());
+            ticket.setRepresentanteApellido1(representante.getApellido1());
+            ticket.setRepresentanteApellido2(representante.getApellido2());
+        }
 
-		// Recupera sesion
-		final TicketSesionExterna ticket = getTicketBySesion(idSesion);
+        entityManager.merge(ticket);
 
-		if (ticket == null) {
-			throw new NoExisteSesionException();
-		}
+        final TicketClave respuesta = new TicketClave();
+        respuesta.setTicket(ticketId);
+        respuesta.setUrlCallback(ticket.getUrlCallback());
+        respuesta.setIdioma(ticket.getIdioma());
+        return respuesta;
+    }
 
-		// Genera ticket y almacena en sesion
-		final String ticketId = GeneradorId.generarId();
-		ticket.setTicket(ticketId);
-		ticket.setFechaTicket(new Date());
-		ticket.setNif(pNif);
-		ticket.setNombre(pNombre);
-		ticket.setApellidos(pApellidos);
-		ticket.setApellido1(pApellido1);
-		ticket.setApellido2(pApellido2);
-		ticket.setIdp(pIdp);
+    /**
+     * Recupera sesion login.
+     *
+     * @param idSesion
+     *            id sesion
+     * @return sesion
+     */
+    private JSesionLogin getSesionLogin(final String idSesion) {
+        final CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<JSesionLogin> cQuery = cBuilder
+                .createQuery(JSesionLogin.class);
+        final Root<JSesionLogin> from = cQuery.from(JSesionLogin.class);
+        cQuery.where(cBuilder.equal(from.get("sesion"), idSesion));
+        final TypedQuery<JSesionLogin> query = entityManager
+                .createQuery(cQuery);
 
-		entityManager.merge(ticket);
+        JSesionLogin sesion = null;
+        final List<JSesionLogin> res = query.getResultList();
+        if (!res.isEmpty()) {
+            sesion = res.get(0);
+        }
 
-		final TicketClave respuesta = new TicketClave();
-		respuesta.setTicket(ticketId);
-		respuesta.setUrlCallback(ticket.getUrlCallback());
-		respuesta.setIdioma(ticket.getIdioma());
-		return respuesta;
-	}
+        return sesion;
+    }
 
-	/**
-	 * @param idSesion
-	 * @return
-	 */
-	private TicketSesionExterna getTicketBySesion(final String idSesion) {
-		final CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
-		final CriteriaQuery<TicketSesionExterna> cQuery = cBuilder.createQuery(TicketSesionExterna.class);
-		final Root<TicketSesionExterna> from = cQuery.from(TicketSesionExterna.class);
-		cQuery.where(cBuilder.equal(from.get("sesion"), idSesion));
-		final TypedQuery<TicketSesionExterna> query = entityManager.createQuery(cQuery);
+    /**
+     * Recupera sesion logout.
+     *
+     * @param idSesion
+     *            id sesion
+     * @return sesion
+     */
+    private JSesionLogout getSesionLogout(final String idSesion) {
+        final CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<JSesionLogout> cQuery = cBuilder
+                .createQuery(JSesionLogout.class);
+        final Root<JSesionLogout> from = cQuery.from(JSesionLogout.class);
+        cQuery.where(cBuilder.equal(from.get("sesion"), idSesion));
+        final TypedQuery<JSesionLogout> query = entityManager
+                .createQuery(cQuery);
 
-		return query.getSingleResult();
-	}
+        JSesionLogout sesion = null;
+        final List<JSesionLogout> res = query.getResultList();
+        if (!res.isEmpty()) {
+            sesion = res.get(0);
+        }
 
-	/**
-	 * @param idSesion
-	 * @return
-	 */
-	private LogoutSesionExterna getTicketBySesionLogout(final String idSesion) {
-		final CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
-		final CriteriaQuery<LogoutSesionExterna> cQuery = cBuilder.createQuery(LogoutSesionExterna.class);
-		final Root<LogoutSesionExterna> from = cQuery.from(LogoutSesionExterna.class);
-		cQuery.where(cBuilder.equal(from.get("sesion"), idSesion));
-		final TypedQuery<LogoutSesionExterna> query = entityManager.createQuery(cQuery);
+        return sesion;
+    }
 
-		return query.getSingleResult();
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public DatosUsuario consumirTicketSesionLogin(final String pTicket) {
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public DatosUsuario consumirTicketSesionExterna(final String pTicket) {
+        JSesionLogin t = null;
 
-		TicketSesionExterna t = null;
+        final Query query = entityManager.createQuery(
+                "Select p From JSesionLogin p Where p.ticket = :ticket");
+        query.setParameter("ticket", pTicket);
 
-		final Query query = entityManager.createQuery("Select p From TicketSesionExterna p Where p.ticket = :ticket");
-		query.setParameter("ticket", pTicket);
+        final List<JSesionLogin> results = query.getResultList();
 
-		final List<TicketSesionExterna> results = query.getResultList();
+        DatosUsuario du = null;
 
-		DatosUsuario du = null;
+        if (results != null && results.size() > 0) {
+            // Obtenemos ticket
+            t = results.get(0);
+            // Lo borramos para que no se pueda volver a usar
+            entityManager.remove(t);
+            // Establecemos datos
+            du = new DatosUsuario();
+            du.setFechaTicket(t.getFechaTicket());
+            du.setNivelAutenticacion(t.getIdp());
+            du.setNif(t.getNif());
+            du.setNombre(t.getNombre());
+            du.setApellidos(t.getApellidos());
+            du.setApellido1(t.getApellido1());
+            du.setApellido2(t.getApellido2());
+            if (StringUtils.isNotBlank(t.getRepresentanteNif())) {
+                final DatosRepresentante dr = new DatosRepresentante();
+                dr.setNif(t.getRepresentanteNif());
+                dr.setNombre(t.getRepresentanteNombre());
+                dr.setApellidos(t.getRepresentanteApellidos());
+                dr.setApellido1(t.getRepresentanteApellido1());
+                dr.setApellido2(t.getRepresentanteApellido2());
+                du.setRepresentante(dr);
+            }
+        }
 
-		if (results != null && results.size() > 0) {
-			// Obtenemos ticket
-			t = results.get(0);
-			// Lo borramos para que no se pueda volver a usar
-			entityManager.remove(t);
-			// Establecemos datos
-			du = new DatosUsuario();
-			du.setFechaTicket(t.getFechaTicket());
-			du.setNivelAutenticacion(t.getIdp());
-			du.setNif(t.getNif());
-			du.setNombre(t.getNombre());
-			du.setApellidos(t.getApellidos());
-			du.setApellido1(t.getApellido1());
-			du.setApellido2(t.getApellido2());
-		}
+        return du;
+    }
 
-		return du;
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public void purgaTicketSesionLogin(final long pTimeoutSesion,
+            final long pTimeoutTicket) {
+        // Recupera lista tickets aplicaciones externas
+        final List<JSesionLogin> listaTickets = entityManager
+                .createQuery("SELECT t FROM JSesionLogin t").getResultList();
+        final Date ahora = new Date();
+        for (final JSesionLogin t : listaTickets) {
+            if (t.getTicket() == null) {
+                if (ahora.getTime() - (t.getFechaInicioSesion().getTime()
+                        + (pTimeoutSesion * ConstantesNumero.N1000)) > 0) {
+                    entityManager.remove(t);
+                }
+            } else {
+                if (ahora.getTime() - (t.getFechaTicket().getTime()
+                        + (pTimeoutTicket * ConstantesNumero.N1000)) > 0) {
+                    entityManager.remove(t);
+                }
+            }
+        }
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public void purgaTicketSesionExterna(final long pTimeoutSesion, final long pTimeoutTicket) {
-		// Recupera lista tickets aplicaciones externas
-		final List<TicketSesionExterna> listaTickets = entityManager.createQuery("SELECT t FROM TicketSesionExterna t")
-				.getResultList();
-		final Date ahora = new Date();
-		for (final TicketSesionExterna t : listaTickets) {
-			if (t.getTicket() == null) {
-				if (ahora.getTime()
-						- (t.getFechaInicioSesion().getTime() + (pTimeoutSesion * ConstantesNumero.N1000)) > 0) {
-					entityManager.remove(t);
-				}
-			} else {
-				if (ahora.getTime() - (t.getFechaTicket().getTime() + (pTimeoutTicket * ConstantesNumero.N1000)) > 0) {
-					entityManager.remove(t);
-				}
-			}
-		}
-	}
+    @Override
+    public void establecerSamlIdSesionLogin(final String idSesion,
+            final String samlId) {
+        // Recupera sesion
+        final JSesionLogin ticket = getSesionLogin(idSesion);
 
-	@Override
-	public void establecerSamlIdPeticion(final String idSesion, final String samlId) {
-		// Recupera sesion
-		final TicketSesionExterna ticket = getTicketBySesion(idSesion);
+        if (ticket == null) {
+            throw new NoExisteSesionException();
+        }
 
-		if (ticket == null) {
-			throw new NoExisteSesionException();
-		}
+        ticket.setSamlIdPeticion(samlId);
 
-		ticket.setSamlIdPeticion(samlId);
+        entityManager.merge(ticket);
 
-		entityManager.merge(ticket);
+    }
 
-	}
+    @Override
+    public void establecerSamlIdSesionLogout(final String idSesion,
+            final String samlId) {
+        // Recupera sesion
+        final JSesionLogout ticket = getSesionLogout(idSesion);
 
-	@Override
-	public void establecerSamlIdLogoutPeticion(final String idSesion, final String samlId) {
-		// Recupera sesion
-		final LogoutSesionExterna ticket = getTicketBySesionLogout(idSesion);
+        if (ticket == null) {
+            throw new NoExisteSesionException();
+        }
 
-		if (ticket == null) {
-			throw new NoExisteSesionException();
-		}
+        ticket.setSamlIdPeticion(samlId);
 
-		ticket.setSamlIdPeticion(samlId);
+        entityManager.merge(ticket);
 
-		entityManager.merge(ticket);
+    }
 
-	}
+    @Override
+    public String crearSesionLogut(final String entidad,
+            final String pUrlCallback, final String idioma) {
+        String idTicket = null;
 
-	@Override
-	public String crearLogutSesion(final String pUrlCallback, final String idioma) {
-		String idTicket = null;
+        // Crea sesion para aplicacion externa
+        final JSesionLogout logoutExterna = new JSesionLogout();
+        logoutExterna.setEntidad(entidad);
+        logoutExterna.setFechaInicioSesion(new Date());
+        logoutExterna.setUrlCallback(pUrlCallback);
+        logoutExterna.setIdioma(idioma);
+        logoutExterna.setSesion(GeneradorId.generarId());
 
-		// Crea sesion para aplicacion externa
-		final LogoutSesionExterna logoutExterna = new LogoutSesionExterna();
-		logoutExterna.setFechaInicioSesion(new Date());
-		logoutExterna.setUrlCallback(pUrlCallback);
-		logoutExterna.setIdioma(idioma);
-		logoutExterna.setSesion(GeneradorId.generarId());
+        entityManager.persist(logoutExterna);
+        idTicket = logoutExterna.getSesion();
 
-		entityManager.persist(logoutExterna);
-		idTicket = logoutExterna.getSesion();
+        return idTicket;
+    }
 
-		return idTicket;
-	}
+    @Override
+    public void purgaTicketSesionLogout(final Long pTimeoutSesion,
+            final Long pTimeoutTicket) {
 
-	@Override
-	public void purgaTicketLogoutSesionExterna(final Long pTimeoutSesion, final Long pTimeoutTicket) {
+        // Recupera lista tickets aplicaciones externas
+        @SuppressWarnings("unchecked")
+        final List<JSesionLogout> listaTickets = entityManager
+                .createQuery("SELECT t FROM JSesionLogout t").getResultList();
+        final Date ahora = new Date();
+        for (final JSesionLogout t : listaTickets) {
+            if (ahora.getTime() - (t.getFechaInicioSesion().getTime()
+                    + (pTimeoutSesion * ConstantesNumero.N1000)) > 0) {
+                entityManager.remove(t);
+            }
 
-		// Recupera lista tickets aplicaciones externas
-		@SuppressWarnings("unchecked")
-		final List<LogoutSesionExterna> listaTickets = entityManager.createQuery("SELECT t FROM LogoutSesionExterna t")
-				.getResultList();
-		final Date ahora = new Date();
-		for (final LogoutSesionExterna t : listaTickets) {
-			if (ahora.getTime()
-					- (t.getFechaInicioSesion().getTime() + (pTimeoutSesion * ConstantesNumero.N1000)) > 0) {
-				entityManager.remove(t);
-			}
+        }
 
-		}
-
-	}
+    }
 
 }

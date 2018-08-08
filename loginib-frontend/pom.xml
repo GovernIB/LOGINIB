@@ -82,7 +82,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>${maven.war.version}</version>
 				<configuration>
-					<warName>sistrages-frontend</warName>
+					<warName>loginib-frontend</warName>
 				</configuration>
 			</plugin>
 

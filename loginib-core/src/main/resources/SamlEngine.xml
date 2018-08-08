@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <instances>
 
-<!-- ******************** SP ******************** -->
-	<!-- Configuration name-->
-	<instance name="SP">
+	<!-- ******************** CAIB ******************** -->
+	<instance name="A04003003">
 		<!-- Configurations parameters StorkSamlEngine: SE CARGA POR CLASSPATH  -->
 		<configuration name="SamlEngineConf">
-			<parameter name="fileConfiguration" value="StorkSamlEngine_SP.xml" />
+			<parameter name="fileConfiguration" value="StorkSamlEngine.xml" />
 		</configuration>
 
 		<!-- Settings module signature -->
@@ -14,7 +13,7 @@
 			<!-- Specific signature module -->
 			<parameter name="class" value="eu.stork.peps.auth.engine.core.impl.SignSW" />
 			<!-- Settings specific module -->
-			<parameter name="fileConfiguration" value="loginib/SignModule_SP.xml" />
+			<parameter name="fileConfiguration" value="/conf/loginib/A04003003_SignModule.xml" />
 		</configuration>
 	</instance>
 

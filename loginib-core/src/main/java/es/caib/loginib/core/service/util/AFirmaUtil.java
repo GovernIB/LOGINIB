@@ -14,7 +14,7 @@ import org.dom4j.Node;
 import org.dom4j.XPath;
 import org.dom4j.io.SAXReader;
 
-import es.caib.loginib.core.api.exception.login.ErrorRespuestaClaveException;
+import es.caib.loginib.core.api.exception.ErrorRespuestaClaveException;
 
 /**
  * Utilidades AFirma.

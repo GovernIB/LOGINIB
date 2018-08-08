@@ -1,5 +1,7 @@
 package es.caib.loginib.core.ejb;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -8,12 +10,14 @@ import javax.interceptor.Interceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
-import es.caib.loginib.core.api.ClaveService;
+import es.caib.loginib.core.api.model.login.DatosSesion;
 import es.caib.loginib.core.api.model.login.DatosUsuario;
 import es.caib.loginib.core.api.model.login.PeticionClave;
 import es.caib.loginib.core.api.model.login.PeticionClaveLogout;
 import es.caib.loginib.core.api.model.login.RespuestaClaveLogout;
 import es.caib.loginib.core.api.model.login.TicketClave;
+import es.caib.loginib.core.api.model.login.types.TypeIdp;
+import es.caib.loginib.core.api.service.ClaveService;
 
 @Stateless
 @Interceptors(SpringBeanAutowiringInterceptor.class)
@@ -24,26 +28,28 @@ public class ClaveServiceBean implements ClaveService {
     private ClaveService claveService;
 
     @Override
-    public String crearSesionClave(String urlCallback, String idioma,
-            String idps, Integer qaa, boolean forceAuth) {
-        return claveService.crearSesionClave(urlCallback, idioma, idps, qaa,
-                forceAuth);
+    public String iniciarLoginClave(String entidad, String urlCallback,
+            String idioma, List<TypeIdp> idps, int qaa, boolean forceAuth) {
+        return claveService.iniciarLoginClave(entidad, urlCallback, idioma,
+                idps, qaa, forceAuth);
     }
 
     @Override
-    public String crearLogoutSesionClave(String pUrlCallback, String idioma) {
-        return claveService.crearLogoutSesionClave(pUrlCallback, idioma);
+    public String iniciarLogoutClave(String entidad, String pUrlCallback,
+            String idioma) {
+        return claveService.iniciarLogoutClave(entidad, pUrlCallback, idioma);
     }
 
     @Override
-    public PeticionClave generarPeticionClave(String idSesion) {
-        return claveService.generarPeticionClave(idSesion);
+    public PeticionClave generarPeticionLoginClave(String idSesion) {
+        return claveService.generarPeticionLoginClave(idSesion);
     }
 
     @Override
-    public TicketClave procesarRespuestaClave(String idSesion,
+    public TicketClave procesarRespuestaLoginClave(String idSesion,
             String samlResponseB64) {
-        return claveService.procesarRespuestaClave(idSesion, samlResponseB64);
+        return claveService.procesarRespuestaLoginClave(idSesion,
+                samlResponseB64);
     }
 
     @Override
@@ -57,8 +63,8 @@ public class ClaveServiceBean implements ClaveService {
     }
 
     @Override
-    public DatosUsuario obtenerDatosUsuarioAplicacionExterna(String ticket) {
-        return claveService.obtenerDatosUsuarioAplicacionExterna(ticket);
+    public DatosUsuario obtenerDatosAutenticacion(String ticket) {
+        return claveService.obtenerDatosAutenticacion(ticket);
     }
 
     @Override
@@ -67,17 +73,17 @@ public class ClaveServiceBean implements ClaveService {
     }
 
     @Override
-    public String obtenerUrlInicioExterna(String idSesion) {
-        return claveService.obtenerUrlInicioExterna(idSesion);
+    public String obtenerUrlRedireccionLoginClave(String idSesion) {
+        return claveService.obtenerUrlRedireccionLoginClave(idSesion);
     }
 
     @Override
-    public String obtenerUrlLogoutExterna(String pIdSesion) {
-        return claveService.obtenerUrlLogoutExterna(pIdSesion);
+    public String obtenerUrlRedireccionLogoutClave(String pIdSesion) {
+        return claveService.obtenerUrlRedireccionLogoutClave(pIdSesion);
     }
 
     @Override
-    public TicketClave simularRespuestaClave(String pIdSesion, String pIdp,
+    public TicketClave simularRespuestaClave(String pIdSesion, TypeIdp pIdp,
             String pNif, String pNombre, String pApellidos, String pApellido1,
             String pApellido2) {
         return claveService.simularRespuestaClave(pIdSesion, pIdp, pNif,
@@ -85,15 +91,25 @@ public class ClaveServiceBean implements ClaveService {
     }
 
     @Override
-    public PeticionClaveLogout generarPeticionLogout(String idSesion) {
-        return claveService.generarPeticionLogout(idSesion);
+    public PeticionClaveLogout generarPeticionLogoutClave(String idSesion) {
+        return claveService.generarPeticionLogoutClave(idSesion);
     }
 
     @Override
-    public RespuestaClaveLogout procesarRespuestaLogout(String pIdSesion,
+    public RespuestaClaveLogout procesarRespuestaLogoutClave(String pIdSesion,
             String pSamlResponseB64) {
-        return claveService.procesarRespuestaLogout(pIdSesion,
+        return claveService.procesarRespuestaLogoutClave(pIdSesion,
                 pSamlResponseB64);
+    }
+
+    @Override
+    public DatosSesion obtenerDatosSesionLogin(String idSesion) {
+        return claveService.obtenerDatosSesionLogin(idSesion);
+    }
+
+    @Override
+    public TicketClave loginAnonimo(String pIdSesion) {
+        return claveService.loginAnonimo(pIdSesion);
     }
 
 }

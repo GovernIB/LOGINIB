@@ -5,7 +5,24 @@
     <artifactId>loginib</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>loginib-rest-api</artifactId>
+
+  <dependencies>
+		<!-- JSON -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
+		<!-- SWAGGER -->
+		<dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger2</artifactId>
+		    <version>${swagger.version}</version>
+		</dependency>
+	</dependencies>
+
   	<build>
 		<plugins>
 			<plugin>
