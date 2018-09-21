@@ -40,6 +40,9 @@ public final class DatosSesion {
     /** Saml id peticion. */
     private String samlIdPeticion;
 
+    /** Url callback. */
+    private String urlCallback;
+
     /**
      * Gets the fecha.
      *
@@ -179,7 +182,7 @@ public final class DatosSesion {
 
     /**
      * Método de acceso a idps.
-     * 
+     *
      * @return idps
      */
     public List<TypeIdp> getIdps() {
@@ -188,12 +191,31 @@ public final class DatosSesion {
 
     /**
      * Método para establecer idps.
-     * 
+     *
      * @param idps
      *            idps a establecer
      */
     public void setIdps(List<TypeIdp> idps) {
         this.idps = idps;
+    }
+
+    /**
+     * Método de acceso a urlCallback.
+     * 
+     * @return urlCallback
+     */
+    public String getUrlCallback() {
+        return urlCallback;
+    }
+
+    /**
+     * Método para establecer urlCallback.
+     * 
+     * @param urlCallback
+     *            urlCallback a establecer
+     */
+    public void setUrlCallback(String urlCallback) {
+        this.urlCallback = urlCallback;
     }
 
 }

@@ -2,98 +2,121 @@ package es.caib.loginib.frontend.model;
 
 /**
  * Datos para iniciar sesion en clave.
- * 
+ *
  * @author Indra
- * 
+ *
  */
 public final class DatosInicioSesionClave {
 
-  /** Url clave. */
-  private String urlClave;
+    /** Url clave. */
+    private String urlClave;
 
-  /** Metodos autenticacion permitidos en clave. */
-  private String idps;
+    // TODO CLAVE2 parece que ya no se usan
+    /** Metodos autenticacion permitidos en clave. */
+    private String idps;
 
-  /** Peticion SAML de autenticacion. */
-  private String samlRequest;
+    /** Peticion SAML de autenticacion. */
+    private String samlRequest;
 
-  /** Idioma. */
-  private String idioma;
+    /** Idioma. */
+    private String idioma;
 
-  /**
-   * Obtiene url clave.
-   *
-   * @return the urlClave
-   */
-  public String getUrlClave() {
-    return urlClave;
-  }
+    /** Relay state. */
+    private String relayState;
 
-  /**
-   * Establece url clave.
-   *
-   * @param urlClave
-   *          the urlClave to set
-   */
-  public void setUrlClave(final String urlClave) {
-    this.urlClave = urlClave;
-  }
+    /**
+     * Obtiene url clave.
+     *
+     * @return the urlClave
+     */
+    public String getUrlClave() {
+        return urlClave;
+    }
 
-  /**
-   * Obtiene idps.
-   *
-   * @return the idps
-   */
-  public String getIdps() {
-    return idps;
-  }
+    /**
+     * Establece url clave.
+     *
+     * @param urlClave
+     *            the urlClave to set
+     */
+    public void setUrlClave(final String urlClave) {
+        this.urlClave = urlClave;
+    }
 
-  /**
-   * Establece idps.
-   *
-   * @param idps
-   *          the idps to set
-   */
-  public void setIdps(final String idps) {
-    this.idps = idps;
-  }
+    /**
+     * Obtiene idps.
+     *
+     * @return the idps
+     */
+    public String getIdps() {
+        return idps;
+    }
 
-  /**
-   * Obtiene saml request.
-   *
-   * @return the samlRequest
-   */
-  public String getSamlRequest() {
-    return samlRequest;
-  }
+    /**
+     * Establece idps.
+     *
+     * @param idps
+     *            the idps to set
+     */
+    public void setIdps(final String idps) {
+        this.idps = idps;
+    }
 
-  /**
-   * Establece saml request.
-   *
-   * @param samlRequest
-   *          the samlRequest to set
-   */
-  public void setSamlRequest(final String samlRequest) {
-    this.samlRequest = samlRequest;
-  }
+    /**
+     * Obtiene saml request.
+     *
+     * @return the samlRequest
+     */
+    public String getSamlRequest() {
+        return samlRequest;
+    }
 
-  /**
-   * Obtiene idioma.
-   *
-   * @return the idioma
-   */
-  public String getIdioma() {
-    return idioma;
-  }
+    /**
+     * Establece saml request.
+     *
+     * @param samlRequest
+     *            the samlRequest to set
+     */
+    public void setSamlRequest(final String samlRequest) {
+        this.samlRequest = samlRequest;
+    }
 
-  /**
-   * Establece idioma.
-   *
-   * @param idioma
-   *          the idioma to set
-   */
-  public void setIdioma(final String idioma) {
-    this.idioma = idioma;
-  }
+    /**
+     * Obtiene idioma.
+     *
+     * @return the idioma
+     */
+    public String getIdioma() {
+        return idioma;
+    }
+
+    /**
+     * Establece idioma.
+     *
+     * @param idioma
+     *            the idioma to set
+     */
+    public void setIdioma(final String idioma) {
+        this.idioma = idioma;
+    }
+
+    /**
+     * Método de acceso a relayState.
+     * 
+     * @return relayState
+     */
+    public String getRelayState() {
+        return relayState;
+    }
+
+    /**
+     * Método para establecer relayState.
+     * 
+     * @param relayState
+     *            relayState a establecer
+     */
+    public void setRelayState(String relayState) {
+        this.relayState = relayState;
+    }
 
 }

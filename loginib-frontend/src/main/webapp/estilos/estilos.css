@@ -1,5 +1,0 @@
-body { font:normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif; color:#666; background-color:#9ea3a9;}
-
-div#capaInfo { position:relative; top:100px; background:url(../imgs/info.gif) no-repeat center 1em #fff; border:1em solid #bec7ca; padding:3em 1em 0 1em; z-index:15; margin: auto; width: 30%;}
-div#capaInfo p.atencion { text-align:center; font-weight:bold;  font-size: 1.2em; }
-div#capaInfo.error { background-image:url(../imgs/error.gif); border-color:#e5d8d8; }

@@ -82,6 +82,7 @@ public final class ClaveDaoImpl implements ClaveDao {
         ds.setQaa(ticket.getQaa());
         ds.setForceAuth(ticket.isForceAuthentication());
         ds.setSamlIdPeticion(ticket.getSamlIdPeticion());
+        ds.setUrlCallback(ticket.getUrlCallback());
 
         return ds;
     }

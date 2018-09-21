@@ -1,0 +1,16 @@
+package es.caib.loginib.core.service.util.clave;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import eu.eidas.auth.engine.ProtocolEngineNoMetadataI;
+import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
+
+/**
+ * SpProtocolEngineI
+ */
+public interface SpProtocolEngineI extends ProtocolEngineNoMetadataI {
+
+    @NonNull
+    byte[] checkAndDecryptResponse(@NonNull byte[] responseBytes)
+            throws EIDASSAMLEngineException;
+
+}

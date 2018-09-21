@@ -9,6 +9,7 @@ create table LIB_LOGIN
 (
    LGI_CODIGO           NUMBER(20)           not null,
    LGI_ENTIDA           VARCHAR2(100 CHAR)   not null,
+   LGI_APLICA           VARCHAR2(100 CHAR),
    LGI_FCSES            DATE                 not null,
    LGI_IDIOMA           VARCHAR2(2 CHAR)     not null,
    LGI_IDPS             VARCHAR2(100 CHAR)   not null,
@@ -41,6 +42,9 @@ comment on column LIB_LOGIN.LGI_CODIGO is
 
 comment on column LIB_LOGIN.LGI_ENTIDA is
 'Código entidad';
+
+comment on column LIB_LOGIN.LGI_APLICA is
+'Identidicador aplicación';
 
 comment on column LIB_LOGIN.LGI_FCSES is
 'Fecha inicio sesion (desde webservice)';
@@ -132,6 +136,7 @@ create table LIB_LOGOUT
    LGO_FCALTA           DATE,
    LGO_SAMLID           VARCHAR2(100 CHAR),
    LGO_SESION           VARCHAR2(100 CHAR),
+   LGO_APLICA           VARCHAR2(100 CHAR),
    constraint LIB_LGO_PK primary key (LGO_CODIGO)
 );
 
@@ -159,10 +164,12 @@ comment on column LIB_LOGOUT.LGO_FCALTA is
 comment on column LIB_LOGOUT.LGO_SESION is
 'Identificador aleatorio de sesion';
 
+comment on column LIB_LOGOUT.LGO_APLICA is
+'Identidicador aplicación';
+
 /*==============================================================*/
 /* Index: LIB_LGO_AK                                            */
 /*==============================================================*/
 create unique index LIB_LGO_AK on LIB_LOGOUT (
    LGO_SESION ASC
 );
-

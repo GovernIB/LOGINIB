@@ -1,8 +1,9 @@
 package es.caib.loginib.core.service;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,6 @@ import es.caib.loginib.core.api.exception.ErrorRespuestaClaveException;
 import es.caib.loginib.core.api.exception.GenerarPeticionClaveException;
 import es.caib.loginib.core.api.exception.TicketNoValidoException;
 import es.caib.loginib.core.api.model.comun.ConstantesNumero;
-import es.caib.loginib.core.api.model.login.DatosLogoutSesion;
 import es.caib.loginib.core.api.model.login.DatosRepresentante;
 import es.caib.loginib.core.api.model.login.DatosSesion;
 import es.caib.loginib.core.api.model.login.DatosUsuario;
@@ -33,16 +33,25 @@ import es.caib.loginib.core.interceptor.NegocioInterceptor;
 import es.caib.loginib.core.service.repository.dao.ClaveDao;
 import es.caib.loginib.core.service.util.AFirmaUtil;
 import es.caib.loginib.core.service.util.SamlUtil;
-import eu.stork.peps.auth.commons.IPersonalAttributeList;
-import eu.stork.peps.auth.commons.PEPSUtil;
-import eu.stork.peps.auth.commons.PersonalAttribute;
-import eu.stork.peps.auth.commons.PersonalAttributeList;
-import eu.stork.peps.auth.commons.STORKAuthnRequest;
-import eu.stork.peps.auth.commons.STORKAuthnResponse;
-import eu.stork.peps.auth.commons.STORKLogoutRequest;
-import eu.stork.peps.auth.commons.STORKLogoutResponse;
-import eu.stork.peps.auth.engine.STORKSAMLEngine;
-import eu.stork.peps.exceptions.STORKSAMLEngineException;
+import eu.eidas.auth.commons.EidasStringUtil;
+import eu.eidas.auth.commons.attribute.AttributeDefinition;
+import eu.eidas.auth.commons.attribute.ImmutableAttributeMap;
+import eu.eidas.auth.commons.attribute.PersonType;
+import eu.eidas.auth.commons.attribute.impl.StringAttributeValueMarshaller;
+import eu.eidas.auth.commons.protocol.IAuthenticationResponseNoMetadata;
+import eu.eidas.auth.commons.protocol.IRequestMessageNoMetadata;
+import eu.eidas.auth.commons.protocol.eidas.LevelOfAssurance;
+import eu.eidas.auth.commons.protocol.eidas.LevelOfAssuranceComparison;
+import eu.eidas.auth.commons.protocol.eidas.impl.EidasAuthenticationRequestNoMetadata;
+import eu.eidas.auth.commons.protocol.impl.EidasSamlBinding;
+import eu.eidas.auth.commons.protocol.impl.SamlNameIdFormat;
+import eu.eidas.auth.engine.ProtocolEngineFactoryNoMetadata;
+import eu.eidas.auth.engine.ProtocolEngineNoMetadataI;
+import eu.eidas.auth.engine.configuration.SamlEngineConfigurationException;
+import eu.eidas.auth.engine.configuration.dom.ProtocolEngineConfigurationFactoryNoMetadata;
+import eu.eidas.auth.engine.xml.opensaml.SAMLEngineUtils;
+import eu.eidas.auth.engine.xml.opensaml.SecureRandomXmlIdGenerator;
+import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
 
 /**
  * Implementación SecurityService.
@@ -115,68 +124,127 @@ public final class ClaveServiceImpl implements ClaveService {
                             + datosSesion.getIdSesion() + "]");
         }
 
-        // Atributos a consultar
-        final IPersonalAttributeList pAttList = new PersonalAttributeList();
-        /* eIdentifier */
-        PersonalAttribute att = new PersonalAttribute();
-        att.setName("eIdentifier");
-        att.setIsRequired(true);
-        pAttList.add(att);
-        /* givenName */
-        att = new PersonalAttribute();
-        att.setName("givenName");
-        att.setIsRequired(true);
-        pAttList.add(att);
-        /* surname */
-        att = new PersonalAttribute();
-        att.setName("surname");
-        att.setIsRequired(false);
-        pAttList.add(att);
-        /* inheritedFamilyName: desglose apellidos */
-        att = new PersonalAttribute();
-        att.setName("inheritedFamilyName");
-        att.setIsRequired(false);
-        pAttList.add(att);
-        /* respuesta @firma */
-        att = new PersonalAttribute();
-        att.setName("afirmaResponse");
-        att.setIsRequired(false);
-        pAttList.add(att);
+        // TODO CLAVE2 respuesta @firma?? qAA cambiado por levelOfAssurance?? spId??
+        // - spApplication -> se indica que parametro desaparece (poner ID SIA en el provider name), pero si hay metodo para establecer. Se consulta a CAID.
+        // - spId / spSector-> parece que desaparece
+
+        /*
+         * att = new PersonalAttribute(); att.setName("afirmaResponse");
+         * att.setIsRequired(false); pAttList.add(att);
+         */
+
+        // Atributos personales que se desean conocer
+        final ImmutableAttributeMap.Builder reqAttrMapBuilder = new ImmutableAttributeMap.Builder();
+
+        if (!datosSesion.getIdps().contains(TypeIdp.CERTIFICADO)) {
+            reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>()
+                    .nameUri("http://es.minhafp.clave/AFirmaIdP")
+                    .friendlyName("AFirmaIdP")
+                    .personType(PersonType.NATURAL_PERSON).required(false)
+                    .uniqueIdentifier(true)
+                    .xmlType("http://www.w3.org/2001/XMLSchema",
+                            "AFirmaIdPType", "cl")
+                    .attributeValueMarshaller(
+                            new StringAttributeValueMarshaller())
+                    .build());
+        }
+        if (!datosSesion.getIdps().contains(TypeIdp.CLAVE_PERMANENTE)) {
+            reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>()
+                    .nameUri("http://es.minhafp.clave/GISSIdP")
+                    .friendlyName("GISSIdP")
+                    .personType(PersonType.NATURAL_PERSON).required(false)
+                    .uniqueIdentifier(true)
+                    .xmlType("http://www.w3.org/2001/XMLSchema", "GISSIdPType",
+                            "cl")
+                    .attributeValueMarshaller(
+                            new StringAttributeValueMarshaller())
+                    .build());
+        }
+        if (!datosSesion.getIdps().contains(TypeIdp.CLAVE_PIN)) {
+            reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>()
+                    .nameUri("http://es.minhafp.clave/AEATIdP")
+                    .friendlyName("AEATIdP")
+                    .personType(PersonType.NATURAL_PERSON).required(false)
+                    .uniqueIdentifier(true)
+                    .xmlType("http://www.w3.org/2001/XMLSchema", "AEATIdPType",
+                            "cl")
+                    .attributeValueMarshaller(
+                            new StringAttributeValueMarshaller())
+                    .build());
+        }
+
+        // De momento EIDAS siempre deshabilitado
+        reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>()
+                .nameUri("http://es.minhafp.clave/EIDASIdP")
+                .friendlyName("EIDASIdP").personType(PersonType.NATURAL_PERSON)
+                .required(false).uniqueIdentifier(true)
+                .xmlType("http://www.w3.org/2001/XMLSchema", "EIDASIdP", "cl")
+                .attributeValueMarshaller(new StringAttributeValueMarshaller())
+                .build());
+
+        final String relayState = SecureRandomXmlIdGenerator.INSTANCE
+                .generateIdentifier(8);
+
+        reqAttrMapBuilder.putPrimaryValues(
+                new AttributeDefinition.Builder<String>()
+                        .nameUri("http://es.minhafp.clave/RelayState")
+                        .friendlyName("RelayState")
+                        .personType(PersonType.NATURAL_PERSON).required(false)
+                        .uniqueIdentifier(true)
+                        .xmlType(
+                                "http://eidas.europa.eu/attributes/naturalperson",
+                                "PersonIdentifierType", "eidas-natural")
+                        .attributeValueMarshaller(
+                                new StringAttributeValueMarshaller())
+                        .build(),
+                relayState);
 
         // Parametros peticion
-        STORKAuthnRequest authnRequest = new STORKAuthnRequest();
-        authnRequest.setDestination(config.getPepsUrl());
-        authnRequest.setProviderName(
-                config.getProviderName(datosSesion.getEntidad()));
-        authnRequest.setForceAuthN(datosSesion.isForceAuth());
-        authnRequest.setQaa(datosSesion.getQaa());
-        authnRequest.setPersonalAttributeList(pAttList);
-        authnRequest.setAssertionConsumerServiceURL(
-                (config.getLoginCallbackClave()) + "/" + idSesion + ".html");
-        authnRequest.setSpSector(config.getSpSector(datosSesion.getEntidad()));
-        authnRequest.setSpApplication(
-                config.getSpApplication(datosSesion.getEntidad()));
-        authnRequest.setSPID(config.getSpId(datosSesion.getEntidad()));
+        final EidasAuthenticationRequestNoMetadata.Builder reqBuilder = new EidasAuthenticationRequestNoMetadata.Builder();
+        reqBuilder.id(SAMLEngineUtils.generateNCName());
+        reqBuilder.destination(config.getPepsUrl());
+        reqBuilder
+                .providerName(config.getProviderName(datosSesion.getEntidad()));
+        reqBuilder.requestedAttributes(reqAttrMapBuilder.build());
 
-        // Generamos peticion SAML
-        final STORKSAMLEngine engine = STORKSAMLEngine
-                .getInstance(datosSesion.getEntidad());
-        if (engine == null) {
-            throw new GenerarPeticionClaveException(
-                    "Error creando engine STORK. Revise localizacion fichero SignModule_<entidad>.xml (segun SamlEngine.xml)");
-        }
+        // TODO CLAVE2 Nivel QAA cambiado por esto
+        reqBuilder.levelOfAssurance(LevelOfAssurance.LOW.stringValue());
+        reqBuilder.levelOfAssuranceComparison(
+                LevelOfAssuranceComparison.fromString("minimum").stringValue());
+
+        // urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
+        // SamlNameIdFormat.PERSISTENT
+        // urn:oasis:names:tc:SAML:2.0:nameid-format:transient
+        // SamlNameIdFormat.TRANSIENT
+        // urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified
+        // SamlNameIdFormat.UNSPECIFIED
+        reqBuilder.nameIdFormat(SamlNameIdFormat.UNSPECIFIED.getNameIdFormat());
+        reqBuilder.binding(EidasSamlBinding.EMPTY.getName());
+        reqBuilder.assertionConsumerServiceURL(
+                config.getLoginCallbackClave() + "/" + idSesion + ".html");
+        reqBuilder.forceAuth(datosSesion.isForceAuth());
+        reqBuilder.spApplication(
+                config.getSpApplication(datosSesion.getEntidad()));
+
+        // Generamos peticion SAML. Se firma la petición indicando los datos del
+        // destino
+        final ProtocolEngineNoMetadataI engine = getEngineSamlFactory(
+                datosSesion.getEntidad());
+
+        final EidasAuthenticationRequestNoMetadata buildRequest = reqBuilder
+                .build();
+        IRequestMessageNoMetadata message = null;
         try {
-            authnRequest = engine.generateSTORKAuthnRequest(authnRequest);
-        } catch (final STORKSAMLEngineException e) {
+            message = engine.generateRequestMessage(buildRequest);
+        } catch (final EIDASSAMLEngineException e) {
             throw new GenerarPeticionClaveException(e);
         }
+        final byte[] ticket = message.getMessageBytes();
 
         // Pasamos a B64 y retornamos
-        final byte[] token = authnRequest.getTokenSaml();
-        final String samlRequestB64 = PEPSUtil.encodeSAMLToken(token);
-        final String samlRequestXML = new String(token);
-        log.debug(" Peticion generada [idSesion = " + idSesion + "]: "
-                + samlRequestXML);
+        final String samlRequestB64 = EidasStringUtil.encodeToBase64(ticket);
+        // log.debug(" Peticion generada [idSesion = " + idSesion + "]: "
+        // + samlRequestXML);
 
         // Extraemos saml id peticion y guardamos en sesion
         final String samlId = SamlUtil.extraerSamlId(samlRequestB64);
@@ -187,13 +255,26 @@ public final class ClaveServiceImpl implements ClaveService {
         }
         claveDao.establecerSamlIdSesionLogin(idSesion, samlId);
 
+        // TODO CLAVE2 revisar params
+        // request.setAttribute("samlRequest", samlRequest);
+        // request.setAttribute("RelayState",
+        // SecureRandomXmlIdGenerator.INSTANCE.generateIdentifier(8));
+        // request.setAttribute("nodeServiceUrl", nodeServiceUrl);
+        // request.setAttribute(EidasParameterKeys.BINDING.toString(),
+        // getRedirectMethod());
+
         // Devolvemos datos necesarios para invocar a Clave
         final PeticionClave peticionClave = new PeticionClave();
         peticionClave.setSamlRequestB64(samlRequestB64);
         peticionClave.setUrlClave(config.getPepsUrl());
         peticionClave.setIdioma(datosSesion.getIdioma());
+
+        // TODO CLAVE2 Ya no es necesario se fija en saml
         peticionClave.setIdps(
                 ClaveLoginUtil.removeAnonimoFromIdps(datosSesion.getIdps()));
+        // TODO CLAVE2 Guardar en BD para comparar a la vuelta? Tiene que ver
+        // algo con el relay state que se pasa en los parametros antes?
+        peticionClave.setRelayState(relayState);
         return peticionClave;
     }
 
@@ -214,33 +295,48 @@ public final class ClaveServiceImpl implements ClaveService {
         }
 
         // Decodifica respuesta Clave
-        STORKAuthnResponse authnResponse = null;
-        // final IPersonalAttributeList personalAttributeList = null;
-        final byte[] decSamlToken = PEPSUtil.decodeSAMLToken(pSamlResponseB64);
-        final STORKSAMLEngine engine = STORKSAMLEngine
-                .getInstance(datosSesion.getEntidad());
-        if (engine == null) {
-            throw new GenerarPeticionClaveException(
-                    "Error creando engine STORK. Revise localizacion fichero SignModule_<entidad>.xml (segun SamlEngine.xml)");
-        }
+        final ProtocolEngineNoMetadataI engine = getEngineSamlFactory(
+                datosSesion.getEntidad());
+
+        // Primero se extraen los bytes de la respuesta recibida
+        final byte[] decSamlTicket = EidasStringUtil
+                .decodeBytesFromBase64(pSamlResponseB64);
+        // Se lee y se valida
+        IAuthenticationResponseNoMetadata authnResponse;
+
+        // En caso de error durante la validación se produce una excepción
+        // TODO CLAVE2 faltaria validar respuesta, ¿se requiere remote host?
         try {
-            authnResponse = engine.validateSTORKAuthnResponse(decSamlToken, "");
-        } catch (final STORKSAMLEngineException e) {
+            authnResponse = engine.unmarshallResponseAndValidate(decSamlTicket,
+                    new URI(config.getPepsUrl()).getHost(), 0, 0,
+                    datosSesion.getUrlCallback());
+        } catch (EIDASSAMLEngineException | URISyntaxException e) {
             throw new ErrorRespuestaClaveException(e);
         }
 
-        // Verificamos si hay error al interpretar la respuesta
-        if (authnResponse.isFail()) {
+        // En caso de que se haya recibido una respuesta cifrada, se puede
+        // descifrar independientemente
+        // TODO CLAVE2 en ejemplo viene comentado, en documentación no. No
+        // existe un metodo.
+        // if (SPUtil.isEncryptedSamlResponse(decSamlTicket)) {
+        // final byte[] eidasTicketSAML =
+        // engine.checkAndDecryptResponse(decSamlTicket);
+        // final String samlUnencryptedResponseXML =
+        // SPUtil.extractAssertionAsString(EidasStringUtil.toString(eidasTicketSAML));
+        // }
+
+        // Con el objeto obtenido se puede comprobar si es una autenticción
+        // exitosa y final extraer los datos recibidos.
+        if (authnResponse.isFailure()) {
             log.debug("La respuesta indica que hay un error [idSesion = "
-                    + pIdSesion + "]: " + authnResponse.getMessage());
-            throw new ErrorRespuestaClaveException(
-                    "La respuesta indica que hay un error : "
-                            + authnResponse.getMessage());
+                    + pIdSesion + "]: " + authnResponse.getStatusMessage());
+            throw new ErrorRespuestaClaveException("Saml Response is fail: "
+                    + authnResponse.getStatusMessage());
         }
 
         // Verificamos que la peticion se corresponde a la sesion
         if (!StringUtils.equals(datosSesion.getSamlIdPeticion(),
-                authnResponse.getInResponseTo())) {
+                authnResponse.getInResponseToId())) {
             log.debug(
                     "La respuesta no se corresponde a la peticion SAML origen [idSesion = "
                             + pIdSesion + "]");
@@ -249,8 +345,11 @@ public final class ClaveServiceImpl implements ClaveService {
         }
 
         // Obtenemos atributos
-        final String idpClave = authnResponse.getAssertions().get(0).getIssuer()
-                .getValue();
+        // TODO CLAVE2 Pendiente de saber como obtenerlo, ponemos fijo para
+        // pruebas
+        // final String idpClave =
+        // authnResponse.getAssertions().get(0).getIssuer().getValue();
+        String idpClave = idpClave = "aFirma";
         log.debug(" Idp retornado de Clave [idSesion = " + pIdSesion + "]: "
                 + idpClave);
 
@@ -261,32 +360,37 @@ public final class ClaveServiceImpl implements ClaveService {
                             + "]: " + idpClave);
         }
 
-        String nifClave = null;
+        // TODO CLAVE2 Pendiente de saber como se obtienen los atributos
+        authnResponse.getAttributes();
+
+        final String nifClave = null;
         String nombre = null;
         String apellidos = null;
         String apellido1 = null;
         String apellido2 = null;
-        String afirmaResponse = null;
-        final ArrayList<PersonalAttribute> attrList = new ArrayList<PersonalAttribute>(
-                authnResponse.getPersonalAttributeList().values());
-        for (final PersonalAttribute pa : attrList) {
-            log.debug(pa.getName() + " = " + pa.getValue().get(0));
-            if ("eIdentifier".equals(pa.getName())) {
-                nifClave = pa.getValue().get(0);
-                log.debug("eIdentifier -> NIF: " + nifClave);
-            } else if ("givenName".equals(pa.getName())) {
-                nombre = pa.getValue().get(0);
-                log.debug("givenName -> Nombre: " + nombre);
-            } else if ("surname".equals(pa.getName())) {
-                apellidos = pa.getValue().get(0);
-                log.debug("surname -> Apellidos: " + apellidos);
-            } else if ("inheritedFamilyName".equals(pa.getName())) {
-                apellido1 = pa.getValue().get(0);
-                log.debug("inheritedFamilyName -> Apellido1: " + apellido1);
-            } else if ("afirmaResponse".equals(pa.getName())) {
-                afirmaResponse = pa.getValue().get(0);
-            }
-        }
+        final String afirmaResponse = null;
+
+        // final ArrayList<PersonalAttribute> attrList = new
+        // ArrayList<PersonalAttribute>(
+        // authnResponse.getPersonalAttributeList().values());
+        // for (final PersonalAttribute pa : attrList) {
+        // log.debug(pa.getName() + " = " + pa.getValue().get(0));
+        // if ("eIdentifier".equals(pa.getName())) {
+        // nifClave = pa.getValue().get(0);
+        // log.debug("eIdentifier -> NIF: " + nifClave);
+        // } else if ("givenName".equals(pa.getName())) {
+        // nombre = pa.getValue().get(0);
+        // log.debug("givenName -> Nombre: " + nombre);
+        // } else if ("surname".equals(pa.getName())) {
+        // apellidos = pa.getValue().get(0);
+        // log.debug("surname -> Apellidos: " + apellidos);
+        // } else if ("inheritedFamilyName".equals(pa.getName())) {
+        // apellido1 = pa.getValue().get(0);
+        // log.debug("inheritedFamilyName -> Apellido1: " + apellido1);
+        // } else if ("afirmaResponse".equals(pa.getName())) {
+        // afirmaResponse = pa.getValue().get(0);
+        // }
+        // }
 
         String nif = ClaveLoginUtil.extraerNif(nifClave);
         if (nif == null) {
@@ -453,58 +557,63 @@ public final class ClaveServiceImpl implements ClaveService {
     @NegocioInterceptor
     public PeticionClaveLogout generarPeticionLogoutClave(
             final String idSesion) {
-        log.debug(" Generar peticion logout... ");
 
-        // TODO DAO PARA SESION LOGOUT (DatosSesionLogout)
-        final DatosLogoutSesion datosSesion = claveDao
-                .obtenerDatosSesionLogout(idSesion);
-        if (datosSesion.getFechaTicket() != null) {
-            throw new GenerarPeticionClaveException(
-                    "sesion ya ha sido autenticada en clave");
-        }
+        return null;
 
-        // Parametros peticion
-        final STORKLogoutRequest req = new STORKLogoutRequest();
-        req.setDestination(config.getPepsLogout());
-        req.setSpProvidedId(config.getProviderName(datosSesion.getEntidad()));
-        req.setIssuer(
-                config.getLogoutCallbackClave() + "/" + idSesion + ".html");
+        // log.debug(" Generar peticion logout... ");
+        //
+        // // TODO DAO PARA SESION LOGOUT (DatosSesionLogout)
+        // final DatosLogoutSesion datosSesion = claveDao
+        // .obtenerDatosSesionLogout(idSesion);
+        // if (datosSesion.getFechaTicket() != null) {
+        // throw new GenerarPeticionClaveException(
+        // "sesion ya ha sido autenticada en clave");
+        // }
+        //
+        // // Parametros peticion
+        // final STORKLogoutRequest req = new STORKLogoutRequest();
+        // req.setDestination(config.getPepsLogout());
+        // req.setSpProvidedId(config.getProviderName(datosSesion.getEntidad()));
+        // req.setIssuer(
+        // config.getLogoutCallbackClave() + "/" + idSesion + ".html");
+        //
+        // // Generamos peticion SAML
+        // final STORKSAMLEngine engine = STORKSAMLEngine
+        // .getInstance(datosSesion.getEntidad());
+        // if (engine == null) {
+        // throw new GenerarPeticionClaveException(
+        // "Error creando engine STORK. Revise localizacion fichero
+        // SignModule_<entidad>.xml (segun SamlEngine.xml)");
+        // }
+        // STORKLogoutRequest logoutReq = null;
+        // try {
+        // logoutReq = engine.generateSTORKLogoutRequest(req);
+        // } catch (final STORKSAMLEngineException e) {
+        // throw new GenerarPeticionClaveException(e);
+        // }
+        //
+        // // Pasamos a B64 y retornamos
+        // final byte[] token = logoutReq.getTokenSaml();
+        // final String samlRequestB64 = PEPSUtil.encodeSAMLToken(token);
+        // final String samlRequestXML = new String(token);
+        // log.debug(" Peticion generada: " + samlRequestXML);
+        //
+        // // TODO Probablemente sea necesario como extraer el saml id para el
+        // // logout
+        // // Extraemos saml id peticion y guardamos en sesion
+        // final String samlId = SamlUtil.extraerSamlIdLogout(samlRequestB64);
+        // if (StringUtils.isBlank(samlId)) {
+        // throw new GenerarPeticionClaveException(
+        // "No se ha podido extraer SamlId de la peticion");
+        // }
+        // claveDao.establecerSamlIdSesionLogout(idSesion, samlId);
+        //
+        // // Devolvemos datos necesarios para invocar a Clave
+        // final PeticionClaveLogout peticionClave = new PeticionClaveLogout();
+        // peticionClave.setSamlRequestB64(samlRequestB64);
+        // peticionClave.setUrlClave(config.getPepsLogout());
+        // return peticionClave;
 
-        // Generamos peticion SAML
-        final STORKSAMLEngine engine = STORKSAMLEngine
-                .getInstance(datosSesion.getEntidad());
-        if (engine == null) {
-            throw new GenerarPeticionClaveException(
-                    "Error creando engine STORK. Revise localizacion fichero SignModule_<entidad>.xml (segun SamlEngine.xml)");
-        }
-        STORKLogoutRequest logoutReq = null;
-        try {
-            logoutReq = engine.generateSTORKLogoutRequest(req);
-        } catch (final STORKSAMLEngineException e) {
-            throw new GenerarPeticionClaveException(e);
-        }
-
-        // Pasamos a B64 y retornamos
-        final byte[] token = logoutReq.getTokenSaml();
-        final String samlRequestB64 = PEPSUtil.encodeSAMLToken(token);
-        final String samlRequestXML = new String(token);
-        log.debug(" Peticion generada: " + samlRequestXML);
-
-        // TODO Probablemente sea necesario como extraer el saml id para el
-        // logout
-        // Extraemos saml id peticion y guardamos en sesion
-        final String samlId = SamlUtil.extraerSamlIdLogout(samlRequestB64);
-        if (StringUtils.isBlank(samlId)) {
-            throw new GenerarPeticionClaveException(
-                    "No se ha podido extraer SamlId de la peticion");
-        }
-        claveDao.establecerSamlIdSesionLogout(idSesion, samlId);
-
-        // Devolvemos datos necesarios para invocar a Clave
-        final PeticionClaveLogout peticionClave = new PeticionClaveLogout();
-        peticionClave.setSamlRequestB64(samlRequestB64);
-        peticionClave.setUrlClave(config.getPepsLogout());
-        return peticionClave;
     }
 
     @Override
@@ -512,52 +621,83 @@ public final class ClaveServiceImpl implements ClaveService {
     public RespuestaClaveLogout procesarRespuestaLogoutClave(
             final String pIdSesion, final String pSamlResponseB64) {
 
-        log.debug(" Procesando respuesta clave logout");
-        final DatosLogoutSesion datosSesion = claveDao
-                .obtenerDatosSesionLogout(pIdSesion);
-        final String urlCallback = datosSesion.getUrlCallback();
-        final String samlIdPeticion = datosSesion.getSamlIdPeticion();
+        return null;
 
-        // Decodifica respuesta Clave
-        final byte[] decSamlToken = PEPSUtil.decodeSAMLToken(pSamlResponseB64);
-        final STORKSAMLEngine engine = STORKSAMLEngine
-                .getInstance(datosSesion.getEntidad());
-        if (engine == null) {
-            throw new GenerarPeticionClaveException(
-                    "Error creando engine STORK. Revise localizacion fichero <entidad>_SignModule.xml (segun SamlEngine.xml)");
-        }
-        STORKLogoutResponse logoutReq = null;
+        // log.debug(" Procesando respuesta clave logout");
+        // final DatosLogoutSesion datosSesion = claveDao
+        // .obtenerDatosSesionLogout(pIdSesion);
+        // final String urlCallback = datosSesion.getUrlCallback();
+        // final String samlIdPeticion = datosSesion.getSamlIdPeticion();
+        //
+        // // Decodifica respuesta Clave
+        // final byte[] decSamlToken =
+        // PEPSUtil.decodeSAMLToken(pSamlResponseB64);
+        // final STORKSAMLEngine engine = STORKSAMLEngine
+        // .getInstance(datosSesion.getEntidad());
+        // if (engine == null) {
+        // throw new GenerarPeticionClaveException(
+        // "Error creando engine STORK. Revise localizacion fichero
+        // SignModule_<entidad>.xml (segun SamlEngine.xml)");
+        // }
+        // STORKLogoutResponse logoutReq = null;
+        // try {
+        // logoutReq = engine.validateSTORKLogoutResponse(decSamlToken, null);
+        // } catch (final STORKSAMLEngineException e) {
+        // throw new ErrorRespuestaClaveException(e);
+        // }
+        //
+        // // Verificamos si hay error al interpretar la respuesta
+        // // TODO VER QUE PASA SI NO HAY NINGUNA SESION ACTIVA EN CLAVE
+        // RespuestaClaveLogout respuesta = null;
+        // if (logoutReq.isFail()) {
+        // respuesta = new RespuestaClaveLogout();
+        // respuesta.setLogout(false);
+        // respuesta.setUrlCallback(urlCallback);
+        // } else {
+        // // Verificamos que la peticion se corresponde a la sesion
+        // if (!StringUtils.equals(samlIdPeticion,
+        // logoutReq.getInResponseTo())) {
+        // throw new ErrorRespuestaClaveException(
+        // "La respuesta no se corresponde a la peticion SAML origen");
+        // }
+        //
+        // respuesta = new RespuestaClaveLogout();
+        // respuesta.setLogout(true);
+        // respuesta.setUrlCallback(urlCallback);
+        //
+        // }
+        //
+        // log.debug("Logout realizado: " + respuesta.isLogout());
+        //
+        // return respuesta;
+
+    }
+
+    /**
+     * Obtiene engine para saml de Clave.
+     *
+     * @param entidad
+     *            entidad
+     * @return engine
+     */
+    private ProtocolEngineNoMetadataI getEngineSamlFactory(String entidad) {
+        // TODO CLAVE2 En clave2 se cachea
         try {
-            logoutReq = engine.validateSTORKLogoutResponse(decSamlToken, null);
-        } catch (final STORKSAMLEngineException e) {
-            throw new ErrorRespuestaClaveException(e);
-        }
-
-        // Verificamos si hay error al interpretar la respuesta
-        // TODO VER QUE PASA SI NO HAY NINGUNA SESION ACTIVA EN CLAVE
-        RespuestaClaveLogout respuesta = null;
-        if (logoutReq.isFail()) {
-            respuesta = new RespuestaClaveLogout();
-            respuesta.setLogout(false);
-            respuesta.setUrlCallback(urlCallback);
-        } else {
-            // Verificamos que la peticion se corresponde a la sesion
-            if (!StringUtils.equals(samlIdPeticion,
-                    logoutReq.getInResponseTo())) {
-                throw new ErrorRespuestaClaveException(
-                        "La respuesta no se corresponde a la peticion SAML origen");
+            final ProtocolEngineConfigurationFactoryNoMetadata protocolEngineConfigurationFactory = new ProtocolEngineConfigurationFactoryNoMetadata(
+                    entidad + "_SamlEngine.xml", null,
+                    System.getProperty("es.caib.loginib.clave2conf.path"));
+            final ProtocolEngineFactoryNoMetadata factory = new ProtocolEngineFactoryNoMetadata(
+                    protocolEngineConfigurationFactory);
+            final ProtocolEngineNoMetadataI protocolEngine = factory
+                    .getProtocolEngine("SPNoMetadata");
+            if (protocolEngine == null) {
+                throw new GenerarPeticionClaveException(
+                        "Error generando engine, retorna nulo");
             }
-
-            respuesta = new RespuestaClaveLogout();
-            respuesta.setLogout(true);
-            respuesta.setUrlCallback(urlCallback);
-
+            return protocolEngine;
+        } catch (final SamlEngineConfigurationException e) {
+            throw new GenerarPeticionClaveException(e);
         }
-
-        log.debug("Logout realizado: " + respuesta.isLogout());
-
-        return respuesta;
-
     }
 
 }

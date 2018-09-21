@@ -1,0 +1,62 @@
+package es.caib.loginib.core.service.util.clave;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import eu.eidas.auth.commons.EidasErrorKey;
+import eu.eidas.auth.engine.ProtocolEngineNoMetadata;
+import eu.eidas.auth.engine.configuration.ProtocolConfigurationAccessorNoMetadata;
+import eu.eidas.auth.engine.xml.opensaml.CorrelatedResponse;
+import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
+
+/**
+ * SpProtocolEngine
+ */
+public final class SpProtocolEngine extends ProtocolEngineNoMetadata
+        implements SpProtocolEngineI {
+
+    private static final Logger LOG = LoggerFactory
+            .getLogger(SpProtocolEngine.class);
+
+    public SpProtocolEngine(
+            @NonNull ProtocolConfigurationAccessorNoMetadata configurationAccessor) {
+        super(configurationAccessor);
+    }
+
+    /**
+     * Decrypt and validate saml respons
+     *
+     * @param responseBytes
+     * @return
+     * @throws EIDASSAMLEngineException
+     */
+    @Override
+    @NonNull
+    public byte[] checkAndDecryptResponse(@NonNull byte[] responseBytes)
+            throws EIDASSAMLEngineException {
+        // This decrypts the given responseBytes:
+        final CorrelatedResponse response = (CorrelatedResponse) unmarshallResponse(
+                responseBytes);
+
+        // validateUnmarshalledResponse(samlResponse, userIP, skewTimeInMillis);
+
+        try {
+            // re-transform the decrypted bytes to another byte array, without
+            // signing:
+            return marshall(response.getResponse());
+        } catch (final EIDASSAMLEngineException e) {
+
+            // TODO CLAVE2 COMENTAR DEBUGS
+            LOG.debug(SAML_EXCHANGE,
+                    "BUSINESS EXCEPTION : checkAndResignEIDASTokenSAML : Sign and Marshall.",
+                    e);
+            LOG.info(SAML_EXCHANGE,
+                    "BUSINESS EXCEPTION : checkAndResignEIDASTokenSAML : Sign and Marshall.",
+                    e.getMessage());
+            throw new EIDASSAMLEngineException(
+                    EidasErrorKey.INTERNAL_ERROR.errorCode(),
+                    EidasErrorKey.INTERNAL_ERROR.errorMessage(), e);
+        }
+    }
+}

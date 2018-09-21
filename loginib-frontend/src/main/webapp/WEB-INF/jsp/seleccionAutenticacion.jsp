@@ -11,26 +11,49 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>GOIB</title>
+	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" type="image/x-icon" /><![endif]-->
+	<link rel="apple-touch-icon-precomposed" href="imgs/favicon/favicon-apple.png" />
+	<link rel="icon" href="imgs/favicon/favicon.png" />
+
+	<link rel="stylesheet" media="screen" href="estilos/imc-loginib.css" />
 </head>
 <body>
 
-	<fmt:message key="seleccionAutenticacion.texto"/>
+	<!-- contenidor -->
+	<div id="imc-contenidor" class="imc-contenidor">
 
-	<c:if test = "${datos.clave}">
-         <p>
-         	<a href="redirigirLoginClave.html?idSesion=<c:out value = "${datos.idSesion}"/>">
-         		<fmt:message key="seleccionAutenticacion.clave"/>
-         	</a>
-         <p>
-     </c:if>
+		<div class="imc-contingut" id="imc-contingut">
+			<div class="imc--c">
 
-     <c:if test = "${datos.anonimo}">
-         <p>
-         	<a href="loginAnonimo.html?idSesion=<c:out value = "${datos.idSesion}"/>">
-         		<fmt:message key="seleccionAutenticacion.anonimo"/>
-         	</a>
-         <p>
-     </c:if>
+				<h1><span><fmt:message key="seleccionAutenticacion.texto"/></span></h1>
+
+				<ul>
+					<c:if test = "${datos.clave}">
+						<li>
+							<a href="redirigirLoginClave.html?idSesion=<c:out value = "${datos.idSesion}"/>" class="imc--clave">
+				         		<span><fmt:message key="seleccionAutenticacion.clave"/></span>
+				         	</a>
+						</li>
+					</c:if>
+					<c:if test = "${datos.anonimo}">
+						<li>
+							<a href="loginAnonimo.html?idSesion=<c:out value = "${datos.idSesion}"/>" class="imc--ciutada">
+				         		<span><fmt:message key="seleccionAutenticacion.anonimo"/></span>
+				         	</a>
+
+						</li>
+					</c:if>
+
+				</ul>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- /contenidor -->
 
 </body>
 </html>

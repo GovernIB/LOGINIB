@@ -10,17 +10,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />				
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
 	<form id="loginClave" action="loginClaveSimulado.html" method="post">
-		IDP (aFirma/AEAT/SS): <input type="text" name="idp" value="aFirma"/><br/>
-		NIF: <input type="text" name="nif" value="11111111H"/><br/>		
+		IDP (ANONIMO/CLAVE_CERTIFICADO/CLAVE_PIN/CLAVE_PERMANENTE): <input type="text" name="idp" value="CLAVE_CERTIFICADO"/><br/>
+		NIF: <input type="text" name="nif" value="11111111H"/><br/>
 		NOMBRE: <input type="text" name="nombre" value="Jose"/><br/>
 		APELLIDOS: <input type="text" name="apellidos" value="Garcia Gutierrez"/><br/>
 		APELLIDO 1: <input type="text" name="apellido1" value="Garcia"/><br/>
 		APELLIDO 2: <input type="text" name="apellido2" value="Gutierrez"/><br/>
-		<input type="hidden" name="idSesion" value="<c:out value="${simularClave.idSesion}"/>"/>		
+		<input type="hidden" name="idSesion" value="<c:out value="${simularClave.idSesion}"/>"/>
 		<input type="submit" value="enviar"/>
 	</form>
 </body>

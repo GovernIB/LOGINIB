@@ -31,10 +31,11 @@ public class Test {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         final RLoginParams param = new RLoginParams();
-        param.setEntidad("A04003003");
+        param.setEntidad("A04013511");
+        // param.setEntidad("SP");
         param.setUrlCallback("http://www.google.es");
         param.setIdioma("es");
-        param.setForzarAutenticacion(true);
+        param.setForzarAutenticacion(false);
         param.setQaa(3);
         param.setMetodosAutenticacion("ANONIMO;CERTIFICADO;CLAVE_PERMANENTE");
 

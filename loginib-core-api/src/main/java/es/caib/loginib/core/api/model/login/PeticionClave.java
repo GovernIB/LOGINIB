@@ -20,6 +20,8 @@ public final class PeticionClave {
     private String urlClave;
     /** Idioma. */
     private String idioma;
+    /** Relay state. */
+    private String relayState;
 
     /**
      * Gets the saml request b64.
@@ -80,7 +82,7 @@ public final class PeticionClave {
 
     /**
      * Método de acceso a idps.
-     * 
+     *
      * @return idps
      */
     public List<TypeIdp> getIdps() {
@@ -89,12 +91,31 @@ public final class PeticionClave {
 
     /**
      * Método para establecer idps.
-     * 
+     *
      * @param idps
      *            idps a establecer
      */
     public void setIdps(List<TypeIdp> idps) {
         this.idps = idps;
+    }
+
+    /**
+     * Método de acceso a relayState.
+     * 
+     * @return relayState
+     */
+    public String getRelayState() {
+        return relayState;
+    }
+
+    /**
+     * Método para establecer relayState.
+     * 
+     * @param relayState
+     *            relayState a establecer
+     */
+    public void setRelayState(String relayState) {
+        this.relayState = relayState;
     }
 
 }

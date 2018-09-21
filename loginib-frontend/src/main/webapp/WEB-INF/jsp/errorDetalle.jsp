@@ -11,12 +11,32 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link href="estilos/estilos.css" rel="stylesheet" type="text/css"/>	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>GOIB</title>
+
+	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" type="image/x-icon" /><![endif]-->
+	<link rel="apple-touch-icon-precomposed" href="imgs/favicon/favicon-apple.png" />
+	<link rel="icon" href="imgs/favicon/favicon.png" />
+
+	<link href="estilos/imc-loginib.css" rel="stylesheet" type="text/css"/>
+
 </head>
 <body>
-	<div id="capaInfo" class="error">	
-		<p class="atencion"><fmt:message key="atencion"/></p>
-		<p>${mensaje}</p>		
-	</div>		
+
+	<!-- contenidor -->
+	<div id="imc-contenidor" class="imc-contenidor">
+
+		<div class="imc-contingut" id="imc-contingut">
+			<div class="imc--c">
+
+				<h1><span><fmt:message key="atencion"/></span></h1>
+				<span>${mensaje}</span>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- /contenidor -->
 </body>
 </html>

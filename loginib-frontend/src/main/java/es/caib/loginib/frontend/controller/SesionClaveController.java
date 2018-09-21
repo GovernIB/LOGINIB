@@ -133,11 +133,14 @@ public final class SesionClaveController {
                 .generarPeticionLoginClave(idSesion);
 
         // Iniciar sesion en clave
+        // TODO CLAVE2 DatosInicioSesionClave no se puede eliminar y usar
+        // directamente PeticionClave
         final DatosInicioSesionClave isc = new DatosInicioSesionClave();
         isc.setIdps(ClaveLoginUtil
                 .traduceIdpListToIdpClave(peticionClave.getIdps()));
         isc.setSamlRequest(peticionClave.getSamlRequestB64());
         isc.setUrlClave(peticionClave.getUrlClave());
+        isc.setRelayState(peticionClave.getRelayState());
         isc.setIdioma(peticionClave.getIdioma());
 
         log.debug("Redirigimos a clave");
