@@ -1,2 +1,2 @@
-# pluginsib-loginib
-Plugins de Login
+# Loginib
+Component horitzontal d'autenticació de la CAIB
