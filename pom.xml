@@ -48,6 +48,13 @@
 
 	</properties>
 
+	<repositories>
+	    <repository>
+	      <id>governIB</id>
+	      <url>https://governIB.github.io/maven/maven/</url>
+   		</repository>
+   	</repositories>
+
   <modules>
   	<module>loginib-lib</module>
     <module>loginib-core-api</module>

@@ -7,17 +7,6 @@
   </parent>
   <artifactId>loginib-core</artifactId>
 
-  <!-- Repositorio local para dependencias de Clave -->
-	<repositories>
-		<repository>
-			<id>repository-local</id>
-			<name>repository-local</name>
-			<url>file://${project.basedir}/repository-local</url>
-			<!-- <url>file:${main.basedir}/../repository-local</url> -->
-		</repository>
-	</repositories>
-
-
   	<dependencies>
 
   			<!-- Modulo LIB -->
