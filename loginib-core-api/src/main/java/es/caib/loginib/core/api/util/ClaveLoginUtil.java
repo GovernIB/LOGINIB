@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
+import es.caib.loginib.core.api.exception.IdpNoValido;
 import es.caib.loginib.core.api.model.comun.ConstantesNumero;
 import es.caib.loginib.core.api.model.login.types.TypeIdp;
 
@@ -40,14 +41,18 @@ public final class ClaveLoginUtil {
      *
      * @param idps
      *            idps
-     * @return Boolean si son IDP permitidos
+     * @return Lista de idps
      */
     public static List<TypeIdp> convertToListIdps(final String idps) {
         final List<TypeIdp> res = new ArrayList<>();
         if (idps != null) {
             final String[] vals = idps.split(";");
             for (final String s : vals) {
-                res.add(TypeIdp.fromString(s));
+                final TypeIdp idp = TypeIdp.fromString(s);
+                if (idp == null) {
+                    throw new IdpNoValido(s);
+                }
+                res.add(idp);
             }
         }
         return res;

@@ -20,187 +20,210 @@ import javax.persistence.Table;
 @Table(name = "LIB_LOGOUT")
 public final class JSesionLogout {
 
-    /** Id secuencial. */
-    @Id
-    @Column(name = "LGO_CODIGO")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LIB_LGO_SEQ")
-    @SequenceGenerator(name = "LIB_LGO_SEQ", allocationSize = 1, sequenceName = "LIB_LGO_SEQ")
-    private Long id;
+	/** Id secuencial. */
+	@Id
+	@Column(name = "LGO_CODIGO")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LIB_LGO_SEQ")
+	@SequenceGenerator(name = "LIB_LGO_SEQ", allocationSize = 1, sequenceName = "LIB_LGO_SEQ")
+	private Long id;
 
-    /** Entidad. */
-    @Column(name = "LGO_ENTIDA")
-    private String entidad;
+	/** Entidad. */
+	@Column(name = "LGO_ENTIDA")
+	private String entidad;
 
-    /** Fecha inicio sesion. **/
-    @Column(name = "LGO_FCSES")
-    private Date fechaInicioSesion;
+	/** Fecha inicio sesion. **/
+	@Column(name = "LGO_FCSES")
+	private Date fechaInicioSesion;
 
-    /** Fecha ticket. **/
-    @Column(name = "LGO_FCALTA")
-    private Date fechaTicket;
+	/** Fecha ticket. **/
+	@Column(name = "LGO_FCALTA")
+	private Date fechaTicket;
 
-    /** Idioma. */
-    @Column(name = "LGO_IDIOMA")
-    private String idioma;
+	/** Idioma. */
+	@Column(name = "LGO_IDIOMA")
+	private String idioma;
 
-    /** Url callback. */
-    @Column(name = "LGO_URLCBK")
-    private String urlCallback;
+	/** Url callback. */
+	@Column(name = "LGO_URLCBK")
+	private String urlCallback;
 
-    /** Saml Id Peticion. */
-    @Column(name = "LGO_SAMLID")
-    private String samlIdPeticion;
+	/** Saml Id Peticion. */
+	@Column(name = "LGO_SAMLID")
+	private String samlIdPeticion;
 
-    /** Sesion. */
-    @Column(name = "LGO_SESION")
-    private String sesion;
+	/** Sesion. */
+	@Column(name = "LGO_SESION")
+	private String sesion;
 
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	/** Identificador aplicacion. */
+	@Column(name = "LGO_APLICA")
+	private String aplicacion;
 
-    /**
-     * Sets the id.
-     *
-     * @param pId
-     *            the id to set
-     */
-    public void setId(final Long pId) {
-        id = pId;
-    }
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * Gets the fecha inicio sesion.
-     *
-     * @return the fechaInicioSesion
-     */
-    public Date getFechaInicioSesion() {
-        return fechaInicioSesion;
-    }
+	/**
+	 * Sets the id.
+	 *
+	 * @param pId
+	 *            the id to set
+	 */
+	public void setId(final Long pId) {
+		id = pId;
+	}
 
-    /**
-     * Sets the fecha inicio sesion.
-     *
-     * @param pFechaInicioSesion
-     *            the fechaInicioSesion to set
-     */
-    public void setFechaInicioSesion(final Date pFechaInicioSesion) {
-        fechaInicioSesion = pFechaInicioSesion;
-    }
+	/**
+	 * Gets the fecha inicio sesion.
+	 *
+	 * @return the fechaInicioSesion
+	 */
+	public Date getFechaInicioSesion() {
+		return fechaInicioSesion;
+	}
 
-    /**
-     * Gets the url callback.
-     *
-     * @return the urlCallback
-     */
-    public String getUrlCallback() {
-        return urlCallback;
-    }
+	/**
+	 * Sets the fecha inicio sesion.
+	 *
+	 * @param pFechaInicioSesion
+	 *            the fechaInicioSesion to set
+	 */
+	public void setFechaInicioSesion(final Date pFechaInicioSesion) {
+		fechaInicioSesion = pFechaInicioSesion;
+	}
 
-    /**
-     * Sets the url callback.
-     *
-     * @param pUrlCallback
-     *            the urlCallback to set
-     */
-    public void setUrlCallback(final String pUrlCallback) {
-        urlCallback = pUrlCallback;
-    }
+	/**
+	 * Gets the url callback.
+	 *
+	 * @return the urlCallback
+	 */
+	public String getUrlCallback() {
+		return urlCallback;
+	}
 
-    /**
-     * Gets the idioma.
-     *
-     * @return the idioma
-     */
-    public String getIdioma() {
-        return idioma;
-    }
+	/**
+	 * Sets the url callback.
+	 *
+	 * @param pUrlCallback
+	 *            the urlCallback to set
+	 */
+	public void setUrlCallback(final String pUrlCallback) {
+		urlCallback = pUrlCallback;
+	}
 
-    /**
-     * Sets the idioma.
-     *
-     * @param pIdioma
-     *            the idioma to set
-     */
-    public void setIdioma(final String pIdioma) {
-        idioma = pIdioma;
-    }
+	/**
+	 * Gets the idioma.
+	 *
+	 * @return the idioma
+	 */
+	public String getIdioma() {
+		return idioma;
+	}
 
-    /**
-     * Gets the sesion.
-     *
-     * @return the sesion
-     */
-    public String getSesion() {
-        return sesion;
-    }
+	/**
+	 * Sets the idioma.
+	 *
+	 * @param pIdioma
+	 *            the idioma to set
+	 */
+	public void setIdioma(final String pIdioma) {
+		idioma = pIdioma;
+	}
 
-    /**
-     * Sets the sesion.
-     *
-     * @param sesion
-     *            the sesion to set
-     */
-    public void setSesion(final String sesion) {
-        this.sesion = sesion;
-    }
+	/**
+	 * Gets the sesion.
+	 *
+	 * @return the sesion
+	 */
+	public String getSesion() {
+		return sesion;
+	}
 
-    /**
-     * Gets the samlIdPeticion.
-     *
-     * @return the sesion
-     */
-    public String getSamlIdPeticion() {
-        return samlIdPeticion;
-    }
+	/**
+	 * Sets the sesion.
+	 *
+	 * @param sesion
+	 *            the sesion to set
+	 */
+	public void setSesion(final String sesion) {
+		this.sesion = sesion;
+	}
 
-    /**
-     * Sets the saml id peticion.
-     *
-     * @param samlIdPeticion
-     *            the saml id peticion
-     */
-    public void setSamlIdPeticion(final String samlIdPeticion) {
-        this.samlIdPeticion = samlIdPeticion;
-    }
+	/**
+	 * Gets the samlIdPeticion.
+	 *
+	 * @return the sesion
+	 */
+	public String getSamlIdPeticion() {
+		return samlIdPeticion;
+	}
 
-    /**
-     * @return the fechaTicket
-     */
-    public Date getFechaTicket() {
-        return fechaTicket;
-    }
+	/**
+	 * Sets the saml id peticion.
+	 *
+	 * @param samlIdPeticion
+	 *            the saml id peticion
+	 */
+	public void setSamlIdPeticion(final String samlIdPeticion) {
+		this.samlIdPeticion = samlIdPeticion;
+	}
 
-    /**
-     * @param fechaTicket
-     *            the fechaTicket to set
-     */
-    public void setFechaTicket(final Date fechaTicket) {
-        this.fechaTicket = fechaTicket;
-    }
+	/**
+	 * @return the fechaTicket
+	 */
+	public Date getFechaTicket() {
+		return fechaTicket;
+	}
 
-    /**
-     * Método de acceso a entidad.
-     *
-     * @return entidad
-     */
-    public String getEntidad() {
-        return entidad;
-    }
+	/**
+	 * @param fechaTicket
+	 *            the fechaTicket to set
+	 */
+	public void setFechaTicket(final Date fechaTicket) {
+		this.fechaTicket = fechaTicket;
+	}
 
-    /**
-     * Método para establecer entidad.
-     *
-     * @param entidad
-     *            entidad a establecer
-     */
-    public void setEntidad(String entidad) {
-        this.entidad = entidad;
-    }
+	/**
+	 * Método de acceso a entidad.
+	 *
+	 * @return entidad
+	 */
+	public String getEntidad() {
+		return entidad;
+	}
+
+	/**
+	 * Método para establecer entidad.
+	 *
+	 * @param entidad
+	 *            entidad a establecer
+	 */
+	public void setEntidad(final String entidad) {
+		this.entidad = entidad;
+	}
+
+	/**
+	 * Método de acceso a aplicacion entidad.
+	 *
+	 * @return the aplicacion
+	 */
+	public String getAplicacion() {
+		return aplicacion;
+	}
+
+	/**
+	 * Método para establecer identificador aplicacion.
+	 *
+	 * @param aplicacion
+	 *            the aplicacion to set
+	 */
+	public void setAplicacion(final String aplicacion) {
+		this.aplicacion = aplicacion;
+	}
 
 }

@@ -13,209 +13,227 @@ import es.caib.loginib.core.api.model.login.types.TypeIdp;
  */
 public final class DatosSesion {
 
-    /** Id sesion. */
-    private String idSesion;
+	/** Id sesion. */
+	private String idSesion;
 
-    /** Idps. */
-    private List<TypeIdp> idps;
+	/** Idps. */
+	private List<TypeIdp> idps;
 
-    /** Entidad. */
-    private String entidad;
+	/** Entidad. */
+	private String entidad;
 
-    /** Fecha inicio sesion. */
-    private Date fechaInicioSesion;
+	/** Fecha inicio sesion. */
+	private Date fechaInicioSesion;
 
-    /** Fecha ticket (nulo si no se ha iniciado sesion en clave). */
-    private Date fechaTicket;
+	/** Fecha ticket (nulo si no se ha iniciado sesion en clave). */
+	private Date fechaTicket;
 
-    /** Idioma. */
-    private String idioma;
+	/** Idioma. */
+	private String idioma;
 
-    /** QAA. */
-    private Integer qaa;
+	/** QAA. */
+	private Integer qaa;
 
-    /** Force auth. */
-    private boolean forceAuth;
+	/** Force auth. */
+	private boolean forceAuth;
 
-    /** Saml id peticion. */
-    private String samlIdPeticion;
+	/** Saml id peticion. */
+	private String samlIdPeticion;
 
-    /** Url callback. */
-    private String urlCallback;
+	/** Url callback. */
+	private String urlCallback;
 
-    /**
-     * Gets the fecha.
-     *
-     * @return the fecha
-     */
-    public Date getFechaInicioSesion() {
-        return fechaInicioSesion;
-    }
+	/** Aplicacion. **/
+	private String aplicacion;
 
-    /**
-     * Sets the fecha.
-     *
-     * @param pFecha
-     *            the fecha to set
-     */
-    public void setFechaInicioSesion(final Date pFecha) {
-        fechaInicioSesion = pFecha;
-    }
+	/**
+	 * Gets the fecha.
+	 *
+	 * @return the fecha
+	 */
+	public Date getFechaInicioSesion() {
+		return fechaInicioSesion;
+	}
 
-    /**
-     * Gets the idioma.
-     *
-     * @return the idioma
-     */
-    public String getIdioma() {
-        return idioma;
-    }
+	/**
+	 * Sets the fecha.
+	 *
+	 * @param pFecha
+	 *            the fecha to set
+	 */
+	public void setFechaInicioSesion(final Date pFecha) {
+		fechaInicioSesion = pFecha;
+	}
 
-    /**
-     * Sets the idioma.
-     *
-     * @param pIdioma
-     *            the idioma to set
-     */
-    public void setIdioma(final String pIdioma) {
-        idioma = pIdioma;
-    }
+	/**
+	 * Gets the idioma.
+	 *
+	 * @return the idioma
+	 */
+	public String getIdioma() {
+		return idioma;
+	}
 
-    /**
-     * Gets the fecha ticket.
-     *
-     * @return the fechaTicket
-     */
-    public Date getFechaTicket() {
-        return fechaTicket;
-    }
+	/**
+	 * Sets the idioma.
+	 *
+	 * @param pIdioma
+	 *            the idioma to set
+	 */
+	public void setIdioma(final String pIdioma) {
+		idioma = pIdioma;
+	}
 
-    /**
-     * Sets the fecha ticket.
-     *
-     * @param pFechaTicket
-     *            the fechaTicket to set
-     */
-    public void setFechaTicket(final Date pFechaTicket) {
-        fechaTicket = pFechaTicket;
-    }
+	/**
+	 * Gets the fecha ticket.
+	 *
+	 * @return the fechaTicket
+	 */
+	public Date getFechaTicket() {
+		return fechaTicket;
+	}
 
-    /**
-     * @return the qaa
-     */
-    public Integer getQaa() {
-        return qaa;
-    }
+	/**
+	 * Sets the fecha ticket.
+	 *
+	 * @param pFechaTicket
+	 *            the fechaTicket to set
+	 */
+	public void setFechaTicket(final Date pFechaTicket) {
+		fechaTicket = pFechaTicket;
+	}
 
-    /**
-     * @param qaa
-     *            the qaa to set
-     */
-    public void setQaa(Integer qaa) {
-        this.qaa = qaa;
-    }
+	/**
+	 * @return the qaa
+	 */
+	public Integer getQaa() {
+		return qaa;
+	}
 
-    /**
-     * Checks if is force auth.
-     *
-     * @return true, if is force auth
-     */
-    public boolean isForceAuth() {
-        return forceAuth;
-    }
+	/**
+	 * @param qaa
+	 *            the qaa to set
+	 */
+	public void setQaa(final Integer qaa) {
+		this.qaa = qaa;
+	}
 
-    /**
-     * Sets the force auth.
-     *
-     * @param forceAuth
-     *            the new force auth
-     */
-    public void setForceAuth(boolean forceAuth) {
-        this.forceAuth = forceAuth;
-    }
+	/**
+	 * Checks if is force auth.
+	 *
+	 * @return true, if is force auth
+	 */
+	public boolean isForceAuth() {
+		return forceAuth;
+	}
 
-    public String getSamlIdPeticion() {
-        return samlIdPeticion;
-    }
+	/**
+	 * Sets the force auth.
+	 *
+	 * @param forceAuth
+	 *            the new force auth
+	 */
+	public void setForceAuth(final boolean forceAuth) {
+		this.forceAuth = forceAuth;
+	}
 
-    public void setSamlIdPeticion(String samlIdPeticion) {
-        this.samlIdPeticion = samlIdPeticion;
-    }
+	public String getSamlIdPeticion() {
+		return samlIdPeticion;
+	}
 
-    /**
-     * Método de acceso a entidad.
-     *
-     * @return entidad
-     */
-    public String getEntidad() {
-        return entidad;
-    }
+	public void setSamlIdPeticion(final String samlIdPeticion) {
+		this.samlIdPeticion = samlIdPeticion;
+	}
 
-    /**
-     * Método para establecer entidad.
-     *
-     * @param entidad
-     *            entidad a establecer
-     */
-    public void setEntidad(String entidad) {
-        this.entidad = entidad;
-    }
+	/**
+	 * Método de acceso a entidad.
+	 *
+	 * @return entidad
+	 */
+	public String getEntidad() {
+		return entidad;
+	}
 
-    /**
-     * Método de acceso a idSesion.
-     *
-     * @return idSesion
-     */
-    public String getIdSesion() {
-        return idSesion;
-    }
+	/**
+	 * Método para establecer entidad.
+	 *
+	 * @param entidad
+	 *            entidad a establecer
+	 */
+	public void setEntidad(final String entidad) {
+		this.entidad = entidad;
+	}
 
-    /**
-     * Método para establecer idSesion.
-     *
-     * @param idSesion
-     *            idSesion a establecer
-     */
-    public void setIdSesion(String idSesion) {
-        this.idSesion = idSesion;
-    }
+	/**
+	 * Método de acceso a idSesion.
+	 *
+	 * @return idSesion
+	 */
+	public String getIdSesion() {
+		return idSesion;
+	}
 
-    /**
-     * Método de acceso a idps.
-     *
-     * @return idps
-     */
-    public List<TypeIdp> getIdps() {
-        return idps;
-    }
+	/**
+	 * Método para establecer idSesion.
+	 *
+	 * @param idSesion
+	 *            idSesion a establecer
+	 */
+	public void setIdSesion(final String idSesion) {
+		this.idSesion = idSesion;
+	}
 
-    /**
-     * Método para establecer idps.
-     *
-     * @param idps
-     *            idps a establecer
-     */
-    public void setIdps(List<TypeIdp> idps) {
-        this.idps = idps;
-    }
+	/**
+	 * Método de acceso a idps.
+	 *
+	 * @return idps
+	 */
+	public List<TypeIdp> getIdps() {
+		return idps;
+	}
 
-    /**
-     * Método de acceso a urlCallback.
-     * 
-     * @return urlCallback
-     */
-    public String getUrlCallback() {
-        return urlCallback;
-    }
+	/**
+	 * Método para establecer idps.
+	 *
+	 * @param idps
+	 *            idps a establecer
+	 */
+	public void setIdps(final List<TypeIdp> idps) {
+		this.idps = idps;
+	}
 
-    /**
-     * Método para establecer urlCallback.
-     * 
-     * @param urlCallback
-     *            urlCallback a establecer
-     */
-    public void setUrlCallback(String urlCallback) {
-        this.urlCallback = urlCallback;
-    }
+	/**
+	 * Método de acceso a urlCallback.
+	 *
+	 * @return urlCallback
+	 */
+	public String getUrlCallback() {
+		return urlCallback;
+	}
+
+	/**
+	 * Método para establecer urlCallback.
+	 *
+	 * @param urlCallback
+	 *            urlCallback a establecer
+	 */
+	public void setUrlCallback(final String urlCallback) {
+		this.urlCallback = urlCallback;
+	}
+
+	/**
+	 * @return the aplicacion
+	 */
+	public String getAplicacion() {
+		return aplicacion;
+	}
+
+	/**
+	 * @param aplicacion
+	 *            the aplicacion to set
+	 */
+	public void setAplicacion(final String aplicacion) {
+		this.aplicacion = aplicacion;
+	}
 
 }

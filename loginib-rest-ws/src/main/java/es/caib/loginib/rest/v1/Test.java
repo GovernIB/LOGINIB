@@ -4,12 +4,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import es.caib.loginib.rest.api.util.JsonException;
-import es.caib.loginib.rest.api.util.JsonUtil;
+import es.caib.loginib.rest.api.v1.RDatosAutenticacion;
 import es.caib.loginib.rest.api.v1.RLoginParams;
 import es.caib.loginib.rest.api.v1.RLogoutParams;
 
@@ -21,68 +18,76 @@ public class Test {
 
         login();
 
-        // logout();
+        logout();
+
+        // validarTicket();
 
     }
 
-    private static String login() throws JsonException {
+    private static String login() {
+
         final RestTemplate restTemplate = new RestTemplate();
         final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
         final RLoginParams param = new RLoginParams();
         param.setEntidad("A04013511");
-        // param.setEntidad("SP");
+        param.setAplicacion("app1");
         param.setUrlCallback("http://www.google.es");
         param.setIdioma("es");
         param.setForzarAutenticacion(false);
         param.setQaa(3);
-        param.setMetodosAutenticacion("ANONIMO;CERTIFICADO;CLAVE_PERMANENTE");
+        param.setMetodosAutenticacion(
+                "ANONIMO;CLAVE_CERTIFICADO;CLAVE_PERMANENTE");
 
-        final String parametrosJSON = JsonUtil.toJson(param);
-
-        final MultiValueMap<String, String> map = new LinkedMultiValueMap();
-        map.add("parametros", parametrosJSON);
-
-        final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(
-                map, headers);
+        final HttpEntity<RLoginParams> request = new HttpEntity<>(param,
+                headers);
 
         final ResponseEntity<String> response = restTemplate
                 .postForEntity(urlBase + "/login", request, String.class);
 
         final String res = response.getBody();
 
-        System.out.println("Inicio sesion: " + res);
+        System.out.println("Inicio sesion login: " + res);
 
         return res;
     }
 
-    private static String logout() throws JsonException {
+    private static String logout() {
         final RestTemplate restTemplate = new RestTemplate();
         final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
         final RLogoutParams param = new RLogoutParams();
         param.setEntidad("A04003003");
         param.setUrlCallback("http://www.google.es");
         param.setIdioma("es");
 
-        final String parametrosJSON = JsonUtil.toJson(param);
-
-        final MultiValueMap<String, String> map = new LinkedMultiValueMap();
-        map.add("parametros", parametrosJSON);
-
-        final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(
-                map, headers);
+        final HttpEntity<RLogoutParams> request = new HttpEntity<>(param,
+                headers);
 
         final ResponseEntity<String> response = restTemplate
                 .postForEntity(urlBase + "/logout", request, String.class);
 
         final String res = response.getBody();
 
-        System.out.println("Inicio sesion: " + res);
+        System.out.println("Inicio sesion logout: " + res);
 
         return res;
+    }
+
+    private static void validarTicket() {
+
+        final RestTemplate restTemplate = new RestTemplate();
+
+        final String ticket = "123";
+
+        final RDatosAutenticacion datosAutenticacion = restTemplate
+                .getForObject(urlBase + "/ticket/" + ticket,
+                        RDatosAutenticacion.class);
+
+        System.out.println(datosAutenticacion.getNif());
+
     }
 
 }
