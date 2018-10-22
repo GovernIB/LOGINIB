@@ -1,4 +1,3 @@
-package es.caib.loginib.rest.v1;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
