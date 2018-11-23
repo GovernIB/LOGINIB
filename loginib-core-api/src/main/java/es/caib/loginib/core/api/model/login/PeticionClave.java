@@ -1,9 +1,5 @@
 package es.caib.loginib.core.api.model.login;
 
-import java.util.List;
-
-import es.caib.loginib.core.api.model.login.types.TypeIdp;
-
 /**
  * Peticion clave.
  *
@@ -14,8 +10,6 @@ public final class PeticionClave {
 
     /** SAML Request en B64. */
     private String samlRequestB64;
-    /** Idps. */
-    private List<TypeIdp> idps;
     /** Url clave. */
     private String urlClave;
     /** Idioma. */
@@ -81,27 +75,8 @@ public final class PeticionClave {
     }
 
     /**
-     * Método de acceso a idps.
-     *
-     * @return idps
-     */
-    public List<TypeIdp> getIdps() {
-        return idps;
-    }
-
-    /**
-     * Método para establecer idps.
-     *
-     * @param idps
-     *            idps a establecer
-     */
-    public void setIdps(List<TypeIdp> idps) {
-        this.idps = idps;
-    }
-
-    /**
      * Método de acceso a relayState.
-     * 
+     *
      * @return relayState
      */
     public String getRelayState() {
@@ -110,7 +85,7 @@ public final class PeticionClave {
 
     /**
      * Método para establecer relayState.
-     * 
+     *
      * @param relayState
      *            relayState a establecer
      */

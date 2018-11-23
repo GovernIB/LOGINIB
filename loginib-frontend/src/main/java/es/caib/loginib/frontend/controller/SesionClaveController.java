@@ -133,11 +133,7 @@ public final class SesionClaveController {
                 .generarPeticionLoginClave(idSesion);
 
         // Iniciar sesion en clave
-        // TODO CLAVE2 DatosInicioSesionClave no se puede eliminar y usar
-        // directamente PeticionClave
         final DatosInicioSesionClave isc = new DatosInicioSesionClave();
-        isc.setIdps(ClaveLoginUtil
-                .traduceIdpListToIdpClave(peticionClave.getIdps()));
         isc.setSamlRequest(peticionClave.getSamlRequestB64());
         isc.setUrlClave(peticionClave.getUrlClave());
         isc.setRelayState(peticionClave.getRelayState());
@@ -203,8 +199,22 @@ public final class SesionClaveController {
     @RequestMapping(value = "/retornoLoginClave/{idSesion}.html", method = RequestMethod.POST)
     public ModelAndView retornoLoginClave(
             @PathVariable("idSesion") final String idSesion,
-            @RequestParam("SAMLResponse") final String samlResponse) {
-        return retornoClave(idSesion, samlResponse);
+            @RequestParam("SAMLResponse") final String samlResponse,
+            @RequestParam("RelayState") final String relayState) {
+
+        log.debug("Retorno clave: id sesion = " + idSesion);
+
+        // Generamos ticket autenticacion
+        final TicketClave ticket = claveService.procesarRespuestaLoginClave(
+                idSesion, samlResponse, relayState);
+
+        // Retornamos aplicacion
+        log.debug("Retornamos a aplicacion: ticket = " + ticket.getTicket());
+        final DatosRetornoClave drc = new DatosRetornoClave();
+        drc.setTicket(ticket.getTicket());
+        drc.setUrlCallbackLogin(ticket.getUrlCallback());
+        drc.setIdioma(ticket.getIdioma());
+        return new ModelAndView("retornoClave", "datos", drc);
     }
 
     /**
@@ -273,32 +283,6 @@ public final class SesionClaveController {
         drc.setUrlCallbackLogin(ticket.getUrlCallback());
         drc.setIdioma(ticket.getIdioma());
 
-        return new ModelAndView("retornoClave", "datos", drc);
-    }
-
-    /**
-     * Retorno de Clave.
-     *
-     * @param idSesion
-     *            idSesion.
-     * @param samlResponse
-     *            samlResponse.
-     * @return pagina que realiza la redireccion a la aplicacion
-     */
-    private ModelAndView retornoClave(final String idSesion,
-            final String samlResponse) {
-        log.debug("Retorno clave: id sesion = " + idSesion);
-
-        // Generamos ticket autenticacion
-        final TicketClave ticket = claveService
-                .procesarRespuestaLoginClave(idSesion, samlResponse);
-
-        // Retornamos aplicacion
-        log.debug("Retornamos a aplicacion: ticket = " + ticket.getTicket());
-        final DatosRetornoClave drc = new DatosRetornoClave();
-        drc.setTicket(ticket.getTicket());
-        drc.setUrlCallbackLogin(ticket.getUrlCallback());
-        drc.setIdioma(ticket.getIdioma());
         return new ModelAndView("retornoClave", "datos", drc);
     }
 

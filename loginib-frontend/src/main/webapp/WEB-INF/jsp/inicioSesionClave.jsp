@@ -22,17 +22,9 @@
 
 </head>
 <body onload="loginClave();">
-	<!-- <fmt:message key="inicioSesion.mensaje"/> -->
 	<form id="loginClave" action="<c:out value="${datos.urlClave}"/>" method="post">
-
 		<input type="hidden" id="relayState" name="RelayState" value="<c:out value="${datos.relayState}"/>">
 		<input type="hidden" id="SAMLRequest" name="SAMLRequest" value="<c:out value="${datos.samlRequest}"/>" />
-
-		<!--
-			TODO CLAVE2 es necesario?
-			<input type="hidden" name="idpList" value="<c:out value="${datos.idps}"/>"/>
-			<input type="hidden" name="allowLegalPerson" value="true"/>
-		-->
 	</form>
 </body>
 </html>

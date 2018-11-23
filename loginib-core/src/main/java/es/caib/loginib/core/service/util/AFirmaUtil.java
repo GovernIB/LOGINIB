@@ -1,11 +1,13 @@
 package es.caib.loginib.core.service.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -24,53 +26,66 @@ import es.caib.loginib.core.api.exception.ErrorRespuestaClaveException;
  */
 public final class AFirmaUtil {
 
-	/**
-	 * Extrae info del certificado a partir de la respuesta de AFirma en B64.
-	 *
-	 * @param xmlFirmaB64
-	 *            respuesta de AFirma en B64
-	 * @return info del certificado (map con idcampo / valorcampo)
-	 */
-	@SuppressWarnings("unchecked")
-	public static Map<String, String> extraerInfoCertificado(final String xmlFirmaB64) {
+    // TODO La respuesta actual de Clave2 no es un XML bien formado y no se
+    // puede parsear
+    /**
+     * Extrae info del certificado a partir de la respuesta de AFirma en B64.
+     *
+     * @param xmlFirmaB64
+     *            respuesta de AFirma en B64
+     * @return info del certificado (map con idcampo / valorcampo)
+     */
+    @SuppressWarnings("unchecked")
+    public static Map<String, String> extraerInfoCertificado(
+            final String xmlFirmaB64) {
 
-		try {
+        try {
 
-			final byte[] aFirmaBytes = Base64.decodeBase64(xmlFirmaB64);
+            final byte[] aFirmaBytes = Base64.decodeBase64(xmlFirmaB64);
 
-			final SAXReader reader = new SAXReader();
-			Document document;
+            // TODO Sustituimos cabecera xml porque no tiene los namespaces
+            String xmlStr = new String(aFirmaBytes, "UTF-8");
+            final String cabeceraKO = "<Partial_Afirma_Response>";
+            final String cabeceraOK = "<Partial_Afirma_Response xmlns:dss=\"urn:oasis:names:tc:dss:1.0:core:schema\"  xmlns:afxp=\"urn:afirma:dss:1.0:profile:XSS:schema\">";
+            xmlStr = StringUtils.replace(xmlStr, cabeceraKO, cabeceraOK);
 
-			document = reader.read(new ByteArrayInputStream(aFirmaBytes));
+            final SAXReader reader = new SAXReader();
+            Document document;
 
-			final Map<String, String> namespaceUris = new HashMap<String, String>();
-			namespaceUris.put("dss", "urn:oasis:names:tc:dss:1.0:core:schema");
-			namespaceUris.put("afxp", "urn:afirma:dss:1.0:profile:XSS:schema");
+            document = reader
+                    .read(new ByteArrayInputStream(xmlStr.getBytes("UTF-8")));
 
-			final XPath xPath = DocumentHelper
-					.createXPath("//dss:OptionalOutputs/afxp:ReadableCertificateInfo/afxp:ReadableField");
-			xPath.setNamespaceURIs(namespaceUris);
+            final Map<String, String> namespaceUris = new HashMap<String, String>();
+            namespaceUris.put("dss", "urn:oasis:names:tc:dss:1.0:core:schema");
+            namespaceUris.put("afxp", "urn:afirma:dss:1.0:profile:XSS:schema");
 
-			final List<Node> nodes = xPath.selectNodes(document);
+            // final XPath xPath = DocumentHelper.createXPath(
+            // "//dss:OptionalOutputs/afxp:ReadableCertificateInfo/afxp:ReadableField");
+            final XPath xPath = DocumentHelper.createXPath(
+                    "//afxp:ReadableCertificateInfo/afxp:ReadableField");
+            xPath.setNamespaceURIs(namespaceUris);
 
-			final Map<String, String> values = new HashMap<String, String>();
+            final List<Node> nodes = xPath.selectNodes(document);
 
-			for (final Node node : nodes) {
-				final Element e = (Element) node;
-				final String idCampo = ((Element) e.elements().get(0)).getText();
-				String valorCampo = null;
-				if (e.elements().size() > 1) {
-					valorCampo = ((Element) e.elements().get(1)).getText();
-				}
-				values.put(idCampo, valorCampo);
-			}
+            final Map<String, String> values = new HashMap<String, String>();
 
-			return values;
+            for (final Node node : nodes) {
+                final Element e = (Element) node;
+                final String idCampo = ((Element) e.elements().get(0))
+                        .getText();
+                String valorCampo = null;
+                if (e.elements().size() > 1) {
+                    valorCampo = ((Element) e.elements().get(1)).getText();
+                }
+                values.put(idCampo, valorCampo);
+            }
 
-		} catch (final DocumentException ex) {
-			throw new ErrorRespuestaClaveException(ex);
-		}
+            return values;
 
-	}
+        } catch (final DocumentException | UnsupportedEncodingException ex) {
+            throw new ErrorRespuestaClaveException(ex);
+        }
+
+    }
 
 }

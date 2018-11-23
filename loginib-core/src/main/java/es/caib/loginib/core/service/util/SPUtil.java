@@ -115,4 +115,29 @@ public class SPUtil {
 
         return assertion;
     }
+
+    public static String extractAssertion(String samlMsg,
+            String xpathAssertion) {
+        String assertion = null;
+        try {
+            final Document doc = DocumentBuilderFactoryUtil.parse(samlMsg);
+
+            final XPath xPath = XPathFactory.newInstance().newXPath();
+            final Node node = (Node) xPath.evaluate(xpathAssertion, doc,
+                    XPathConstants.NODE);
+            if (node != null) {
+                assertion = node.getNodeValue();
+            }
+        } catch (final ParserConfigurationException pce) {
+            LOG.error("cannot parse response {}", pce);
+        } catch (final SAXException saxe) {
+            LOG.error("cannot parse response {}", saxe);
+        } catch (final IOException ioe) {
+            LOG.error("cannot parse response {}", ioe);
+        } catch (final XPathExpressionException xpathe) {
+            LOG.error("cannot find the assertion {}", xpathe);
+        }
+
+        return assertion;
+    }
 }

@@ -11,10 +11,6 @@ public final class DatosInicioSesionClave {
     /** Url clave. */
     private String urlClave;
 
-    // TODO CLAVE2 parece que ya no se usan
-    /** Metodos autenticacion permitidos en clave. */
-    private String idps;
-
     /** Peticion SAML de autenticacion. */
     private String samlRequest;
 
@@ -41,25 +37,6 @@ public final class DatosInicioSesionClave {
      */
     public void setUrlClave(final String urlClave) {
         this.urlClave = urlClave;
-    }
-
-    /**
-     * Obtiene idps.
-     *
-     * @return the idps
-     */
-    public String getIdps() {
-        return idps;
-    }
-
-    /**
-     * Establece idps.
-     *
-     * @param idps
-     *            the idps to set
-     */
-    public void setIdps(final String idps) {
-        this.idps = idps;
     }
 
     /**
@@ -102,7 +79,7 @@ public final class DatosInicioSesionClave {
 
     /**
      * Método de acceso a relayState.
-     * 
+     *
      * @return relayState
      */
     public String getRelayState() {
@@ -111,7 +88,7 @@ public final class DatosInicioSesionClave {
 
     /**
      * Método para establecer relayState.
-     * 
+     *
      * @param relayState
      *            relayState a establecer
      */

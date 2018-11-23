@@ -6,9 +6,11 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
+import es.caib.loginib.core.api.exception.GenerarPeticionClaveException;
 import es.caib.loginib.core.api.exception.IdpNoValido;
 import es.caib.loginib.core.api.model.comun.ConstantesNumero;
 import es.caib.loginib.core.api.model.login.types.TypeIdp;
+import eu.eidas.auth.commons.protocol.eidas.LevelOfAssurance;
 
 /**
  * Utilidades ClaveLoginUtil.
@@ -156,6 +158,7 @@ public final class ClaveLoginUtil {
      * @param idp
      * @return
      */
+
     public static TypeIdp traduceIdpClaveToIdp(final String idpClave) {
         TypeIdp res = null;
         if (idpClave != null) {
@@ -207,6 +210,24 @@ public final class ClaveLoginUtil {
     }
 
     /**
+     * Extrae dato propiedad clave. Quita corchetes.
+     *
+     * @param datoClave
+     *            dato clave
+     * @return dato clave
+     */
+    public static String extraerDatoClave(String datoClave) {
+        String res = null;
+        if (datoClave != null) {
+            res = datoClave;
+            while (res.startsWith("[") && res.endsWith("]")) {
+                res = res.substring(1, res.length() - 1);
+            }
+        }
+        return res;
+    }
+
+    /**
      * Verifica si es CIF.
      *
      * @param valor
@@ -251,6 +272,65 @@ public final class ClaveLoginUtil {
             res = false;
         }
         return res;
+    }
+
+    /**
+     * Convierte qaa a LevelOfAssurance.
+     *
+     * @param qaa
+     *            qaa
+     * @return LevelOfAssurance
+     */
+    public static LevelOfAssurance convertQaaToLevelOfAssurance(Integer qaa) {
+        if (qaa == null) {
+            throw new GenerarPeticionClaveException(
+                    "No se ha establecido parametro qaa");
+        }
+        LevelOfAssurance level = null;
+        switch (qaa) {
+        case 1:
+            level = LevelOfAssurance.LOW;
+            break;
+        case 2:
+            level = LevelOfAssurance.SUBSTANTIAL;
+            break;
+        case 3:
+            level = LevelOfAssurance.HIGH;
+            break;
+        default:
+            throw new GenerarPeticionClaveException(
+                    "Nivel qaa no soportado: " + qaa);
+        }
+        return level;
+    }
+
+    /**
+     * Convierte issuer a idp.
+     *
+     * @param issuer
+     *            issuer
+     * @return idp
+     */
+    public static TypeIdp convertIssuerToIdp(final String issuer) {
+        TypeIdp idp = null;
+        if (issuer != null) {
+            if (issuer.endsWith("ServiceProvider-AFirma")) {
+                idp = TypeIdp.CERTIFICADO;
+            }
+            if (issuer.endsWith("ServiceProvider-AFirma")) {
+                idp = TypeIdp.CERTIFICADO;
+            }
+            if (issuer.endsWith("ServiceProvider-AFirma")) {
+                idp = TypeIdp.CERTIFICADO;
+            }
+            // TODO STORK
+        }
+
+        if (idp == null) {
+            throw new IdpNoValido(issuer);
+        }
+
+        return idp;
     }
 
 }
