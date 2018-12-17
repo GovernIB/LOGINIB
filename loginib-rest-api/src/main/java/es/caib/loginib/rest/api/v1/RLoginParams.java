@@ -25,6 +25,12 @@ public final class RLoginParams {
 	private String urlCallback;
 
 	/**
+	 * Url Callback error.
+	 */
+	@ApiModelProperty(value = "Url Callback error", required = true)
+	private String urlCallbackError;
+
+	/**
 	 * Metodos autenticacion clave (separados por ;). Valores:
 	 * ANONIMO;CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE.
 	 */
@@ -182,6 +188,21 @@ public final class RLoginParams {
 	 */
 	public void setAplicacion(final String aplicacion) {
 		this.aplicacion = aplicacion;
+	}
+
+	/**
+	 * @return the urlCallbackError
+	 */
+	public String getUrlCallbackError() {
+		return urlCallbackError;
+	}
+
+	/**
+	 * @param urlCallbackError
+	 *            the urlCallbackError to set
+	 */
+	public void setUrlCallbackError(final String urlCallbackError) {
+		this.urlCallbackError = urlCallbackError;
 	}
 
 }

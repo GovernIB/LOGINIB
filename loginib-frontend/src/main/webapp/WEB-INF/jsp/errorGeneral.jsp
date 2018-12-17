@@ -29,7 +29,7 @@
 			<div class="imc--c">
 
 				<h1><span><fmt:message key="atencion"/></span></h1>
-				<span><fmt:message key="${mensaje}"/></span>
+				<span><fmt:message key="${respuesta.mensaje}"/></span>
 
 			</div>
 		</div>

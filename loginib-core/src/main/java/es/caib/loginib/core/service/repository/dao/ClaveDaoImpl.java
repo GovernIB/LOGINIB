@@ -41,8 +41,9 @@ public final class ClaveDaoImpl implements ClaveDao {
 	private EntityManager entityManager;
 
 	@Override
-	public String crearSesionLogin(final String entidad, final String pUrlCallback, final String idioma,
-			final List<TypeIdp> idps, final Integer qaa, final boolean forceAuth, final String aplicacion) {
+	public String crearSesionLogin(final String entidad, final String pUrlCallback, final String pUrlCallbackError,
+			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean forceAuth,
+			final String aplicacion) {
 		String idTicket = null;
 
 		// Crea sesion para aplicacion externa
@@ -50,6 +51,7 @@ public final class ClaveDaoImpl implements ClaveDao {
 		ticketExterna.setEntidad(entidad);
 		ticketExterna.setFechaInicioSesion(new Date());
 		ticketExterna.setUrlCallback(pUrlCallback);
+		ticketExterna.setUrlCallbackError(pUrlCallbackError);
 		ticketExterna.setIdioma(idioma);
 		ticketExterna.setIdps(ClaveLoginUtil.convertToStringIdps(idps));
 		ticketExterna.setSesion(GeneradorId.generarId());
@@ -82,6 +84,7 @@ public final class ClaveDaoImpl implements ClaveDao {
 		ds.setForceAuth(ticket.isForceAuthentication());
 		ds.setSamlIdPeticion(ticket.getSamlIdPeticion());
 		ds.setUrlCallback(ticket.getUrlCallback());
+		ds.setUrlCallbackError(ticket.getUrlCallbackError());
 		ds.setAplicacion(ticket.getAplicacion());
 
 		return ds;

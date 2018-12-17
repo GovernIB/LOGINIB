@@ -24,6 +24,8 @@ public interface ClaveDao {
 	 *            entidad
 	 * @param urlCallback
 	 *            url Callback
+	 * @param urlCallbackError
+	 *            url Callback error
 	 * @param idioma
 	 *            idioma
 	 * @param idps
@@ -36,8 +38,8 @@ public interface ClaveDao {
 	 *            Aplicacion
 	 * @return identificador sesion
 	 */
-	String crearSesionLogin(final String entidad, String urlCallback, String idioma, final List<TypeIdp> idps,
-			final Integer qaa, final boolean forceAuth, final String aplicacion);
+	String crearSesionLogin(final String entidad, String urlCallback, final String pUrlCallbackError, String idioma,
+			final List<TypeIdp> idps, final Integer qaa, final boolean forceAuth, final String aplicacion);
 
 	/**
 	 * Obtener datos sesion.

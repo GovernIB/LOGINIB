@@ -47,6 +47,10 @@ public final class JSesionLogin {
 	@Column(name = "LGI_URLCBK")
 	private String urlCallback;
 
+	/** Url callback. */
+	@Column(name = "LGI_URLCER")
+	private String urlCallbackError;
+
 	/** Ticket sesion. **/
 	@Column(name = "LGI_TICKET")
 	private String ticket;
@@ -562,6 +566,21 @@ public final class JSesionLogin {
 	 */
 	public void setAplicacion(final String aplicacion) {
 		this.aplicacion = aplicacion;
+	}
+
+	/**
+	 * @return the urlCallbackError
+	 */
+	public String getUrlCallbackError() {
+		return urlCallbackError;
+	}
+
+	/**
+	 * @param urlCallbackError
+	 *            the urlCallbackError to set
+	 */
+	public void setUrlCallbackError(final String urlCallbackError) {
+		this.urlCallbackError = urlCallbackError;
 	}
 
 }

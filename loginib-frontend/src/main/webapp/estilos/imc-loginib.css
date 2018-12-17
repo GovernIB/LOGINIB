@@ -6,7 +6,7 @@ body, form, table, caption, tr, th, td, ul, ol, li, dl, dt, dd, img, p, header, 
 article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section { display: block; }
 
 *, *::before, *::after {
-  -webkit-box-sizing: border-box; 
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -47,7 +47,7 @@ a:focus span { color: #fff; background-color: #3b8e5d; }
 .imc-contingut h1 { font-weight: normal; text-align: center; margin-bottom: 2em; }
 .imc-contingut h1 span { font-size: 1.5em; }
 
-.imc-contingut ul { display: flex; align-items: center; } 
+.imc-contingut ul { display: flex; align-items: center; }
 .imc-contingut ul li { width: 50%; margin: 0 .3em; background-color: #fff; }
 
 .imc-contingut ul li a { display: block; position: relative; text-align: center; height: 10em; }
@@ -73,4 +73,20 @@ a:focus span { color: #fff; background-color: #3b8e5d; }
 	.imc-contingut ul li:first-child { margin-left: .6em; }
 	.imc-contingut ul li:last-child { margin-right: .6em; }
 
+}
+.botonVolver {
+	margin-top:2em;
+}
+
+.botonVolver a {
+	/*background: #00f;**/
+	border-width:2px;
+	border-color:#00f;
+	border-style:solid;
+	border-radius: 6px;
+	padding:7px;
+	cursor: pointer;
+}
+.botonVolver a:hover {
+	border-color:#44f;
 }

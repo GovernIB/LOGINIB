@@ -31,8 +31,12 @@
 			<div class="imc--c">
 
 				<h1><span><fmt:message key="atencion"/></span></h1>
-				<span>${mensaje}</span>
-
+				<span>${respuesta.mensaje}</span>
+				<c:if test="${not empty respuesta.urlCallback}">
+					<p class="botonVolver">
+						<span><a href="${respuesta.urlCallback}">Volver</a></span>
+					</p>
+				</c:if>
 			</div>
 		</div>
 

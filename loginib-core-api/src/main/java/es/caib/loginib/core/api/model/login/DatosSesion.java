@@ -43,6 +43,9 @@ public final class DatosSesion {
 	/** Url callback. */
 	private String urlCallback;
 
+	/** Url callback en caso de error. */
+	private String urlCallbackError;
+
 	/** Aplicacion. **/
 	private String aplicacion;
 
@@ -234,6 +237,21 @@ public final class DatosSesion {
 	 */
 	public void setAplicacion(final String aplicacion) {
 		this.aplicacion = aplicacion;
+	}
+
+	/**
+	 * @return the urlCallbackError
+	 */
+	public String getUrlCallbackError() {
+		return urlCallbackError;
+	}
+
+	/**
+	 * @param urlCallbackError
+	 *            the urlCallbackError to set
+	 */
+	public void setUrlCallbackError(final String urlCallbackError) {
+		this.urlCallbackError = urlCallbackError;
 	}
 
 }
