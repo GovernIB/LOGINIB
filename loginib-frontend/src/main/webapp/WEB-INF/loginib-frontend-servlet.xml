@@ -4,6 +4,7 @@
 	  xmlns:mvc="http://www.springframework.org/schema/mvc"
 	  xmlns:aop="http://www.springframework.org/schema/aop"
 	  xmlns:jee="http://www.springframework.org/schema/jee"
+	  xmlns:task="http://www.springframework.org/schema/task"
 	  xmlns:tx="http://www.springframework.org/schema/tx"
       xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
@@ -16,7 +17,9 @@
 	    http://www.springframework.org/schema/jee
         http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
         http://www.springframework.org/schema/tx
-	    http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+	    http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+	    http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-4.3.xsd">
 
 	<!-- Scans the classpath of this application for @Components to deploy as beans -->
 	<context:component-scan base-package="es.caib.loginib.frontend" scoped-proxy="interfaces"/>
@@ -30,6 +33,9 @@
 
 	<!-- Configures the @Controller programming model -->
 	<mvc:annotation-driven />
+
+	<!-- Procesos -->
+	<task:annotation-driven />
 
 	<!--  Textos de mensajes -->
 	<bean id="messageSource"

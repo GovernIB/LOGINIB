@@ -118,8 +118,9 @@ public interface ClaveDao {
 	 *            timeout sesion
 	 * @param timeoutTicket
 	 *            timeout ticket
+	 * @param timeoutPurga
 	 */
-	void purgaTicketSesionLogin(long timeoutSesion, long timeoutTicket);
+	void purgaTicketSesionLogin(Long timeoutSesion, Long timeoutTicket, Long timeoutPurga);
 
 	/**
 	 * Iniciar logout sesion.
@@ -143,7 +144,8 @@ public interface ClaveDao {
 	 *            timeout sesion
 	 * @param timeoutTicket
 	 *            timeout ticket
+	 * @param timeoutPurga
 	 */
-	void purgaTicketSesionLogout(Long timeoutSesionExterna, Long timeoutTicketExterna);
+	void purgaTicketSesionLogout(Long timeoutSesionExterna, Long timeoutTicketExterna, Long timeoutPurga);
 
 }

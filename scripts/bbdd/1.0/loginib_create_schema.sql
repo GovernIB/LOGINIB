@@ -1,3 +1,4 @@
+
 create sequence LIB_LGI_SEQ;
 
 create sequence LIB_LGO_SEQ;
@@ -14,7 +15,7 @@ create table LIB_LOGIN
    LGI_IDIOMA           VARCHAR2(2 CHAR)     not null,
    LGI_IDPS             VARCHAR2(100 CHAR)   not null,
    LGI_URLCBK           VARCHAR2(4000 CHAR)  not null,
-   LGI_URLCER 			VARCHAR2(4000 CHAR)  not null,
+   LGI_URLCER           VARCHAR2(4000 CHAR)  not null,
    LGI_FCAUTH           NUMBER(1)            default 0 not null,
    LGI_TICKET           VARCHAR2(100 CHAR),
    LGI_FCALTA           DATE,
@@ -32,6 +33,7 @@ create table LIB_LOGIN
    LGI_SESION           VARCHAR2(100 CHAR),
    LGI_QAA              NUMBER(1),
    LGI_SAMLID           VARCHAR2(100 CHAR),
+   LGI_PURGCK           NUMBER(1)            default 0 not null,
    constraint LIB_LGI_PK primary key (LGI_CODIGO)
 );
 
@@ -57,7 +59,7 @@ comment on column LIB_LOGIN.LGI_IDPS is
 'Idps (separados por ;)';
 
 comment on column LIB_LOGIN.LGI_URLCBK is
-'Url callback';
+'Url callback login correcto (se pasara parametro ticket)';
 
 comment on column LIB_LOGIN.LGI_URLCER is
 'Url callback error';
@@ -113,6 +115,9 @@ comment on column LIB_LOGIN.LGI_QAA is
 comment on column LIB_LOGIN.LGI_SAMLID is
 'SAML ID petición Clave';
 
+comment on column LIB_LOGIN.LGI_PURGCK is
+'Marcado como purgado';
+
 /*==============================================================*/
 /* Index: LIB_LGI_AK                                            */
 /*==============================================================*/
@@ -134,13 +139,14 @@ create table LIB_LOGOUT
 (
    LGO_CODIGO           NUMBER(20)           not null,
    LGO_ENTIDA           VARCHAR2(100 CHAR)   not null,
+   LGO_APLICA           VARCHAR2(100 CHAR),
    LGO_FCSES            DATE                 not null,
    LGO_IDIOMA           VARCHAR2(2 CHAR)     not null,
    LGO_URLCBK           VARCHAR2(4000 CHAR)  not null,
    LGO_FCALTA           DATE,
    LGO_SAMLID           VARCHAR2(100 CHAR),
    LGO_SESION           VARCHAR2(100 CHAR),
-   LGO_APLICA           VARCHAR2(100 CHAR),
+   LGO_PURGCK           NUMBER(1)            default 0 not null,
    constraint LIB_LGO_PK primary key (LGO_CODIGO)
 );
 
@@ -152,6 +158,9 @@ comment on column LIB_LOGOUT.LGO_CODIGO is
 
 comment on column LIB_LOGOUT.LGO_ENTIDA is
 'Código entidad';
+
+comment on column LIB_LOGOUT.LGO_APLICA is
+'Identidicador aplicación';
 
 comment on column LIB_LOGOUT.LGO_FCSES is
 'Fecha inicio sesion';
@@ -168,8 +177,8 @@ comment on column LIB_LOGOUT.LGO_FCALTA is
 comment on column LIB_LOGOUT.LGO_SESION is
 'Identificador aleatorio de sesion';
 
-comment on column LIB_LOGOUT.LGO_APLICA is
-'Identidicador aplicación';
+comment on column LIB_LOGOUT.LGO_PURGCK is
+'Marcado como purgado';
 
 /*==============================================================*/
 /* Index: LIB_LGO_AK                                            */
@@ -177,3 +186,4 @@ comment on column LIB_LOGOUT.LGO_APLICA is
 create unique index LIB_LGO_AK on LIB_LOGOUT (
    LGO_SESION ASC
 );
+

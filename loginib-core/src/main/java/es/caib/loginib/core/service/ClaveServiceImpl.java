@@ -385,11 +385,11 @@ public final class ClaveServiceImpl implements ClaveService {
 	@NegocioInterceptor
 	public void purgar() {
 		// Procesos de login
-		claveDao.purgaTicketSesionLogin(config.getTimeoutProcesoAutenticacion(),
-				config.getTimeoutTicketAutenticacion());
+		claveDao.purgaTicketSesionLogin(config.getTimeoutProcesoAutenticacion(), config.getTimeoutTicketAutenticacion(),
+				config.getTimeoutPurga());
 		// Procesos de logout
 		claveDao.purgaTicketSesionLogout(config.getTimeoutProcesoAutenticacion(),
-				config.getTimeoutTicketAutenticacion());
+				config.getTimeoutTicketAutenticacion(), config.getTimeoutPurga());
 
 	}
 

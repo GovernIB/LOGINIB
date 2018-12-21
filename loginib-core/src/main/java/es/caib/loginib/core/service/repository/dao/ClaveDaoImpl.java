@@ -1,11 +1,13 @@
 package es.caib.loginib.core.service.repository.dao;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -234,7 +236,8 @@ public final class ClaveDaoImpl implements ClaveDao {
 
 		JSesionLogin t = null;
 
-		final Query query = entityManager.createQuery("Select p From JSesionLogin p Where p.ticket = :ticket");
+		final Query query = entityManager
+				.createQuery("Select p From JSesionLogin p Where p.ticket = :ticket and checkPurga = 0");
 		query.setParameter("ticket", pTicket);
 
 		final List<JSesionLogin> results = query.getResultList();
@@ -244,8 +247,9 @@ public final class ClaveDaoImpl implements ClaveDao {
 		if (results != null && results.size() > 0) {
 			// Obtenemos ticket
 			t = results.get(0);
-			// Lo borramos para que no se pueda volver a usar
-			entityManager.remove(t);
+			// Marcamos el check para purgar
+			t.setCheckPurga(true);
+			entityManager.merge(t);
 			// Establecemos datos
 			du = new DatosUsuario();
 			du.setFechaTicket(t.getFechaTicket());
@@ -271,23 +275,34 @@ public final class ClaveDaoImpl implements ClaveDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void purgaTicketSesionLogin(final long pTimeoutSesion, final long pTimeoutTicket) {
-		// Recupera lista tickets aplicaciones externas
-		final List<JSesionLogin> listaTickets = entityManager.createQuery("SELECT t FROM JSesionLogin t")
-				.getResultList();
+	public void purgaTicketSesionLogin(final Long pTimeoutSesion, final Long pTimeoutTicket, final Long pTimeoutPurga) {
+
+		// Recupera lista tickets aplicaciones externas y los marca para purgar.
+		final List<JSesionLogin> listaTickets = entityManager
+				.createQuery("SELECT t FROM JSesionLogin t where t.checkPurga = 0 ").getResultList();
 		final Date ahora = new Date();
 		for (final JSesionLogin t : listaTickets) {
 			if (t.getTicket() == null) {
 				if (ahora.getTime()
 						- (t.getFechaInicioSesion().getTime() + (pTimeoutSesion * ConstantesNumero.N1000)) > 0) {
-					entityManager.remove(t);
+					t.setCheckPurga(true);
+					entityManager.merge(t);
 				}
 			} else {
 				if (ahora.getTime() - (t.getFechaTicket().getTime() + (pTimeoutTicket * ConstantesNumero.N1000)) > 0) {
-					entityManager.remove(t);
+					t.setCheckPurga(true);
+					entityManager.merge(t);
 				}
 			}
 		}
+
+		final Query query = entityManager.createQuery(
+				"DELETE FROM JSesionLogin where checkPurga = 1 and (fechaInicioSesion < :fecha or fechaTicket < :fecha)");
+		final Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, -1 * pTimeoutPurga.intValue());
+		query.setParameter("fecha", calendar.getTime(), TemporalType.DATE);
+		query.executeUpdate();
+
 	}
 
 	@Override
@@ -341,20 +356,29 @@ public final class ClaveDaoImpl implements ClaveDao {
 	}
 
 	@Override
-	public void purgaTicketSesionLogout(final Long pTimeoutSesion, final Long pTimeoutTicket) {
+	public void purgaTicketSesionLogout(final Long pTimeoutSesion, final Long pTimeoutTicket,
+			final Long pTimeoutPurga) {
 
 		// Recupera lista tickets aplicaciones externas
 		@SuppressWarnings("unchecked")
-		final List<JSesionLogout> listaTickets = entityManager.createQuery("SELECT t FROM JSesionLogout t")
-				.getResultList();
+		final List<JSesionLogout> listaTickets = entityManager
+				.createQuery("SELECT t FROM JSesionLogout t where t.checkPurga = 0 ").getResultList();
 		final Date ahora = new Date();
 		for (final JSesionLogout t : listaTickets) {
 			if (ahora.getTime()
 					- (t.getFechaInicioSesion().getTime() + (pTimeoutSesion * ConstantesNumero.N1000)) > 0) {
-				entityManager.remove(t);
+				t.setCheckPurga(true);
+				entityManager.merge(t);
 			}
 
 		}
+
+		final Query queryDelete = entityManager.createQuery(
+				"DELETE FROM JSesionLogout where checkPurga = 1 and (fechaInicioSesion < :fecha or fechaTicket < :fecha)");
+		final Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, -1 * pTimeoutPurga.intValue());
+		queryDelete.setParameter("fecha", calendar.getTime(), TemporalType.DATE);
+		queryDelete.executeUpdate();
 
 	}
 

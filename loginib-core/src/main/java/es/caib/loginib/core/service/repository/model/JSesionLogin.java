@@ -123,6 +123,10 @@ public final class JSesionLogin {
 	@Column(name = "LGI_APLICA")
 	private String aplicacion;
 
+	/** Identidicador aplicación. */
+	@Column(name = "LGI_PURGCK")
+	private boolean checkPurga;
+
 	/**
 	 * Gets the ticket.
 	 *
@@ -581,6 +585,21 @@ public final class JSesionLogin {
 	 */
 	public void setUrlCallbackError(final String urlCallbackError) {
 		this.urlCallbackError = urlCallbackError;
+	}
+
+	/**
+	 * @return the checkPurga
+	 */
+	public boolean isCheckPurga() {
+		return checkPurga;
+	}
+
+	/**
+	 * @param checkPurga
+	 *            the checkPurga to set
+	 */
+	public void setCheckPurga(final boolean checkPurga) {
+		this.checkPurga = checkPurga;
 	}
 
 }

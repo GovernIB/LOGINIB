@@ -59,6 +59,10 @@ public final class JSesionLogout {
 	@Column(name = "LGO_APLICA")
 	private String aplicacion;
 
+	/** Check purga. */
+	@Column(name = "LGO_PURGCK")
+	private boolean checkPurga;
+
 	/**
 	 * Gets the id.
 	 *
@@ -224,6 +228,21 @@ public final class JSesionLogout {
 	 */
 	public void setAplicacion(final String aplicacion) {
 		this.aplicacion = aplicacion;
+	}
+
+	/**
+	 * @return the checkPurga
+	 */
+	public boolean isCheckPurga() {
+		return checkPurga;
+	}
+
+	/**
+	 * @param checkPurga
+	 *            the checkPurga to set
+	 */
+	public void setCheckPurga(final boolean checkPurga) {
+		this.checkPurga = checkPurga;
 	}
 
 }
