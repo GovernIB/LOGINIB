@@ -48,8 +48,8 @@ public class ClaveServiceBean implements ClaveService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.API })
-	public String obtenerUrlRedireccionLoginClave(final String idSesion) {
-		return claveService.obtenerUrlRedireccionLoginClave(idSesion);
+	public String obtenerUrlRedireccionLoginClave(final String idSesion, final String idioma) {
+		return claveService.obtenerUrlRedireccionLoginClave(idSesion, idioma);
 	}
 
 	@Override

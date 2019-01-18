@@ -131,9 +131,11 @@ public interface ClaveService {
 	 *
 	 * @param idSesion
 	 *            Id sesion
+	 * @param idioma
+	 *            idioma
 	 * @return url
 	 */
-	String obtenerUrlRedireccionLoginClave(String idSesion);
+	String obtenerUrlRedireccionLoginClave(String idSesion, String idioma);
 
 	/**
 	 * Obtener url logout sesion clave para aplicacion externas.

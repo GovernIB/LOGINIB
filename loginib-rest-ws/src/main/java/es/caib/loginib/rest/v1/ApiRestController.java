@@ -48,7 +48,7 @@ public class ApiRestController {
 				parametros.isForzarAutenticacion(), parametros.getAplicacion());
 
 		// Obtenemos url redireccion inicio sesion
-		final String url = claveService.obtenerUrlRedireccionLoginClave(idSesion);
+		final String url = claveService.obtenerUrlRedireccionLoginClave(idSesion, parametros.getIdioma());
 
 		return url;
 

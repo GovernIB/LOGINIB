@@ -416,9 +416,10 @@ public final class ClaveServiceImpl implements ClaveService {
 
 	@Override
 	@NegocioInterceptor
-	public String obtenerUrlRedireccionLoginClave(final String pIdSesion) {
+	public String obtenerUrlRedireccionLoginClave(final String pIdSesion, final String pIdioma) {
 		try {
-			return config.getLoginRedireccionClave() + "?idSesion=" + URLEncoder.encode(pIdSesion, "UTF-8");
+			return config.getLoginRedireccionClave() + "?idioma=" + pIdioma + "&idSesion="
+					+ URLEncoder.encode(pIdSesion, "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
 			throw new ErrorNoControladoException(e);
 		}
