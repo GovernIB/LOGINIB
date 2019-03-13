@@ -4,7 +4,7 @@
 
 **Descripción funcional**
 
-Component horitzontal d'autenticació de la CAIB
+El component horitzontal d’autenticació LoginIB proveu, a qualsevol aplicació, les funcionalitats d’identificació i autenticació en base a tiquets d’un sol ús.  Aquest component inclou la gestió de la pàgina de login i permet la utilització de diferents tipus d’autenticació. 
 
 
 [**Documentació**](https://github.com/GovernIB/LOGINIB/tree/loginib-1.0/doc)
