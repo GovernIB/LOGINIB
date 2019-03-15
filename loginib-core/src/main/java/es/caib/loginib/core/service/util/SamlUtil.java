@@ -23,101 +23,92 @@ import es.caib.loginib.core.api.exception.GenerarPeticionClaveException;
  */
 public final class SamlUtil {
 
-    /**
-     * Extrae Saml Id de la peticion saml.
-     *
-     * @param xmlB64
-     *            xmlB64
-     * @return saml id
-     */
-    public static String extraerSamlId(final String xmlB64) {
+	/**
+	 * Extrae Saml Id de la peticion saml.
+	 *
+	 * @param xmlB64
+	 *            xmlB64
+	 * @return saml id
+	 */
+	public static String extraerSamlId(final String xmlB64) {
 
-        try {
+		try {
 
-            String samlId = null;
+			String samlId = null;
 
-            final byte[] xmlContent = Base64.decodeBase64(xmlB64);
+			final byte[] xmlContent = Base64.decodeBase64(xmlB64);
 
-            final SAXReader reader = new SAXReader();
+			final SAXReader reader = new SAXReader();
 
-            Document document;
-            document = reader.read(new ByteArrayInputStream(xmlContent));
+			Document document;
+			document = reader.read(new ByteArrayInputStream(xmlContent));
 
-            final Map<String, String> namespaceUris = new HashMap<String, String>();
-            namespaceUris.put("saml2p", "urn:oasis:names:tc:SAML:2.0:protocol");
-            namespaceUris.put("ds", "http://www.w3.org/2000/09/xmldsig#");
-            namespaceUris.put("saml2", "urn:oasis:names:tc:SAML:2.0:assertion");
-            namespaceUris.put("stork",
-                    "urn:eu:stork:names:tc:STORK:1.0:assertion");
-            namespaceUris.put("storkp",
-                    "urn:eu:stork:names:tc:STORK:1.0:protocol");
+			final Map<String, String> namespaceUris = new HashMap<String, String>();
+			namespaceUris.put("saml2p", "urn:oasis:names:tc:SAML:2.0:protocol");
+			namespaceUris.put("ds", "http://www.w3.org/2000/09/xmldsig#");
+			namespaceUris.put("saml2", "urn:oasis:names:tc:SAML:2.0:assertion");
+			namespaceUris.put("stork", "urn:eu:stork:names:tc:STORK:1.0:assertion");
+			namespaceUris.put("storkp", "urn:eu:stork:names:tc:STORK:1.0:protocol");
 
-            final XPath xPath = DocumentHelper
-                    .createXPath("//saml2p:AuthnRequest");
-            xPath.setNamespaceURIs(namespaceUris);
+			final XPath xPath = DocumentHelper.createXPath("//saml2p:AuthnRequest");
+			xPath.setNamespaceURIs(namespaceUris);
 
-            final Node node = xPath.selectSingleNode(document);
-            if (node != null) {
-                final Element e = (Element) node;
-                samlId = e.attributeValue("ID");
-            }
+			final Node node = xPath.selectSingleNode(document);
+			if (node != null) {
+				final Element e = (Element) node;
+				samlId = e.attributeValue("ID");
+			}
 
-            return samlId;
+			return samlId;
 
-        } catch (final DocumentException ex) {
-            throw new GenerarPeticionClaveException(
-                    "No se ha podido extraer SamlId de la peticion", ex);
-        }
+		} catch (final DocumentException ex) {
+			throw new GenerarPeticionClaveException("No se ha podido extraer SamlId de la peticion", ex);
+		}
 
-    }
+	}
 
-    /**
-     * Extrae Saml Id de la peticion saml.
-     *
-     * @param xmlB64
-     *            xmlB64
-     * @return saml id
-     */
-    public static String extraerSamlIdLogout(final String xmlB64) {
+	/**
+	 * Extrae Saml Id de la peticion saml.
+	 *
+	 * @param xmlB64
+	 *            xmlB64
+	 * @return saml id
+	 */
+	public static String extraerSamlIdLogout(final String xmlB64) {
 
-        try {
+		try {
 
-            String samlId = null;
+			String samlId = null;
 
-            final byte[] xmlContent = Base64.decodeBase64(xmlB64);
+			final byte[] xmlContent = Base64.decodeBase64(xmlB64);
 
-            final SAXReader reader = new SAXReader();
+			final SAXReader reader = new SAXReader();
 
-            Document document;
-            document = reader.read(new ByteArrayInputStream(xmlContent));
+			Document document;
+			document = reader.read(new ByteArrayInputStream(xmlContent));
 
-            final Map<String, String> namespaceUris = new HashMap<String, String>();
-            namespaceUris.put("saml2p", "urn:oasis:names:tc:SAML:2.0:protocol");
-            namespaceUris.put("ds", "http://www.w3.org/2000/09/xmldsig#");
-            namespaceUris.put("saml2", "urn:oasis:names:tc:SAML:2.0:assertion");
-            namespaceUris.put("stork",
-                    "urn:eu:stork:names:tc:STORK:1.0:assertion");
-            namespaceUris.put("storkp",
-                    "urn:eu:stork:names:tc:STORK:1.0:protocol");
+			final Map<String, String> namespaceUris = new HashMap<String, String>();
+			namespaceUris.put("saml2p", "urn:oasis:names:tc:SAML:2.0:protocol");
+			namespaceUris.put("ds", "http://www.w3.org/2000/09/xmldsig#");
+			namespaceUris.put("saml2", "urn:oasis:names:tc:SAML:2.0:assertion");
+			namespaceUris.put("stork", "urn:eu:stork:names:tc:STORK:1.0:assertion");
+			namespaceUris.put("storkp", "urn:eu:stork:names:tc:STORK:1.0:protocol");
 
-            final XPath xPath = DocumentHelper
-                    .createXPath("//saml2p:LogoutRequest");
-            xPath.setNamespaceURIs(namespaceUris);
+			final XPath xPath = DocumentHelper.createXPath("//saml2p:LogoutRequest");
+			xPath.setNamespaceURIs(namespaceUris);
 
-            final Node node = xPath.selectSingleNode(document);
-            if (node != null) {
-                final Element e = (Element) node;
-                samlId = e.attributeValue("ID");
-            }
+			final Node node = xPath.selectSingleNode(document);
+			if (node != null) {
+				final Element e = (Element) node;
+				samlId = e.attributeValue("ID");
+			}
 
-            return samlId;
+			return samlId;
 
-        } catch (final DocumentException ex) {
-            throw new GenerarPeticionClaveException(
-                    "No se ha podido extraer SamlId de la peticion de logout",
-                    ex);
-        }
+		} catch (final DocumentException ex) {
+			throw new GenerarPeticionClaveException("No se ha podido extraer SamlId de la peticion de logout", ex);
+		}
 
-    }
+	}
 
 }
