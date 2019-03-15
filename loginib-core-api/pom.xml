@@ -22,13 +22,6 @@
 		    <version>${commons-lang3.version}</version>
 		</dependency>
 
-		<!-- LIBRERIAS CLAVE -->
-        <dependency>
-			<groupId>eu.eidas</groupId>
-			<artifactId>eidas-commons</artifactId>
-			<version>${eidas.version}</version>
-		</dependency>
-
   	</dependencies>
 
   	<build>
