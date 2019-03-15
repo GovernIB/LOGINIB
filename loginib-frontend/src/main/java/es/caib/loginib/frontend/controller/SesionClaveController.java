@@ -130,10 +130,9 @@ public final class SesionClaveController {
 
 		// Iniciar sesion en clave
 		final DatosInicioSesionClave isc = new DatosInicioSesionClave();
-
-		isc.setIdps(ClaveLoginUtil.traduceIdpListToIdpClave(peticionClave.getIdps()));
 		isc.setSamlRequest(peticionClave.getSamlRequestB64());
 		isc.setUrlClave(peticionClave.getUrlClave());
+		isc.setRelayState(peticionClave.getRelayState());
 		isc.setIdioma(peticionClave.getIdioma());
 
 		log.debug("Redirigimos a clave");
