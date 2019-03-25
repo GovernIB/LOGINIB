@@ -152,7 +152,7 @@ public final class ClaveServiceImpl implements ClaveService {
 		final STORKSAMLEngine engine = STORKSAMLEngine.getInstance(datosSesion.getEntidad());
 		if (engine == null) {
 			throw new GenerarPeticionClaveException(
-					"Error creando engine STORK. Revise localizacion fichero SignModule_<entidad>.xml (segun SamlEngine.xml)");
+					"Error creando engine STORK. Revise localizacion fichero <entidad>_SignModule.xml (segun SamlEngine.xml)");
 		}
 		try {
 			authnRequest = engine.generateSTORKAuthnRequest(authnRequest);
@@ -186,8 +186,7 @@ public final class ClaveServiceImpl implements ClaveService {
 
 	@Override
 	@NegocioInterceptor
-	public TicketClave procesarRespuestaLoginClave(final String pIdSesion, final String pSamlResponseB64,
-			final String relayStateRequest) {
+	public TicketClave procesarRespuestaLoginClave(final String pIdSesion, final String pSamlResponseB64) {
 
 		log.debug(" Procesando respuesta clave [idSesion = " + pIdSesion + "]");
 
@@ -230,10 +229,7 @@ public final class ClaveServiceImpl implements ClaveService {
 
 		// Obtenemos atributos
 
-		// TODO PENDIENTE RESOLVER COMPILACION
-		// final String idpClave =
-		// authnResponse.getAssertions().get(0).getIssuer().getValue();
-		final String idpClave = "PENDIENTE";
+		final String idpClave = authnResponse.getAssertions().get(0).getIssuer().getValue();
 
 		log.debug(" Idp retornado de Clave [idSesion = " + pIdSesion + "]: " + idpClave);
 
@@ -277,6 +273,12 @@ public final class ClaveServiceImpl implements ClaveService {
 		}
 
 		if (!ClaveLoginUtil.esCif(nif)) {
+			// Verificamos que venga desglosado el apellido, si no generamos error
+			if (apellido1 == null) {
+				log.debug("La respuesta no devuelve desglosados los apellidos [idSesion = " + pIdSesion + "]");
+				throw new ErrorRespuestaClaveException("La respuesta no devuelve desglosados los apellidos", pIdSesion);
+			}
+
 			// Extrae apellidos si vienen desglosados
 			if (apellido1 != null && apellidos != null) {
 				// Control extranjeros, solo 1 apellido

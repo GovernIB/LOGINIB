@@ -72,9 +72,8 @@ public class ClaveServiceBean implements ClaveService {
 
 	@Override
 	@PermitAll
-	public TicketClave procesarRespuestaLoginClave(final String idSesion, final String samlResponseB64,
-			final String relayStateReq) {
-		return claveService.procesarRespuestaLoginClave(idSesion, samlResponseB64, relayStateReq);
+	public TicketClave procesarRespuestaLoginClave(final String idSesion, final String samlResponseB64) {
+		return claveService.procesarRespuestaLoginClave(idSesion, samlResponseB64);
 	}
 
 	@Override
