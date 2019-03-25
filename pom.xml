@@ -2,13 +2,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>es.caib.loginib</groupId>
   <artifactId>loginib</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Loginib</name>
   <description>Loginib</description>
 
 	<properties>
-		<loginib.version>0.0.2-SNAPSHOT</loginib.version>
+		<loginib.version>1.0.0-SNAPSHOT</loginib.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<maven.compiler.version>3.7.0</maven.compiler.version>
@@ -39,10 +39,14 @@
 
 		<slf4j.version>1.5.8</slf4j.version>
 
-		<jaxen.version>1.1.6</jaxen.version>
-
 		<jackson.version>2.9.5</jackson.version>
 		<swagger.version>2.7.0</swagger.version>
+
+		<claveCommons.version>1.4.2</claveCommons.version>
+		<samlEngine.version>1.1.0</samlEngine.version>
+		<opensaml.version>2.6.1</opensaml.version>
+		<jaxen.version>1.1.6</jaxen.version>
+
 
 	</properties>
 
