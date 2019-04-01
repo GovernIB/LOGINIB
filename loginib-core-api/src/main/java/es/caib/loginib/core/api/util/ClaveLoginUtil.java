@@ -140,7 +140,7 @@ public final class ClaveLoginUtil {
 			res = "SS";
 			break;
 		case CLAVE_PIN:
-			res = "AEAT";
+			res = "PIN24H";
 			break;
 		default:
 			res = null;
@@ -167,7 +167,7 @@ public final class ClaveLoginUtil {
 			case "SS":
 				res = TypeIdp.CLAVE_PERMANENTE;
 				break;
-			case "AEAT":
+			case "PIN24H":
 				res = TypeIdp.CLAVE_PIN;
 				break;
 			default:

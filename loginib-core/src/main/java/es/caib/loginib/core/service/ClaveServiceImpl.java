@@ -228,17 +228,15 @@ public final class ClaveServiceImpl implements ClaveService {
 		}
 
 		// Obtenemos atributos
-
+		// - IDP
 		final String idpClave = authnResponse.getAssertions().get(0).getIssuer().getValue();
-
 		log.debug(" Idp retornado de Clave [idSesion = " + pIdSesion + "]: " + idpClave);
-
 		final TypeIdp idp = ClaveLoginUtil.traduceIdpClaveToIdp(idpClave);
 		if (idp == null) {
 			throw new ErrorRespuestaClaveException(
 					"Idp retornado no contemplado [idSesion = " + pIdSesion + "]: " + idpClave, pIdSesion);
 		}
-
+		// - Nif, nombre y apellidos
 		String nifClave = null;
 		String nombre = null;
 		String apellidos = null;
