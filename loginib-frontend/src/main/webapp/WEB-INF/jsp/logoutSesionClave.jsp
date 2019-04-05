@@ -23,7 +23,7 @@
 </head>
 <body onload="loginClave();">
 	<form id="loginClave" action="<c:out value="${datos.urlClave}"/>" method="post">	
-		<input type="hidden" name="samlRequestLogout" value="<c:out value="${datos.samlRequest}"/>"/>			
+		<input type="hidden" name="samlRequestLogout" value="<c:out value="${datos.samlRequest}"/>"/>		
 	</form>
 </body>
 </html>

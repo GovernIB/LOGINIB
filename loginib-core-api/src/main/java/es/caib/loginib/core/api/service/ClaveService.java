@@ -92,9 +92,11 @@ public interface ClaveService {
 	 *            respuesta clave
 	 * @param idSesion
 	 *            idSesion
+	 * @param relayState
+	 *            relayState
 	 * @return ticket de acceso
 	 */
-	TicketClave procesarRespuestaLoginClave(final String idSesion, final String samlResponseB64);
+	TicketClave procesarRespuestaLoginClave(final String idSesion, final String samlResponseB64, String relayState);
 
 	/**
 	 * Indica si el acceso a clave esta deshabilitado.
