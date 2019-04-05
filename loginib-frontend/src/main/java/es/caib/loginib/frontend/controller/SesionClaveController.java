@@ -130,9 +130,10 @@ public final class SesionClaveController {
 
 		// Iniciar sesion en clave
 		final DatosInicioSesionClave isc = new DatosInicioSesionClave();
+
+		isc.setIdps(ClaveLoginUtil.traduceIdpListToIdpClave(peticionClave.getIdps()));
 		isc.setSamlRequest(peticionClave.getSamlRequestB64());
 		isc.setUrlClave(peticionClave.getUrlClave());
-		isc.setRelayState(peticionClave.getRelayState());
 		isc.setIdioma(peticionClave.getIdioma());
 
 		log.debug("Redirigimos a clave");
@@ -191,13 +192,12 @@ public final class SesionClaveController {
 	 */
 	@RequestMapping(value = "/retornoLoginClave/{idSesion}.html", method = RequestMethod.POST)
 	public ModelAndView retornoLoginClave(@PathVariable("idSesion") final String idSesion,
-			@RequestParam("SAMLResponse") final String samlResponse,
-			@RequestParam("RelayState") final String relayState) {
+			@RequestParam("SAMLResponse") final String samlResponse) {
 
 		log.debug("Retorno clave: id sesion = " + idSesion);
 
 		// Generamos ticket autenticacion
-		final TicketClave ticket = claveService.procesarRespuestaLoginClave(idSesion, samlResponse, relayState);
+		final TicketClave ticket = claveService.procesarRespuestaLoginClave(idSesion, samlResponse);
 
 		// Retornamos aplicacion
 		log.debug("Retornamos a aplicacion: ticket = " + ticket.getTicket());
