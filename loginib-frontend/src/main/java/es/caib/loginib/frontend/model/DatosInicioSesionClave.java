@@ -8,92 +8,92 @@ package es.caib.loginib.frontend.model;
  */
 public final class DatosInicioSesionClave {
 
-    /** Url clave. */
-    private String urlClave;
+	/** Url clave. */
+	private String urlClave;
 
-    /** Peticion SAML de autenticacion. */
-    private String samlRequest;
+	/** Peticion SAML de autenticacion. */
+	private String samlRequest;
 
-    /** Idioma. */
-    private String idioma;
+	/** Idioma. */
+	private String idioma;
 
-    /** Relay state. */
-    private String relayState;
+	/** Idps. */
+	private String idps;
 
-    /**
-     * Obtiene url clave.
-     *
-     * @return the urlClave
-     */
-    public String getUrlClave() {
-        return urlClave;
-    }
+	/**
+	 * Obtiene url clave.
+	 *
+	 * @return the urlClave
+	 */
+	public String getUrlClave() {
+		return urlClave;
+	}
 
-    /**
-     * Establece url clave.
-     *
-     * @param urlClave
-     *            the urlClave to set
-     */
-    public void setUrlClave(final String urlClave) {
-        this.urlClave = urlClave;
-    }
+	/**
+	 * Establece url clave.
+	 *
+	 * @param urlClave
+	 *            the urlClave to set
+	 */
+	public void setUrlClave(final String urlClave) {
+		this.urlClave = urlClave;
+	}
 
-    /**
-     * Obtiene saml request.
-     *
-     * @return the samlRequest
-     */
-    public String getSamlRequest() {
-        return samlRequest;
-    }
+	/**
+	 * Obtiene saml request.
+	 *
+	 * @return the samlRequest
+	 */
+	public String getSamlRequest() {
+		return samlRequest;
+	}
 
-    /**
-     * Establece saml request.
-     *
-     * @param samlRequest
-     *            the samlRequest to set
-     */
-    public void setSamlRequest(final String samlRequest) {
-        this.samlRequest = samlRequest;
-    }
+	/**
+	 * Establece saml request.
+	 *
+	 * @param samlRequest
+	 *            the samlRequest to set
+	 */
+	public void setSamlRequest(final String samlRequest) {
+		this.samlRequest = samlRequest;
+	}
 
-    /**
-     * Obtiene idioma.
-     *
-     * @return the idioma
-     */
-    public String getIdioma() {
-        return idioma;
-    }
+	/**
+	 * Obtiene idioma.
+	 *
+	 * @return the idioma
+	 */
+	public String getIdioma() {
+		return idioma;
+	}
 
-    /**
-     * Establece idioma.
-     *
-     * @param idioma
-     *            the idioma to set
-     */
-    public void setIdioma(final String idioma) {
-        this.idioma = idioma;
-    }
+	/**
+	 * Establece idioma.
+	 *
+	 * @param idioma
+	 *            the idioma to set
+	 */
+	public void setIdioma(final String idioma) {
+		this.idioma = idioma;
+	}
 
-    /**
-     * Método de acceso a relayState.
-     *
-     * @return relayState
-     */
-    public String getRelayState() {
-        return relayState;
-    }
+	/**
+	 * Método de acceso a idps.
+	 * 
+	 * @return idps
+	 */
+	public String getIdps() {
+		return idps;
+	}
 
-    /**
-     * Método para establecer relayState.
-     *
-     * @param relayState
-     *            relayState a establecer
-     */
-    public void setRelayState(String relayState) {
-        this.relayState = relayState;
-    }
+	/**
+	 * Método para establecer idps.
+	 * 
+	 * @param idps
+	 *            idps a establecer
+	 */
+	public void setIdps(String idps) {
+		this.idps = idps;
+	}
 
 }
