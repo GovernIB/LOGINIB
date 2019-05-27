@@ -2,6 +2,7 @@ package es.caib.loginib.core.api.service;
 
 import java.util.List;
 
+import es.caib.loginib.core.api.model.login.DatosRepresentante;
 import es.caib.loginib.core.api.model.login.DatosSesion;
 import es.caib.loginib.core.api.model.login.DatosUsuario;
 import es.caib.loginib.core.api.model.login.PeticionClave;
@@ -157,10 +158,12 @@ public interface ClaveService {
 	 *            nombre
 	 * @param pApellidos
 	 *            apellidos
+	 * @param pRepresentante
+	 *            representante
 	 * @return Ticket retorno
 	 */
 	TicketClave simularRespuestaClave(String pIdSesion, TypeIdp pIdp, String pNif, String pNombre, String pApellidos,
-			final String pApellido1, final String pApellido2);
+			final String pApellido1, final String pApellido2, final DatosRepresentante pRepresentante);
 
 	/**
 	 * Generar peticion logout.

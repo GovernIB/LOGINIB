@@ -141,7 +141,25 @@ public final class ClaveServiceImpl implements ClaveService {
 		authnRequest.setDestination(config.getPepsUrl());
 		authnRequest.setProviderName(config.getProviderName(datosSesion.getEntidad()));
 		authnRequest.setForceAuthN(datosSesion.isForceAuth());
-		authnRequest.setQaa(datosSesion.getQaa());
+
+		// Traducimos nivel QAA: 1 (Bajo) - 2 (Medio) - Alto (3)
+		// a valores Cl@ve1: 2 - 3 - 4
+		int qaaClave1;
+		switch (datosSesion.getQaa()) {
+		case 1: // Bajo
+			qaaClave1 = 2;
+			break;
+		case 2: // Medio
+			qaaClave1 = 3;
+			break;
+		case 3: // Alto
+			qaaClave1 = 4;
+			break;
+		default: // Si no tiene valor, Alto
+			qaaClave1 = 4;
+			break;
+		}
+		authnRequest.setQaa(qaaClave1);
 		authnRequest.setPersonalAttributeList(pAttList);
 		authnRequest.setAssertionConsumerServiceURL((config.getLoginCallbackClave()) + "/" + idSesion + ".html");
 		authnRequest.setSpSector(config.getSpSector(datosSesion.getEntidad()));
@@ -329,10 +347,10 @@ public final class ClaveServiceImpl implements ClaveService {
 	@Override
 	@NegocioInterceptor
 	public TicketClave simularRespuestaClave(final String pIdSesion, final TypeIdp pIdp, final String pNif,
-			final String pNombre, final String pApellidos, final String pApellido1, final String pApellido2) {
-
+			final String pNombre, final String pApellidos, final String pApellido1, final String pApellido2,
+			final DatosRepresentante pRepresentante) {
 		return claveDao.generateTicketSesionLogin(pIdSesion, pIdp, pNif, pNombre, pApellidos, pApellido1, pApellido2,
-				null);
+				pRepresentante);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.loginib.core.api.model.comun.ConstantesRolesAcceso;
+import es.caib.loginib.core.api.model.login.DatosRepresentante;
 import es.caib.loginib.core.api.model.login.DatosSesion;
 import es.caib.loginib.core.api.model.login.DatosUsuario;
 import es.caib.loginib.core.api.model.login.PeticionClave;
@@ -97,8 +98,10 @@ public class ClaveServiceBean implements ClaveService {
 	@Override
 	@PermitAll
 	public TicketClave simularRespuestaClave(final String pIdSesion, final TypeIdp pIdp, final String pNif,
-			final String pNombre, final String pApellidos, final String pApellido1, final String pApellido2) {
-		return claveService.simularRespuestaClave(pIdSesion, pIdp, pNif, pNombre, pApellidos, pApellido1, pApellido2);
+			final String pNombre, final String pApellidos, final String pApellido1, final String pApellido2,
+			final DatosRepresentante pRepresentante) {
+		return claveService.simularRespuestaClave(pIdSesion, pIdp, pNif, pNombre, pApellidos, pApellido1, pApellido2,
+				pRepresentante);
 	}
 
 	@Override

@@ -20,6 +20,12 @@
 		APELLIDOS: <input type="text" name="apellidos" value="APELLIDOUNOPF APELLIDODOSPF"/><br/>
 		APELLIDO 1: <input type="text" name="apellido1" value="APELLIDOUNOPF"/><br/>
 		APELLIDO 2: <input type="text" name="apellido2" value="APELLIDODOSPF"/><br/>
+		REPRESENTANTE NIF: <input type="text" name="rnif" value=""/><br/>
+		REPRESENTANTE NOMBRE: <input type="text" name="rnombre" value=""/><br/>
+		REPRESENTANTE APELLIDOS: <input type="text" name="rapellidos" value=""/><br/>
+		REPRESENTANTE APELLIDO 1: <input type="text" name="rapellido1" value=""/><br/>
+		REPRESENTANTE APELLIDO 2: <input type="text" name="rapellido2" value=""/><br/>
+
 		<input type="hidden" name="idSesion" value="<c:out value="${simularClave.idSesion}"/>"/>
 		<input type="submit" value="enviar"/>
 	</form>

@@ -3,6 +3,7 @@ package es.caib.loginib.frontend.controller;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.loginib.core.api.exception.ErrorRespuestaClaveException;
 import es.caib.loginib.core.api.exception.ServiceException;
+import es.caib.loginib.core.api.model.login.DatosRepresentante;
 import es.caib.loginib.core.api.model.login.DatosSesion;
 import es.caib.loginib.core.api.model.login.PeticionClave;
 import es.caib.loginib.core.api.model.login.PeticionClaveLogout;
@@ -252,13 +254,26 @@ public final class SesionClaveController {
 	public ModelAndView loginClaveSimulado(@RequestParam("idSesion") final String idSesion,
 			@RequestParam("idp") final String idp, @RequestParam("nif") final String nif,
 			@RequestParam("nombre") final String nombre, @RequestParam("apellidos") final String apellidos,
-			@RequestParam("apellido1") final String apellido1, @RequestParam("apellido2") final String apellido2) {
+			@RequestParam("apellido1") final String apellido1, @RequestParam("apellido2") final String apellido2,
+			@RequestParam("rnif") final String rnif, @RequestParam("rnombre") final String rnombre,
+			@RequestParam("rapellidos") final String rapellidos, @RequestParam("rapellido1") final String rapellido1,
+			@RequestParam("rapellido2") final String rapellido2) {
 
 		log.debug("Retorno clave simulado: id sesion = " + idSesion);
 
+		DatosRepresentante representante = null;
+		if (StringUtils.isNotBlank(rnif)) {
+			representante = new DatosRepresentante();
+			representante.setNif(rnif);
+			representante.setNombre(rnombre);
+			representante.setApellido1(rapellido1);
+			representante.setApellido2(rapellido2);
+			representante.setApellidos(rapellidos);
+		}
+
 		// Generamos ticket autenticacion
 		final TicketClave ticket = claveService.simularRespuestaClave(idSesion, TypeIdp.fromString(idp), nif, nombre,
-				apellidos, apellido1, apellido2);
+				apellidos, apellido1, apellido2, representante);
 
 		// Retornamos aplicacion
 		log.debug("Retornamos a aplicacion: ticket = " + ticket.getTicket());
