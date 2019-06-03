@@ -53,13 +53,13 @@
 							<groupId>es.caib.loginib</groupId>
 							<artifactId>loginib-frontend</artifactId>
 							<contextRoot>/loginibfront</contextRoot>
-							<bundleFileName>loginib-frontend.war</bundleFileName>
+							<bundleFileName>loginibfront.war</bundleFileName>
 						</webModule>
 						<webModule>
 							<groupId>es.caib.loginib</groupId>
 							<artifactId>loginib-rest-ws</artifactId>
-							<contextRoot>/loginib/api</contextRoot>
-							<bundleFileName>loginib-rest.war</bundleFileName>
+							<contextRoot>/loginibws</contextRoot>
+							<bundleFileName>loginibws.war</bundleFileName>
 						</webModule>
 					</modules>
 					<defaultLibBundleDir>lib/</defaultLibBundleDir>
