@@ -30,7 +30,7 @@
 		<div class="imc-contingut" id="imc-contingut">
 			<div class="imc--c">
 
-				<h1><span><fmt:message key="atencion"/></span></h1>
+				<h1 class="imc--atencio"><span><fmt:message key="atencion"/></span></h1>
 				<span>${respuesta.mensaje}</span>
 				<c:if test="${not empty respuesta.urlCallback}">
 					<p class="botonVolver">

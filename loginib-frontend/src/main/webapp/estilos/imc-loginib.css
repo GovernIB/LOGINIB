@@ -42,10 +42,20 @@ a:focus span { color: #fff; background-color: #3b8e5d; }
 
 /* continguts */
 
-.imc-contingut { display: block; position: fixed; z-index: 1; top: calc(50% - 10em); left: calc(50% - 15em); width: 30em; height: 20em; font-size: 1.3em; }
+.imc-contingut {
+	display: block;
+	position: fixed;
+	z-index: 1;
+	top: calc(50% - 10em);
+	left: calc(50% - 15em);
+	width: 30em;
+	height: 20em;
+	font-size: 1.3em;
+}
 
 .imc-contingut h1 { font-weight: normal; text-align: center; margin-bottom: 2em; }
 .imc-contingut h1 span { font-size: 1.5em; }
+.imc-contingut h1.imc--atencio { background: transparent url(../imgs/ico_error.svg) no-repeat 10em 0em/ auto 1.6em; }
 
 .imc-contingut ul { display: flex; align-items: center; }
 .imc-contingut ul li { width: 50%; margin: 0 .3em; background-color: #fff; }

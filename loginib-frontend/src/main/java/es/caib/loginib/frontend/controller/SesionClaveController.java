@@ -1,6 +1,7 @@
 package es.caib.loginib.frontend.controller;
 
 import javax.annotation.Resource;
+import javax.ejb.EJBException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -339,8 +340,11 @@ public final class SesionClaveController {
 	@ExceptionHandler({ Exception.class })
 	public ModelAndView handleServiceException(final Exception pex, final HttpServletRequest request) {
 
-		// Si no es una excepcion de negocio, generamos log
-		if (!(pex instanceof ServiceException)) {
+		Exception ex = pex;
+
+		if (pex instanceof EJBException && pex.getCause() instanceof ServiceException) {
+			ex = (Exception) pex.getCause();
+		} else if (!(pex instanceof ServiceException)) {
 			log.error("Excepcion en capa front: " + pex.getMessage(), pex);
 		}
 
@@ -348,12 +352,14 @@ public final class SesionClaveController {
 		// detalle al usuario
 		String errorMessage = null;
 		String idSession = null;
-		if (pex instanceof ErrorRespuestaClaveException) {
-			errorMessage = pex.getMessage();
-			if (((ErrorRespuestaClaveException) pex).getIdSesion() != null) {
-				idSession = ((ErrorRespuestaClaveException) pex).getIdSesion();
+
+		if (ex instanceof ErrorRespuestaClaveException) {
+			errorMessage = ex.getMessage();
+			if (((ErrorRespuestaClaveException) ex).getIdSesion() != null) {
+				idSession = ((ErrorRespuestaClaveException) ex).getIdSesion();
 			}
 		}
+
 		request.getSession().setAttribute(ERROR_MESSAGE_USER, errorMessage);
 		if (idSession != null) {
 			request.getSession().setAttribute(ERROR_ID_SESION, idSession);
