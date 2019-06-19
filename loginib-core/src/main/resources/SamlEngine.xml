@@ -34,7 +34,20 @@
 		</configuration>
 	</instance>
 
+<!-- ******************** Fundacion Bit ******************** -->
+	<instance name="A04019281">
+		<!-- Configurations parameters StorkSamlEngine: SE CARGA POR CLASSPATH  -->
+		<configuration name="SamlEngineConf">
+			<parameter name="fileConfiguration" value="StorkSamlEngine.xml" />
+		</configuration>
 
-
+		<!-- Settings module signature -->
+		<configuration name="SignatureConf">
+			<!-- Specific signature module -->
+			<parameter name="class" value="eu.stork.peps.auth.engine.core.impl.SignSW" />
+			<!-- Settings specific module -->
+			<parameter name="fileConfiguration" value="/app/caib/sistra2/loginib/A04019281_SignModule.xml" />
+		</configuration>
+	</instance>
 
 </instances>
