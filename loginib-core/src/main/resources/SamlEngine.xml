@@ -13,7 +13,7 @@
 			<!-- Specific signature module -->
 			<parameter name="class" value="eu.stork.peps.auth.engine.core.impl.SignSW" />
 			<!-- Settings specific module -->
-			<parameter name="fileConfiguration" value="/app/caib/sistra2/loginib/A04003003_SignModule.xml" />
+			<parameter name="fileConfiguration" value="/app/caib/loginib/A04003003_SignModule.xml" />
 		</configuration>
 	</instance>
 
@@ -30,7 +30,7 @@
 			<!-- Specific signature module -->
 			<parameter name="class" value="eu.stork.peps.auth.engine.core.impl.SignSW" />
 			<!-- Settings specific module -->
-			<parameter name="fileConfiguration" value="/app/caib/sistra2/loginib/SignModule_APB.xml" />
+			<parameter name="fileConfiguration" value="/app/caib/loginib/SignModule_APB.xml" />
 		</configuration>
 	</instance>
 
@@ -46,7 +46,7 @@
 			<!-- Specific signature module -->
 			<parameter name="class" value="eu.stork.peps.auth.engine.core.impl.SignSW" />
 			<!-- Settings specific module -->
-			<parameter name="fileConfiguration" value="/app/caib/sistra2/loginib/A04019281_SignModule.xml" />
+			<parameter name="fileConfiguration" value="/app/caib/loginib/A04019281_SignModule.xml" />
 		</configuration>
 	</instance>
 
