@@ -16,6 +16,7 @@
 		<maven.war.version>3.2.0</maven.war.version>
 		<maven.ear.version>2.10.1</maven.ear.version>
 		<maven.ejb.version>3.0.0</maven.ejb.version>
+		<maven.properties.version>1.0.0</maven.properties.version>
 
 		<commons-io.version>2.6</commons-io.version>
 		<commons-lang.version>2.6</commons-lang.version>
@@ -64,4 +65,63 @@
   	<module>loginib-rest-ws</module>
   	<module>loginib-ear</module>
   </modules>
+
+
+	<build>
+		<plugins>
+
+			<!--  Lo siguiente es para hacer un deploy del proyecto.  -->
+            <plugin>
+		        <artifactId>maven-deploy-plugin</artifactId>
+		        <version>2.8.1</version>
+		        <configuration>
+		          <altDeploymentRepository>
+		            internal.repo::default::file://${project.build.directory}/mvn-repo
+		          </altDeploymentRepository>
+		        </configuration>
+		      </plugin>
+
+		      <plugin>
+		        <groupId>com.github.github</groupId>
+		        <artifactId>site-maven-plugin</artifactId>
+		        <version>0.12</version>
+		        <configuration>
+		          <!-- git commit message -->
+		          <message>Maven artifacts for ${project.version}</message>
+		          <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+		          <noJekyll>true</noJekyll>
+		          <!-- remote branch name -->
+		          <branch>refs/heads/gh-pages</branch>
+		          <includes>
+		            <include>**/*</include>
+		          </includes>
+		          <path>maven</path>
+		          <!-- github repo name -->
+		          <repositoryName>maven</repositoryName>
+		          <!-- github username or organization  -->
+		          <repositoryOwner>GovernIB</repositoryOwner>
+		          <server>github_governib_maven</server>
+		          <merge>true</merge>
+		          <dryRun>false</dryRun>
+		        </configuration>
+		        <executions>
+		          <execution>
+		            <goals>
+		              <goal>site</goal>
+		            </goals>
+		            <phase>deploy</phase>
+		          </execution>
+		        </executions>
+		      </plugin>
+
+    	</plugins>
+  	</build>
+
+	<distributionManagement>
+	         <repository>
+	           <id>github-governib-maven-repos</id>
+	           <name>GitHub GovernIB Maven Repository</name>
+	           <url>https://governib.github.io/maven/maven/</url>
+	         </repository>
+	</distributionManagement>
 </project>

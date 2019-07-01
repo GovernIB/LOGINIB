@@ -15,11 +15,11 @@
 <body>
 	<form id="loginClave" action="loginClaveSimulado.html" method="post">
 		IDP (ANONIMO/CLAVE_CERTIFICADO/CLAVE_PIN/CLAVE_PERMANENTE): <input type="text" name="idp" value="CLAVE_CERTIFICADO"/><br/>
-		NIF: <input type="text" name="nif" value="11111111H"/><br/>
-		NOMBRE: <input type="text" name="nombre" value="Jose"/><br/>
-		APELLIDOS: <input type="text" name="apellidos" value="Garcia Gutierrez"/><br/>
-		APELLIDO 1: <input type="text" name="apellido1" value="Garcia"/><br/>
-		APELLIDO 2: <input type="text" name="apellido2" value="Gutierrez"/><br/>
+		NIF: <input type="text" name="nif" value="00000000T"/><br/>
+		NOMBRE: <input type="text" name="nombre" value="PRUEBASPF"/><br/>
+		APELLIDOS: <input type="text" name="apellidos" value="APELLIDOUNOPF APELLIDODOSPF"/><br/>
+		APELLIDO 1: <input type="text" name="apellido1" value="APELLIDOUNOPF"/><br/>
+		APELLIDO 2: <input type="text" name="apellido2" value="APELLIDODOSPF"/><br/>
 		<input type="hidden" name="idSesion" value="<c:out value="${simularClave.idSesion}"/>"/>
 		<input type="submit" value="enviar"/>
 	</form>
