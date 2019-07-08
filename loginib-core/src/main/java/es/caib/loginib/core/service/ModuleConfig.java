@@ -128,7 +128,7 @@ public final class ModuleConfig {
 	 * Obtiene provider name.
 	 *
 	 * @param entidad
-	 *            entidad
+	 *                    entidad
 	 * @return provider name
 	 */
 	public String getProviderName(final String entidad) {
@@ -139,7 +139,7 @@ public final class ModuleConfig {
 	 * Obtiene spId
 	 *
 	 * @param entidad
-	 *            entidad
+	 *                    entidad
 	 * @return spId
 	 */
 	public String getSpId(final String entidad) {
@@ -150,22 +150,11 @@ public final class ModuleConfig {
 	 * Obtiene spSector
 	 *
 	 * @param entidad
-	 *            entidad
+	 *                    entidad
 	 * @return spSector
 	 */
 	public String getSpSector(final String entidad) {
 		return propiedades.getProperty(entidad + ".spSector");
-	}
-
-	/**
-	 * Obtiene spApplication
-	 *
-	 * @param entidad
-	 *            entidad
-	 * @return spApplication
-	 */
-	public String getSpApplication(final String entidad) {
-		return propiedades.getProperty(entidad + ".spApplication");
 	}
 
 	/**

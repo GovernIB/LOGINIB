@@ -163,7 +163,7 @@ public final class ClaveServiceImpl implements ClaveService {
 		authnRequest.setPersonalAttributeList(pAttList);
 		authnRequest.setAssertionConsumerServiceURL((config.getLoginCallbackClave()) + "/" + idSesion + ".html");
 		authnRequest.setSpSector(config.getSpSector(datosSesion.getEntidad()));
-		authnRequest.setSpApplication(config.getSpApplication(datosSesion.getEntidad()));
+		authnRequest.setSpApplication(datosSesion.getAplicacion());
 		authnRequest.setSPID(config.getSpId(datosSesion.getEntidad()));
 
 		// Generamos peticion SAML
