@@ -32,9 +32,9 @@ public final class RLoginParams {
 
 	/**
 	 * Metodos autenticacion clave (separados por ;). Valores:
-	 * ANONIMO;CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE.
+	 * ANONIMO;CLAVE_CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE.
 	 */
-	@ApiModelProperty(value = "Metodos autenticacion clave (separados por ;). Valores: ANONIMO;CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE.", required = true)
+	@ApiModelProperty(value = "Metodos autenticacion clave (separados por ;). Valores: ANONIMO;CLAVE_CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE.", required = true)
 	private String metodosAutenticacion;
 
 	/**
