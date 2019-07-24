@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.UnmodifiableIterator;
 
 import es.caib.loginib.core.api.exception.ErrorNoControladoException;
+import es.caib.loginib.core.api.exception.ErrorParametroException;
 import es.caib.loginib.core.api.exception.ErrorRespuestaClaveException;
 import es.caib.loginib.core.api.exception.GenerarPeticionClaveException;
 import es.caib.loginib.core.api.exception.TicketNoValidoException;
@@ -39,7 +40,6 @@ import es.caib.loginib.core.api.util.ClaveLoginUtil;
 import es.caib.loginib.core.interceptor.NegocioInterceptor;
 import es.caib.loginib.core.service.repository.dao.ClaveDao;
 import es.caib.loginib.core.service.util.AFirmaUtil;
-import es.caib.loginib.core.service.util.SPUtil;
 import eu.eidas.auth.commons.EidasStringUtil;
 import eu.eidas.auth.commons.attribute.AttributeDefinition;
 import eu.eidas.auth.commons.attribute.AttributeValue;
@@ -87,6 +87,33 @@ public final class ClaveServiceImpl implements ClaveService {
 			final String idioma, final List<TypeIdp> idps, final int qaa, final boolean forceAuth,
 			final String aplicacion) {
 		log.debug(" Crea sesion clave: [idps = " + idps + "] [urlCallback = " + pUrlCallback + "]");
+
+		if (StringUtils.isBlank(entidad)) {
+			throw new ErrorParametroException("No se ha especificado parametro entidad");
+		}
+		if (StringUtils.isBlank(pUrlCallback)) {
+			throw new ErrorParametroException("No se ha especificado parametro url callback");
+		}
+		if (StringUtils.isBlank(pUrlCallbackError)) {
+			throw new ErrorParametroException("No se ha especificado parametro url callback error");
+		}
+		if (StringUtils.isBlank(idioma)) {
+			throw new ErrorParametroException("No se ha especificado parametro idioma");
+		}
+		if (idps == null || idps.isEmpty()) {
+			throw new ErrorParametroException("No se han especificado idps");
+		}
+		boolean idpAutenticado = false;
+		for (final TypeIdp i : idps) {
+			if (i != TypeIdp.ANONIMO) {
+				idpAutenticado = true;
+				break;
+			}
+		}
+		if (idpAutenticado && (qaa <= 0 || qaa > 3)) {
+			throw new ErrorParametroException("No se ha especificado un qaa valido");
+		}
+
 		final String idSesion = claveDao.crearSesionLogin(entidad, pUrlCallback, pUrlCallbackError, idioma, idps, qaa,
 				forceAuth, aplicacion);
 		log.debug(" Creada sesion clave:  [idSesion = " + idSesion + "] [idps = " + idps + "] [urlCallback = "
@@ -183,7 +210,7 @@ public final class ClaveServiceImpl implements ClaveService {
 		reqBuilder.binding(EidasSamlBinding.POST.getName());
 		reqBuilder.assertionConsumerServiceURL(config.getLoginCallbackClave() + "/" + idSesion + ".html");
 		reqBuilder.forceAuth(datosSesion.isForceAuth());
-		reqBuilder.spApplication(config.getSpApplication(datosSesion.getEntidad()));
+		reqBuilder.spApplication(datosSesion.getAplicacion());
 
 		// Generamos peticion SAML. Se firma la petición indicando los datos del
 		// destino
@@ -265,13 +292,6 @@ public final class ClaveServiceImpl implements ClaveService {
 		}
 
 		// Extraemos IDP
-		// TODO Extraer IDP
-		final String issuerAssertion = SPUtil.extractAssertion(samlXml,
-				"//saml2p:Response/saml2:Assertion/saml2:Issuer");
-		log.debug(issuerAssertion);
-		// final TypeIdp idp =
-		// ClaveLoginUtil.convertIssuerToIdp(issuerAssertion);
-		final TypeIdp idp = TypeIdp.CERTIFICADO;
 
 		// Extraemos atributos
 		final ImmutableMap<AttributeDefinition<?>, ImmutableSet<? extends AttributeValue<?>>> attrList = authnResponse
@@ -285,6 +305,7 @@ public final class ClaveServiceImpl implements ClaveService {
 
 		// FamilyName, FirstName, PersonIdentifier, FirstSurname, PartialAfirma,
 		// RelayState]
+		final TypeIdp idp = ClaveLoginUtil.convertIssuerToIdp(attrMap.get("SelectedIdP"));
 		String nif = ClaveLoginUtil.extraerDatoClave(attrMap.get("PersonIdentifier"));
 		String nombre = ClaveLoginUtil.extraerDatoClave(attrMap.get("FirstName"));
 		String apellidos = ClaveLoginUtil.extraerDatoClave(attrMap.get("FamilyName"));
@@ -292,6 +313,9 @@ public final class ClaveServiceImpl implements ClaveService {
 		String apellido2 = null;
 		final String afirmaResponse = attrMap.get("PartialAfirma");
 		final String relayState = ClaveLoginUtil.extraerDatoClave(attrMap.get("RelayState"));
+		final String levelAuth = authnResponse.getLevelOfAssurance();
+		final Integer qaaAutenticacion = ClaveLoginUtil
+				.convertLevelOfAssuranceToQaa(LevelOfAssurance.fromString(levelAuth));
 
 		if (!StringUtils.equals(datosSesion.getSamlIdPeticion(), relayState)
 				|| !StringUtils.equals(datosSesion.getSamlIdPeticion(), relayStateRequest)) {
@@ -340,11 +364,11 @@ public final class ClaveServiceImpl implements ClaveService {
 		}
 
 		// Almacenar en tabla y generar ticket sesion (OTP)
-		log.debug(" Datos obtenidos clave [idSesion = " + pIdSesion + "]: Nivel=" + idp + ", Nif=" + nif + ", Nombre="
-				+ nombre + " " + apellidos);
+		log.debug(" Datos obtenidos clave [idSesion = " + pIdSesion + "]: QAA= " + qaaAutenticacion + ", Nivel=" + idp
+				+ ", Nif=" + nif + ", Nombre=" + nombre + " " + apellidos);
 
-		final TicketClave respuesta = claveDao.generateTicketSesionLogin(pIdSesion, idp, nif, nombre, apellidos,
-				apellido1, apellido2, representante);
+		final TicketClave respuesta = claveDao.generateTicketSesionLogin(pIdSesion, idp, qaaAutenticacion, nif, nombre,
+				apellidos, apellido1, apellido2, representante);
 
 		log.debug(" Ticket generado [idSesion = " + pIdSesion + "]: " + respuesta.getTicket());
 
@@ -355,9 +379,9 @@ public final class ClaveServiceImpl implements ClaveService {
 	@NegocioInterceptor
 	public TicketClave simularRespuestaClave(final String pIdSesion, final TypeIdp pIdp, final String pNif,
 			final String pNombre, final String pApellidos, final String pApellido1, final String pApellido2) {
-
-		return claveDao.generateTicketSesionLogin(pIdSesion, pIdp, pNif, pNombre, pApellidos, pApellido1, pApellido2,
-				null);
+		return claveDao.generateTicketSesionLogin(pIdSesion, pIdp,
+				ClaveLoginUtil.convertLevelOfAssuranceToQaa(LevelOfAssurance.SUBSTANTIAL), pNif, pNombre, pApellidos,
+				pApellido1, pApellido2, null);
 	}
 
 	@Override
@@ -372,7 +396,7 @@ public final class ClaveServiceImpl implements ClaveService {
 		}
 
 		// Genera ticket para acceso sin autenticacion
-		return claveDao.generateTicketSesionLogin(pIdSesion, TypeIdp.ANONIMO, null, null, null, null, null, null);
+		return claveDao.generateTicketSesionLogin(pIdSesion, TypeIdp.ANONIMO, null, null, null, null, null, null, null);
 	}
 
 	@Override
@@ -454,7 +478,10 @@ public final class ClaveServiceImpl implements ClaveService {
 		}
 
 		// Generamos peticion SAML
-		final String idSaml = SecureRandomXmlIdGenerator.INSTANCE.generateIdentifier(8);
+		// final String relayState =
+		// SecureRandomXmlIdGenerator.INSTANCE.generateIdentifier(8);
+		final String idSaml = SAMLEngineUtils.generateNCName();
+
 		final ProtocolEngineNoMetadataI engine = getEngineSamlFactory(datosSesion.getEntidad());
 		byte[] token = null;
 		try {
@@ -528,14 +555,14 @@ public final class ClaveServiceImpl implements ClaveService {
 	 * Obtiene engine para saml de Clave.
 	 *
 	 * @param entidad
-	 *            entidad
+	 *                    entidad
 	 * @return engine
 	 */
 	private ProtocolEngineNoMetadataI getEngineSamlFactory(final String entidad) {
 		// TODO CLAVE2 En clave2 se cachea
 		try {
 			final ProtocolEngineConfigurationFactoryNoMetadata protocolEngineConfigurationFactory = new ProtocolEngineConfigurationFactoryNoMetadata(
-					entidad + "_SamlEngine.xml", null, System.getProperty("es.caib.loginib.clave2conf.path"));
+					entidad + "_SamlEngine.xml", null, config.getDirectorioConfiguracion());
 			final ProtocolEngineFactoryNoMetadata factory = new ProtocolEngineFactoryNoMetadata(
 					protocolEngineConfigurationFactory);
 			final ProtocolEngineNoMetadataI protocolEngine = factory.getProtocolEngine("SPNoMetadata");

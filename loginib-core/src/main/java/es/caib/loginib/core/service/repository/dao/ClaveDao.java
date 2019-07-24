@@ -21,21 +21,21 @@ public interface ClaveDao {
 	 * Iniciar sesion.
 	 *
 	 * @param entidad
-	 *            entidad
+	 *                             entidad
 	 * @param urlCallback
-	 *            url Callback
+	 *                             url Callback
 	 * @param urlCallbackError
-	 *            url Callback error
+	 *                             url Callback error
 	 * @param idioma
-	 *            idioma
+	 *                             idioma
 	 * @param idps
-	 *            idps
+	 *                             idps
 	 * @param qaa
-	 *            Qaa
+	 *                             Qaa
 	 * @param forceAuth
-	 *            forceAuth
+	 *                             forceAuth
 	 * @param aplicacion
-	 *            Aplicacion
+	 *                             Aplicacion
 	 * @return identificador sesion
 	 */
 	String crearSesionLogin(final String entidad, String urlCallback, final String pUrlCallbackError, String idioma,
@@ -45,7 +45,7 @@ public interface ClaveDao {
 	 * Obtener datos sesion.
 	 *
 	 * @param idSesion
-	 *            Id sesion
+	 *                     Id sesion
 	 * @return Datos sesion
 	 */
 	DatosSesion obtenerDatosSesionLogin(String idSesion);
@@ -54,7 +54,7 @@ public interface ClaveDao {
 	 * Obtener datos sesion logout.
 	 *
 	 * @param idSesion
-	 *            Id sesion
+	 *                     Id sesion
 	 * @return Datos sesion
 	 */
 	DatosLogoutSesion obtenerDatosSesionLogout(String idSesion);
@@ -63,9 +63,9 @@ public interface ClaveDao {
 	 * Establecer SamlId Peticion.
 	 *
 	 * @param idSesion
-	 *            Id sesion
+	 *                     Id sesion
 	 * @param samlId
-	 *            Saml Id
+	 *                     Saml Id
 	 */
 	void establecerSamlIdSesionLogin(String idSesion, String samlId);
 
@@ -73,9 +73,9 @@ public interface ClaveDao {
 	 * Establecer SamlId Logout Peticion.
 	 *
 	 * @param idSesion
-	 *            Id sesion
+	 *                     Id sesion
 	 * @param samlId
-	 *            Saml Id
+	 *                     Saml Id
 	 */
 	void establecerSamlIdSesionLogout(String idSesion, String samlId);
 
@@ -83,30 +83,30 @@ public interface ClaveDao {
 	 * Crea ticket.
 	 *
 	 * @param idSesion
-	 *            id sesion
+	 *                          id sesion
 	 * @param idp
-	 *            idp
+	 *                          idp
 	 * @param nif
-	 *            Nif
+	 *                          Nif
 	 * @param nombre
-	 *            Nombre
+	 *                          Nombre
 	 * @param apellidos
-	 *            Apelllidos
+	 *                          Apelllidos
 	 * @param apellido1
-	 *            Apellido 1
+	 *                          Apellido 1
 	 * @param representante
-	 *            representante
+	 *                          representante
 	 * @parama apellido2 Apellido 2
 	 * @return Ticket
 	 */
-	TicketClave generateTicketSesionLogin(String idSesion, TypeIdp idp, String nif, String nombre, String apellidos,
-			String apellido1, String apellido2, DatosRepresentante representante);
+	TicketClave generateTicketSesionLogin(String idSesion, TypeIdp idp, Integer qaa, String nif, String nombre,
+			String apellidos, String apellido1, String apellido2, DatosRepresentante representante);
 
 	/**
 	 * Obtiene ticket aplicacion externa y lo borra.
 	 *
 	 * @param ticket
-	 *            Ticket
+	 *                   Ticket
 	 * @return DatosUsuario
 	 */
 	DatosUsuario consumirTicketSesionLogin(final String ticket);
@@ -115,9 +115,9 @@ public interface ClaveDao {
 	 * Realiza purga tickets aplicaciones externas.
 	 *
 	 * @param timeoutSesion
-	 *            timeout sesion
+	 *                          timeout sesion
 	 * @param timeoutTicket
-	 *            timeout ticket
+	 *                          timeout ticket
 	 * @param timeoutPurga
 	 */
 	void purgaTicketSesionLogin(Long timeoutSesion, Long timeoutTicket, Long timeoutPurga);
@@ -126,13 +126,13 @@ public interface ClaveDao {
 	 * Iniciar logout sesion.
 	 *
 	 * @param entidad
-	 *            entidad
+	 *                        entidad
 	 * @param urlCallback
-	 *            url Callback
+	 *                        url Callback
 	 * @param idioma
-	 *            idioma
+	 *                        idioma
 	 * @param aplicacion
-	 *            Identificador aplicacion
+	 *                        Identificador aplicacion
 	 * @return identificador sesion
 	 */
 	String crearSesionLogut(final String entidad, String pUrlCallback, String idioma, String aplicacion);
@@ -141,9 +141,9 @@ public interface ClaveDao {
 	 * Realiza purga logouts aplicaciones externas.
 	 *
 	 * @param timeoutSesion
-	 *            timeout sesion
+	 *                          timeout sesion
 	 * @param timeoutTicket
-	 *            timeout ticket
+	 *                          timeout ticket
 	 * @param timeoutPurga
 	 */
 	void purgaTicketSesionLogout(Long timeoutSesionExterna, Long timeoutTicketExterna, Long timeoutPurga);

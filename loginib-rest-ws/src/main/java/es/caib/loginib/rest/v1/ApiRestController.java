@@ -58,7 +58,7 @@ public class ApiRestController {
 	 * Recupera datos ticket.
 	 *
 	 * @param ticket
-	 *            ticket
+	 *                   ticket
 	 * @return datos ticket
 	 */
 	@ApiOperation(value = "Obtiene datos autenticación a partir del ticket", notes = "Obtiene datos autenticación a partir del ticket", response = RDatosAutenticacion.class)
@@ -69,6 +69,9 @@ public class ApiRestController {
 
 		final RDatosAutenticacion datos = new RDatosAutenticacion();
 		datos.setMetodoAutenticacion(du.getNivelAutenticacion());
+		if (du.getQaa() != null) {
+			datos.setQaa(du.getQaa().toString());
+		}
 		datos.setNif(du.getNif());
 		datos.setNombre(du.getNombre());
 		datos.setApellidos(du.getApellidos());

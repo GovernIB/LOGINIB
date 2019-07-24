@@ -21,22 +21,14 @@ public interface ClaveService {
 	/**
 	 * Crea sesion para clave.
 	 *
-	 * @param entidad
-	 *            entidad
-	 * @param urlCallback
-	 *            Url callback
-	 * @param urlCallbackError
-	 *            Url callback error
-	 * @param idioma
-	 *            idioma
-	 * @param idps
-	 *            Idps
-	 * @param qaa
-	 *            Qaa
-	 * @param forceAuth
-	 *            forceAuth
-	 * @param aplicacion
-	 *            Aplicacion
+	 * @param entidad          entidad
+	 * @param urlCallback      Url callback
+	 * @param urlCallbackError Url callback error
+	 * @param idioma           idioma
+	 * @param idps             Idps
+	 * @param qaa              Qaa
+	 * @param forceAuth        forceAuth
+	 * @param aplicacion       Aplicacion
 	 * @return Id sesion
 	 */
 	String iniciarLoginClave(final String entidad, final String urlCallback, final String urlCallbackError,
@@ -45,14 +37,10 @@ public interface ClaveService {
 	/**
 	 * Crea logout para clave.
 	 *
-	 * @param entidad
-	 *            entidad
-	 * @param pUrlCallback
-	 *            url callback
-	 * @param idioma
-	 *            idioma
-	 * @param aplicacion
-	 *            identificador aplicacion
+	 * @param entidad      entidad
+	 * @param pUrlCallback url callback
+	 * @param idioma       idioma
+	 * @param aplicacion   identificador aplicacion
 	 * @return id sesion
 	 */
 	String iniciarLogoutClave(final String entidad, final String pUrlCallback, final String idioma,
@@ -61,16 +49,14 @@ public interface ClaveService {
 	/**
 	 * Obtener datos sesión login.
 	 *
-	 * @param idSesion
-	 *            id sesion
+	 * @param idSesion id sesion
 	 */
 	public DatosSesion obtenerDatosSesionLogin(String idSesion);
 
 	/**
 	 * Genera petición de autenticación para Clave.
 	 *
-	 * @param idSesion
-	 *            id sesion
+	 * @param idSesion id sesion
 	 * @return Petición Clave
 	 */
 	PeticionClave generarPeticionLoginClave(final String idSesion);
@@ -78,8 +64,7 @@ public interface ClaveService {
 	/**
 	 * Genera ticket para acceso anonimo.
 	 *
-	 * @param pIdSesion
-	 *            Id sesion
+	 * @param pIdSesion Id sesion
 	 * @return ticket
 	 */
 	TicketClave loginAnonimo(final String pIdSesion);
@@ -88,12 +73,9 @@ public interface ClaveService {
 	 * Procesa peticion clave, extrae los datos de autenticacion, los almacena en
 	 * bbdd y devuelve ticket de autenticacion.
 	 *
-	 * @param samlResponseB64
-	 *            respuesta clave
-	 * @param idSesion
-	 *            idSesion
-	 * @param relayState
-	 *            relayState
+	 * @param samlResponseB64 respuesta clave
+	 * @param idSesion        idSesion
+	 * @param relayState      relayState
 	 * @return ticket de acceso
 	 */
 	TicketClave procesarRespuestaLoginClave(final String idSesion, final String samlResponseB64, String relayState);
@@ -115,8 +97,7 @@ public interface ClaveService {
 	/**
 	 * Obtiene datos usuario para aplicacion externa.
 	 *
-	 * @param ticket
-	 *            Ticket
+	 * @param ticket Ticket
 	 * @return Datos usuario
 	 */
 	DatosUsuario obtenerDatosAutenticacion(String ticket);
@@ -129,10 +110,8 @@ public interface ClaveService {
 	/**
 	 * Obtener url inicio sesion clave para aplicacion externas.
 	 *
-	 * @param idSesion
-	 *            Id sesion
-	 * @param idioma
-	 *            idioma
+	 * @param idSesion Id sesion
+	 * @param idioma   idioma
 	 * @return url
 	 */
 	String obtenerUrlRedireccionLoginClave(String idSesion, String idioma);
@@ -140,8 +119,7 @@ public interface ClaveService {
 	/**
 	 * Obtener url logout sesion clave para aplicacion externas.
 	 *
-	 * @param idSesion
-	 *            Id sesion
+	 * @param idSesion Id sesion
 	 * @return url
 	 */
 	String obtenerUrlRedireccionLogoutClave(final String pIdSesion);
@@ -149,16 +127,11 @@ public interface ClaveService {
 	/**
 	 * Simula respuesta Clave.
 	 *
-	 * @param pIdSesion
-	 *            id sesion
-	 * @param pIdp
-	 *            idp
-	 * @param pNif
-	 *            nif
-	 * @param pNombre
-	 *            nombre
-	 * @param pApellidos
-	 *            apellidos
+	 * @param pIdSesion  id sesion
+	 * @param pIdp       idp
+	 * @param pNif       nif
+	 * @param pNombre    nombre
+	 * @param pApellidos apellidos
 	 * @return Ticket retorno
 	 */
 	TicketClave simularRespuestaClave(String pIdSesion, TypeIdp pIdp, String pNif, String pNombre, String pApellidos,
@@ -167,8 +140,7 @@ public interface ClaveService {
 	/**
 	 * Generar peticion logout.
 	 *
-	 * @param idSesion
-	 *            id sesion
+	 * @param idSesion id sesion
 	 *
 	 * @return Datos para redirigira a Clave para hacer logout
 	 */
@@ -177,10 +149,9 @@ public interface ClaveService {
 	/**
 	 * Respuesta peticion logout.
 	 *
-	 * @param pIdSesion
-	 *            Id Sesion
-	 * @param pSamlResponseB64
-	 *            Saml response
+	 * @param pIdSesion        Id Sesion
+	 * @param pSamlResponseB64 Saml response
+	 * @param relayState       relayState
 	 * @return Redireccion a aplicacion origen
 	 */
 	RespuestaClaveLogout procesarRespuestaLogoutClave(final String pIdSesion, final String pSamlResponseB64);

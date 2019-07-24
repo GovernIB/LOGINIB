@@ -35,14 +35,14 @@
 	</entry>
 	<!-- signing response assertion true/false (default false) -->
 	<entry key="response.sign.assertions">false</entry>
-	
+
 	<entry key="keyStoreType">JKS</entry>
-		
-	
+
+
 	<entry key="keyStorePath">A04003003_keystoreClave.jks</entry>
-	<entry key="keyStorePassword">changeit</entry>
+	<entry key="keyStorePassword">123456</entry>
 	<entry key="keyPassword">12341234</entry>
 	<entry key="issuer">CN=AC Administración Pública, SERIALNUMBER=Q2826004J, OU=CERES, O=FNMT-RCM, C=ES</entry>
-	<entry key="serialNumber">2225b8208462913858e2537aa3e70ce5</entry>	
-	
+	<entry key="serialNumber">2225b8208462913858e2537aa3e70ce5</entry>
+
 </properties>

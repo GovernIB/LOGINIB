@@ -1,13 +1,11 @@
 package es.caib.loginib.core.service.util;
 
 import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -31,8 +29,7 @@ public final class AFirmaUtil {
 	/**
 	 * Extrae info del certificado a partir de la respuesta de AFirma en B64.
 	 *
-	 * @param xmlFirmaB64
-	 *            respuesta de AFirma en B64
+	 * @param xmlFirmaB64 respuesta de AFirma en B64
 	 * @return info del certificado (map con idcampo / valorcampo)
 	 */
 	@SuppressWarnings("unchecked")
@@ -42,16 +39,10 @@ public final class AFirmaUtil {
 
 			final byte[] aFirmaBytes = Base64.decodeBase64(xmlFirmaB64);
 
-			// TODO Sustituimos cabecera xml porque no tiene los namespaces
-			String xmlStr = new String(aFirmaBytes, "UTF-8");
-			final String cabeceraKO = "<Partial_Afirma_Response>";
-			final String cabeceraOK = "<Partial_Afirma_Response xmlns:dss=\"urn:oasis:names:tc:dss:1.0:core:schema\"  xmlns:afxp=\"urn:afirma:dss:1.0:profile:XSS:schema\">";
-			xmlStr = StringUtils.replace(xmlStr, cabeceraKO, cabeceraOK);
-
 			final SAXReader reader = new SAXReader();
 			Document document;
 
-			document = reader.read(new ByteArrayInputStream(xmlStr.getBytes("UTF-8")));
+			document = reader.read(new ByteArrayInputStream(aFirmaBytes));
 
 			final Map<String, String> namespaceUris = new HashMap<String, String>();
 			namespaceUris.put("dss", "urn:oasis:names:tc:dss:1.0:core:schema");
@@ -78,7 +69,7 @@ public final class AFirmaUtil {
 
 			return values;
 
-		} catch (final DocumentException | UnsupportedEncodingException ex) {
+		} catch (final DocumentException ex) {
 			throw new ErrorRespuestaClaveException(ex, null);
 		}
 

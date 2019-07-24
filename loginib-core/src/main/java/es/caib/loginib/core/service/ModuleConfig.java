@@ -1,5 +1,6 @@
 package es.caib.loginib.core.service;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -23,12 +24,20 @@ public final class ModuleConfig {
 	/** Properties. */
 	private Properties propiedades;
 
+	/** Directorio configuracion. */
+	private String directorioConfiguracion;
+
 	/** Inicio. */
 	@PostConstruct
 	public void init() {
-		try (FileInputStream fis = new FileInputStream(System.getProperty("es.caib.loginib.properties.path"));) {
+		final String pathFileConfiguracion = System.getProperty("es.caib.loginib.properties.path");
+		try (FileInputStream fis = new FileInputStream(pathFileConfiguracion);) {
+			// Carga propiedades
 			propiedades = new Properties();
 			propiedades.load(fis);
+			// Obtiene directorio configuracion
+			final File file = new File(pathFileConfiguracion);
+			directorioConfiguracion = file.getAbsoluteFile().getParent() + "/";
 		} catch (final IOException e) {
 			throw new ConfiguracionException(e);
 		}
@@ -128,7 +137,7 @@ public final class ModuleConfig {
 	 * Obtiene provider name.
 	 *
 	 * @param entidad
-	 *            entidad
+	 *                    entidad
 	 * @return provider name
 	 */
 	public String getProviderName(final String entidad) {
@@ -136,36 +145,12 @@ public final class ModuleConfig {
 	}
 
 	/**
-	 * Obtiene spId
+	 * Obtiene ruta directorio configuracion
 	 *
-	 * @param entidad
-	 *            entidad
-	 * @return spId
+	 * @return directorio configuracion
 	 */
-	public String getSpId(final String entidad) {
-		return propiedades.getProperty(entidad + ".spId");
-	}
-
-	/**
-	 * Obtiene spSector
-	 *
-	 * @param entidad
-	 *            entidad
-	 * @return spSector
-	 */
-	public String getSpSector(final String entidad) {
-		return propiedades.getProperty(entidad + ".spSector");
-	}
-
-	/**
-	 * Obtiene spApplication
-	 *
-	 * @param entidad
-	 *            entidad
-	 * @return spApplication
-	 */
-	public String getSpApplication(final String entidad) {
-		return propiedades.getProperty(entidad + ".spApplication");
+	public String getDirectorioConfiguracion() {
+		return directorioConfiguracion;
 	}
 
 	/**
@@ -174,7 +159,7 @@ public final class ModuleConfig {
 	 * @return dias para la purga definitiva
 	 */
 	public Long getTimeoutPurga() {
-		return Long.parseLong(propiedades.getProperty("timeoutPuga"));
+		return Long.parseLong(propiedades.getProperty("timeoutPurga"));
 	}
 
 }

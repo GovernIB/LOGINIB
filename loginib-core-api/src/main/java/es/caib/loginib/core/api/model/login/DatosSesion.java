@@ -31,8 +31,11 @@ public final class DatosSesion {
 	/** Idioma. */
 	private String idioma;
 
-	/** QAA. */
+	/** QAA solicitado. */
 	private Integer qaa;
+
+	/** QAA autenticacion. */
+	private Integer qaaAutenticacion;
 
 	/** Force auth. */
 	private boolean forceAuth;
@@ -62,7 +65,7 @@ public final class DatosSesion {
 	 * Sets the fecha.
 	 *
 	 * @param pFecha
-	 *            the fecha to set
+	 *                   the fecha to set
 	 */
 	public void setFechaInicioSesion(final Date pFecha) {
 		fechaInicioSesion = pFecha;
@@ -81,7 +84,7 @@ public final class DatosSesion {
 	 * Sets the idioma.
 	 *
 	 * @param pIdioma
-	 *            the idioma to set
+	 *                    the idioma to set
 	 */
 	public void setIdioma(final String pIdioma) {
 		idioma = pIdioma;
@@ -100,7 +103,7 @@ public final class DatosSesion {
 	 * Sets the fecha ticket.
 	 *
 	 * @param pFechaTicket
-	 *            the fechaTicket to set
+	 *                         the fechaTicket to set
 	 */
 	public void setFechaTicket(final Date pFechaTicket) {
 		fechaTicket = pFechaTicket;
@@ -115,7 +118,7 @@ public final class DatosSesion {
 
 	/**
 	 * @param qaa
-	 *            the qaa to set
+	 *                the qaa to set
 	 */
 	public void setQaa(final Integer qaa) {
 		this.qaa = qaa;
@@ -134,7 +137,7 @@ public final class DatosSesion {
 	 * Sets the force auth.
 	 *
 	 * @param forceAuth
-	 *            the new force auth
+	 *                      the new force auth
 	 */
 	public void setForceAuth(final boolean forceAuth) {
 		this.forceAuth = forceAuth;
@@ -161,7 +164,7 @@ public final class DatosSesion {
 	 * Método para establecer entidad.
 	 *
 	 * @param entidad
-	 *            entidad a establecer
+	 *                    entidad a establecer
 	 */
 	public void setEntidad(final String entidad) {
 		this.entidad = entidad;
@@ -180,7 +183,7 @@ public final class DatosSesion {
 	 * Método para establecer idSesion.
 	 *
 	 * @param idSesion
-	 *            idSesion a establecer
+	 *                     idSesion a establecer
 	 */
 	public void setIdSesion(final String idSesion) {
 		this.idSesion = idSesion;
@@ -199,7 +202,7 @@ public final class DatosSesion {
 	 * Método para establecer idps.
 	 *
 	 * @param idps
-	 *            idps a establecer
+	 *                 idps a establecer
 	 */
 	public void setIdps(final List<TypeIdp> idps) {
 		this.idps = idps;
@@ -218,7 +221,7 @@ public final class DatosSesion {
 	 * Método para establecer urlCallback.
 	 *
 	 * @param urlCallback
-	 *            urlCallback a establecer
+	 *                        urlCallback a establecer
 	 */
 	public void setUrlCallback(final String urlCallback) {
 		this.urlCallback = urlCallback;
@@ -233,7 +236,7 @@ public final class DatosSesion {
 
 	/**
 	 * @param aplicacion
-	 *            the aplicacion to set
+	 *                       the aplicacion to set
 	 */
 	public void setAplicacion(final String aplicacion) {
 		this.aplicacion = aplicacion;
@@ -248,10 +251,29 @@ public final class DatosSesion {
 
 	/**
 	 * @param urlCallbackError
-	 *            the urlCallbackError to set
+	 *                             the urlCallbackError to set
 	 */
 	public void setUrlCallbackError(final String urlCallbackError) {
 		this.urlCallbackError = urlCallbackError;
+	}
+
+	/**
+	 * Método de acceso a qaaAutenticacion.
+	 * 
+	 * @return qaaAutenticacion
+	 */
+	public Integer getQaaAutenticacion() {
+		return qaaAutenticacion;
+	}
+
+	/**
+	 * Método para establecer qaaAutenticacion.
+	 * 
+	 * @param qaaAutenticacion
+	 *                             qaaAutenticacion a establecer
+	 */
+	public void setQaaAutenticacion(final Integer qaaAutenticacion) {
+		this.qaaAutenticacion = qaaAutenticacion;
 	}
 
 }

@@ -10,8 +10,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
-	
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
 	<script type="text/javascript">
 	<!--
 	function loginClave() {
@@ -19,11 +19,12 @@
 	}
 	-->
 	</script>
-	
+
 </head>
 <body onload="loginClave();">
-	<form id="loginClave" action="<c:out value="${datos.urlClave}"/>" method="post">	
-		<input type="hidden" name="samlRequestLogout" value="<c:out value="${datos.samlRequest}"/>"/>		
+	<form id="loginClave" action="<c:out value="${datos.urlClave}"/>" method="post">
+		<input type="hidden" name="logoutRequest" value="<c:out value="${datos.samlRequest}"/>"/>
+		<input type="hidden" name="RelayState" value="<c:out value="${datos.relayState}"/>"/>
 	</form>
 </body>
 </html>

@@ -83,6 +83,7 @@ public final class ClaveDaoImpl implements ClaveDao {
 		ds.setIdps(ClaveLoginUtil.convertToListIdps(ticket.getIdps()));
 		ds.setFechaTicket(ticket.getFechaTicket());
 		ds.setQaa(ticket.getQaa());
+		ds.setQaaAutenticacion(ticket.getQaaAutenticacion());
 		ds.setForceAuth(ticket.isForceAuthentication());
 		ds.setSamlIdPeticion(ticket.getSamlIdPeticion());
 		ds.setUrlCallback(ticket.getUrlCallback());
@@ -116,11 +117,12 @@ public final class ClaveDaoImpl implements ClaveDao {
 	}
 
 	@Override
-	public TicketClave generateTicketSesionLogin(final String idSesion, final TypeIdp idp, final String pNif,
-			final String pNombre, final String pApellidos, final String pApellido1, final String pApellido2,
-			final DatosRepresentante representante) {
+	public TicketClave generateTicketSesionLogin(final String idSesion, final TypeIdp idp, final Integer qaa,
+			final String pNif, final String pNombre, final String pApellidos, final String pApellido1,
+			final String pApellido2, final DatosRepresentante representante) {
 		TicketClave ticket;
-		ticket = generaTicketExterna(idSesion, idp, pNif, pNombre, pApellidos, pApellido1, pApellido2, representante);
+		ticket = generaTicketExterna(idSesion, idp, qaa, pNif, pNombre, pApellidos, pApellido1, pApellido2,
+				representante);
 		return ticket;
 	}
 
@@ -128,26 +130,26 @@ public final class ClaveDaoImpl implements ClaveDao {
 	 * Genera ticket para aplicacion externa.
 	 *
 	 * @param idSesion
-	 *            id sesion
+	 *                          id sesion
 	 * @param pIdp
-	 *            nivel autenticacion (C: certificado / U: usuario)
+	 *                          nivel autenticacion (C: certificado / U: usuario)
 	 * @param pNif
-	 *            Nif
+	 *                          Nif
 	 * @param pNombre
-	 *            Nombre
+	 *                          Nombre
 	 * @param pApellidos
-	 *            Apelllidos
+	 *                          Apelllidos
 	 * @param pApellido2
-	 *            Apellido 2
+	 *                          Apellido 2
 	 * @param pApellido1
-	 *            Apellido 1
+	 *                          Apellido 1
 	 * @param representante
-	 *            representante
+	 *                          representante
 	 * @return Ticket
 	 */
-	private TicketClave generaTicketExterna(final String idSesion, final TypeIdp pIdp, final String pNif,
-			final String pNombre, final String pApellidos, final String pApellido1, final String pApellido2,
-			final DatosRepresentante representante) {
+	private TicketClave generaTicketExterna(final String idSesion, final TypeIdp pIdp, final Integer qaa,
+			final String pNif, final String pNombre, final String pApellidos, final String pApellido1,
+			final String pApellido2, final DatosRepresentante representante) {
 
 		// Recupera sesion
 		final JSesionLogin ticket = getSesionLogin(idSesion);
@@ -166,6 +168,7 @@ public final class ClaveDaoImpl implements ClaveDao {
 		ticket.setApellido1(pApellido1);
 		ticket.setApellido2(pApellido2);
 		ticket.setIdp(pIdp.toString());
+		ticket.setQaaAutenticacion(qaa);
 
 		if (representante != null) {
 			ticket.setRepresentanteNif(representante.getNif());
@@ -188,7 +191,7 @@ public final class ClaveDaoImpl implements ClaveDao {
 	 * Recupera sesion login.
 	 *
 	 * @param idSesion
-	 *            id sesion
+	 *                     id sesion
 	 * @return sesion
 	 */
 	private JSesionLogin getSesionLogin(final String idSesion) {
@@ -211,7 +214,7 @@ public final class ClaveDaoImpl implements ClaveDao {
 	 * Recupera sesion logout.
 	 *
 	 * @param idSesion
-	 *            id sesion
+	 *                     id sesion
 	 * @return sesion
 	 */
 	private JSesionLogout getSesionLogout(final String idSesion) {
@@ -254,6 +257,7 @@ public final class ClaveDaoImpl implements ClaveDao {
 			du = new DatosUsuario();
 			du.setFechaTicket(t.getFechaTicket());
 			du.setNivelAutenticacion(t.getIdp());
+			du.setQaa(t.getQaaAutenticacion());
 			du.setNif(t.getNif());
 			du.setNombre(t.getNombre());
 			du.setApellidos(t.getApellidos());

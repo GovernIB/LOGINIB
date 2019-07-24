@@ -1,6 +1,7 @@
 package es.caib.loginib.frontend.controller;
 
 import javax.annotation.Resource;
+import javax.ejb.EJBException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -103,8 +104,7 @@ public final class SesionClaveController {
 	/**
 	 * Recibe peticion de inicio de sesion en Clave y redirige a Clave.
 	 *
-	 * @param idSesion
-	 *            idSesion
+	 * @param idSesion idSesion
 	 * @return pagina que realiza la redireccion a Clave
 	 */
 	@RequestMapping(value = "/redirigirLoginClave.html")
@@ -144,8 +144,7 @@ public final class SesionClaveController {
 	/**
 	 * Recibe peticion de logout de sesion en Clave y redirige a Clave.
 	 *
-	 * @param idSesion
-	 *            idSesion
+	 * @param idSesion idSesion
 	 * @return pagina que realiza la redireccion a Clave
 	 */
 	@RequestMapping(value = "/redirigirLogoutClave.html")
@@ -182,10 +181,8 @@ public final class SesionClaveController {
 	/**
 	 * Retorno de Clave y vuelta a aplicacion externa.
 	 *
-	 * @param idSesion
-	 *            idSesion.
-	 * @param samlResponse
-	 *            samlResponse.
+	 * @param idSesion     idSesion.
+	 * @param samlResponse samlResponse.
 	 * @return pagina que realiza la redireccion a aplicacion externa tras el login
 	 *         en Clave
 	 */
@@ -211,16 +208,14 @@ public final class SesionClaveController {
 	/**
 	 * Retorno de logout Clave y vuelta a aplicacion externa.
 	 *
-	 * @param idSesion
-	 *            idSesion.
-	 * @param samlResponse
-	 *            samlResponse.
+	 * @param idSesion     idSesion.
+	 * @param samlResponse samlResponse.
 	 * @return pagina que realiza la redireccion a aplicacion externa tras el login
 	 *         en Clave
 	 */
 	@RequestMapping(value = "/retornoLogoutClave/{idSesion}.html", method = RequestMethod.POST)
 	public ModelAndView retornoLogoutClave(@PathVariable("idSesion") final String idSesion,
-			@RequestParam("samlResponseLogout") final String samlResponse) {
+			@RequestParam("logoutResponse") final String samlResponse) {
 
 		final RespuestaClaveLogout resp = claveService.procesarRespuestaLogoutClave(idSesion, samlResponse);
 
@@ -236,16 +231,11 @@ public final class SesionClaveController {
 	/**
 	 * Simulamos acceso clave.
 	 *
-	 * @param idSesion
-	 *            idSesion
-	 * @param idp
-	 *            idp
-	 * @param nif
-	 *            nif
-	 * @param nombre
-	 *            nombre
-	 * @param apellidos
-	 *            apellidos
+	 * @param idSesion  idSesion
+	 * @param idp       idp
+	 * @param nif       nif
+	 * @param nombre    nombre
+	 * @param apellidos apellidos
 	 * @return retorno aplicacion
 	 */
 	@RequestMapping(value = "loginClaveSimulado.html", method = RequestMethod.POST)
@@ -273,8 +263,7 @@ public final class SesionClaveController {
 	/**
 	 * Muestra error.
 	 *
-	 * @param errorCode
-	 *            codigo error
+	 * @param errorCode codigo error
 	 * @return pagina error
 	 */
 	@RequestMapping("/error.html")
@@ -315,17 +304,18 @@ public final class SesionClaveController {
 	/**
 	 * Handler de excepciones de negocio.
 	 *
-	 * @param pex
-	 *            Excepción
-	 * @param request
-	 *            Request
+	 * @param pex     Excepción
+	 * @param request Request
 	 * @return Respuesta JSON indicando el mensaje producido
 	 */
 	@ExceptionHandler({ Exception.class })
 	public ModelAndView handleServiceException(final Exception pex, final HttpServletRequest request) {
 
-		// Si no es una excepcion de negocio, generamos log
-		if (!(pex instanceof ServiceException)) {
+		Exception ex = pex;
+
+		if (pex instanceof EJBException && pex.getCause() instanceof ServiceException) {
+			ex = (Exception) pex.getCause();
+		} else if (!(pex instanceof ServiceException)) {
 			log.error("Excepcion en capa front: " + pex.getMessage(), pex);
 		}
 
@@ -333,10 +323,11 @@ public final class SesionClaveController {
 		// detalle al usuario
 		String errorMessage = null;
 		String idSession = null;
-		if (pex instanceof ErrorRespuestaClaveException) {
-			errorMessage = pex.getMessage();
-			if (((ErrorRespuestaClaveException) pex).getIdSesion() != null) {
-				idSession = ((ErrorRespuestaClaveException) pex).getIdSesion();
+
+		if (ex instanceof ErrorRespuestaClaveException) {
+			errorMessage = ex.getMessage();
+			if (((ErrorRespuestaClaveException) ex).getIdSesion() != null) {
+				idSession = ((ErrorRespuestaClaveException) ex).getIdSesion();
 			}
 		}
 		request.getSession().setAttribute(ERROR_MESSAGE_USER, errorMessage);
