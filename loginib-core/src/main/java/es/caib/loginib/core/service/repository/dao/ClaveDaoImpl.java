@@ -128,21 +128,21 @@ public final class ClaveDaoImpl implements ClaveDao {
 	 * Genera ticket para aplicacion externa.
 	 *
 	 * @param idSesion
-	 *            id sesion
+	 *                          id sesion
 	 * @param pIdp
-	 *            nivel autenticacion (C: certificado / U: usuario)
+	 *                          nivel autenticacion (C: certificado / U: usuario)
 	 * @param pNif
-	 *            Nif
+	 *                          Nif
 	 * @param pNombre
-	 *            Nombre
+	 *                          Nombre
 	 * @param pApellidos
-	 *            Apelllidos
+	 *                          Apelllidos
 	 * @param pApellido2
-	 *            Apellido 2
+	 *                          Apellido 2
 	 * @param pApellido1
-	 *            Apellido 1
+	 *                          Apellido 1
 	 * @param representante
-	 *            representante
+	 *                          representante
 	 * @return Ticket
 	 */
 	private TicketClave generaTicketExterna(final String idSesion, final TypeIdp pIdp, final String pNif,
@@ -188,7 +188,7 @@ public final class ClaveDaoImpl implements ClaveDao {
 	 * Recupera sesion login.
 	 *
 	 * @param idSesion
-	 *            id sesion
+	 *                     id sesion
 	 * @return sesion
 	 */
 	private JSesionLogin getSesionLogin(final String idSesion) {
@@ -211,7 +211,7 @@ public final class ClaveDaoImpl implements ClaveDao {
 	 * Recupera sesion logout.
 	 *
 	 * @param idSesion
-	 *            id sesion
+	 *                     id sesion
 	 * @return sesion
 	 */
 	private JSesionLogout getSesionLogout(final String idSesion) {
@@ -254,6 +254,9 @@ public final class ClaveDaoImpl implements ClaveDao {
 			du = new DatosUsuario();
 			du.setFechaTicket(t.getFechaTicket());
 			du.setNivelAutenticacion(t.getIdp());
+			if (!"ANONIMO".equals(du.getNivelAutenticacion())) {
+				du.setQaa(t.getQaa());
+			}
 			du.setNif(t.getNif());
 			du.setNombre(t.getNombre());
 			du.setApellidos(t.getApellidos());

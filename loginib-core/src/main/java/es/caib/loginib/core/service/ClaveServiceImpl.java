@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.caib.loginib.core.api.exception.ErrorNoControladoException;
+import es.caib.loginib.core.api.exception.ErrorParametroException;
 import es.caib.loginib.core.api.exception.ErrorRespuestaClaveException;
 import es.caib.loginib.core.api.exception.GenerarPeticionClaveException;
 import es.caib.loginib.core.api.exception.TicketNoValidoException;
@@ -70,6 +71,33 @@ public final class ClaveServiceImpl implements ClaveService {
 			final String idioma, final List<TypeIdp> idps, final int qaa, final boolean forceAuth,
 			final String aplicacion) {
 		log.debug(" Crea sesion clave: [idps = " + idps + "] [urlCallback = " + pUrlCallback + "]");
+
+		if (StringUtils.isBlank(entidad)) {
+			throw new ErrorParametroException("No se ha especificado parametro entidad");
+		}
+		if (StringUtils.isBlank(pUrlCallback)) {
+			throw new ErrorParametroException("No se ha especificado parametro url callback");
+		}
+		if (StringUtils.isBlank(pUrlCallbackError)) {
+			throw new ErrorParametroException("No se ha especificado parametro url callback error");
+		}
+		if (StringUtils.isBlank(idioma)) {
+			throw new ErrorParametroException("No se ha especificado parametro idioma");
+		}
+		if (idps == null || idps.isEmpty()) {
+			throw new ErrorParametroException("No se han especificado idps");
+		}
+		boolean idpAutenticado = false;
+		for (final TypeIdp i : idps) {
+			if (i != TypeIdp.ANONIMO) {
+				idpAutenticado = true;
+				break;
+			}
+		}
+		if (idpAutenticado && (qaa <= 0 || qaa > 3)) {
+			throw new ErrorParametroException("No se ha especificado un qaa valido");
+		}
+
 		final String idSesion = claveDao.crearSesionLogin(entidad, pUrlCallback, pUrlCallbackError, idioma, idps, qaa,
 				forceAuth, aplicacion);
 		log.debug(" Creada sesion clave:  [idSesion = " + idSesion + "] [idps = " + idps + "] [urlCallback = "
