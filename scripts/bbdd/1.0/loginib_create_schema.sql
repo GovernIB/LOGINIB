@@ -32,6 +32,7 @@ create table LIB_LOGIN
    LGI_AP2RPT           VARCHAR2(1000 CHAR),
    LGI_SESION           VARCHAR2(100 CHAR),
    LGI_QAA              NUMBER(1),
+   LGI_QAARES           NUMBER(1),
    LGI_SAMLID           VARCHAR2(100 CHAR),
    LGI_PURGCK           NUMBER(1)            default 0 not null,
    constraint LIB_LGI_PK primary key (LGI_CODIGO)
@@ -110,7 +111,10 @@ comment on column LIB_LOGIN.LGI_SESION is
 'Identificador aleatorio de sesion';
 
 comment on column LIB_LOGIN.LGI_QAA is
-'Nivel de seguridad';
+'Nivel de seguridad solicitado';
+
+comment on column LIB_LOGIN.LGI_QAARES is
+'Nivel de seguridad con el que se autentica';
 
 comment on column LIB_LOGIN.LGI_SAMLID is
 'SAML ID petición Clave';
