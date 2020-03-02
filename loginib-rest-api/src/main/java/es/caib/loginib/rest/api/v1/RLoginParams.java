@@ -32,9 +32,9 @@ public final class RLoginParams {
 
 	/**
 	 * Metodos autenticacion clave (separados por ;). Valores:
-	 * ANONIMO;CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE.
+	 * ANONIMO;CLAVE_CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE;CLIENTCERT.
 	 */
-	@ApiModelProperty(value = "Metodos autenticacion clave (separados por ;). Valores: ANONIMO;CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE.", required = true)
+	@ApiModelProperty(value = "Metodos autenticacion clave (separados por ;). Valores: ANONIMO;CLAVE_CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE;CLIENTCERT.", required = true)
 	private String metodosAutenticacion;
 
 	/**
@@ -50,7 +50,7 @@ public final class RLoginParams {
 	private String idioma;
 
 	/**
-	 * Forzar autenticación.
+	 * Forzar autenticación (para Cl@ve).
 	 */
 	@ApiModelProperty(value = "Forzar autenticación", required = true)
 	private boolean forzarAutenticacion;
@@ -74,7 +74,7 @@ public final class RLoginParams {
 	 * Método para establecer urlCallbackLogin.
 	 *
 	 * @param urlCallbackLogin
-	 *            urlCallbackLogin a establecer
+	 *                             urlCallbackLogin a establecer
 	 */
 	public void setUrlCallback(final String urlCallbackLogin) {
 		this.urlCallback = urlCallbackLogin;
@@ -93,7 +93,7 @@ public final class RLoginParams {
 	 * Método para establecer metodosAutenticacion.
 	 *
 	 * @param metodosAutenticacion
-	 *            metodosAutenticacion a establecer
+	 *                                 metodosAutenticacion a establecer
 	 */
 	public void setMetodosAutenticacion(final String metodosAutenticacion) {
 		this.metodosAutenticacion = metodosAutenticacion;
@@ -112,7 +112,7 @@ public final class RLoginParams {
 	 * Método para establecer qaa.
 	 *
 	 * @param qaa
-	 *            qaa a establecer
+	 *                qaa a establecer
 	 */
 	public void setQaa(final int qaa) {
 		this.qaa = qaa;
@@ -131,7 +131,7 @@ public final class RLoginParams {
 	 * Método para establecer idioma.
 	 *
 	 * @param idioma
-	 *            idioma a establecer
+	 *                   idioma a establecer
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
@@ -150,7 +150,7 @@ public final class RLoginParams {
 	 * Método para establecer forzarAutenticacion.
 	 *
 	 * @param forzarAutenticacion
-	 *            forzarAutenticacion a establecer
+	 *                                forzarAutenticacion a establecer
 	 */
 	public void setForzarAutenticacion(final boolean forzarAutenticacion) {
 		this.forzarAutenticacion = forzarAutenticacion;
@@ -169,7 +169,7 @@ public final class RLoginParams {
 	 * Método para establecer entidad.
 	 *
 	 * @param entidad
-	 *            entidad a establecer
+	 *                    entidad a establecer
 	 */
 	public void setEntidad(final String entidad) {
 		this.entidad = entidad;
@@ -184,7 +184,7 @@ public final class RLoginParams {
 
 	/**
 	 * @param aplicacion
-	 *            the aplicacion to set
+	 *                       the aplicacion to set
 	 */
 	public void setAplicacion(final String aplicacion) {
 		this.aplicacion = aplicacion;
@@ -199,7 +199,7 @@ public final class RLoginParams {
 
 	/**
 	 * @param urlCallbackError
-	 *            the urlCallbackError to set
+	 *                             the urlCallbackError to set
 	 */
 	public void setUrlCallbackError(final String urlCallbackError) {
 		this.urlCallbackError = urlCallbackError;

@@ -1,5 +1,10 @@
 package es.caib.loginib.frontend.controller;
 
+import java.security.cert.X509Certificate;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.ejb.EJBException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +28,7 @@ import es.caib.loginib.core.api.model.login.RespuestaClaveLogout;
 import es.caib.loginib.core.api.model.login.RespuestaError;
 import es.caib.loginib.core.api.model.login.SimularClave;
 import es.caib.loginib.core.api.model.login.TicketClave;
+import es.caib.loginib.core.api.model.login.types.TypeClientCert;
 import es.caib.loginib.core.api.model.login.types.TypeIdp;
 import es.caib.loginib.core.api.service.ClaveService;
 import es.caib.loginib.core.api.util.ClaveLoginUtil;
@@ -77,7 +83,63 @@ public final class SesionClaveController {
 		datos.setIdioma(sesion.getIdioma());
 		datos.setClave(ClaveLoginUtil.permiteAccesoClave(sesion.getIdps()));
 		datos.setAnonimo(ClaveLoginUtil.permiteAccesoAnonimo(sesion.getIdps()));
+		datos.setClientCert(!claveService.isAccesoClientCertDeshabilitado() && ClaveLoginUtil.permiteAccesoClientCert(sesion.getIdps()));
 		return new ModelAndView("seleccionAutenticacion", "datos", datos);
+	}
+
+	/**
+	 * Login client-cert.
+	 *
+	 * @return client-cert
+	 */
+	@RequestMapping("/client-cert/login.html")
+	public ModelAndView loginClientCert(@RequestParam("idSesion") final String idSesion,
+			final HttpServletRequest request) {
+
+		// Comprobamos si se ha deshabilitado
+		if (claveService.isAccesoClientCertDeshabilitado()) {
+			// Mostramos pagina generica de error
+			return new ModelAndView("redirect:/error.html?code=" + ErrorCodes.CLIENTCERT_DESHABILITADO.toString());
+		}
+
+		// Recuperamos metodo ClientCert
+		final TypeClientCert clientCertMetodo = claveService.getClientCertMetodo();
+		if (clientCertMetodo == null) {
+			// Mostramos pagina generica de error
+			return new ModelAndView("redirect:/error.html?code=" + ErrorCodes.CLIENTCERT_DESHABILITADO.toString());
+		}
+
+		X509Certificate certificado = null;
+		switch (clientCertMetodo) {
+		case HEADER:
+			final String ipAddress = request.getRemoteAddr();
+			final Map<String, String> headers = new HashMap<>();
+			final Enumeration<String> headerEnum = request.getHeaderNames();
+			while (headerEnum.hasMoreElements()) {
+				final String headerName = headerEnum.nextElement();
+				headers.put(headerName, request.getHeader(headerName));
+			}
+			certificado = claveService.recuperarCertificadoHeader(headers, ipAddress);
+			break;
+		case AJP:
+			final X509Certificate[] certs = (X509Certificate[]) request
+					.getAttribute("javax.servlet.request.X509Certificate");
+			if (certs != null && certs.length > 0) {
+				certificado = certs[0];
+			}
+			break;
+		}
+
+		final TicketClave ticket = claveService.loginClientCert(idSesion, certificado);
+
+		// Retornamos aplicacion
+		log.debug("Retornamos a aplicacion: ticket = " + ticket.getTicket());
+		final DatosRetornoClave drc = new DatosRetornoClave();
+		drc.setTicket(ticket.getTicket());
+		drc.setUrlCallbackLogin(ticket.getUrlCallback());
+		drc.setIdioma(ticket.getIdioma());
+		return new ModelAndView("retornoClave", "datos", drc);
+
 	}
 
 	/**
@@ -104,7 +166,8 @@ public final class SesionClaveController {
 	/**
 	 * Recibe peticion de inicio de sesion en Clave y redirige a Clave.
 	 *
-	 * @param idSesion idSesion
+	 * @param idSesion
+	 *                     idSesion
 	 * @return pagina que realiza la redireccion a Clave
 	 */
 	@RequestMapping(value = "/redirigirLoginClave.html")
@@ -144,7 +207,8 @@ public final class SesionClaveController {
 	/**
 	 * Recibe peticion de logout de sesion en Clave y redirige a Clave.
 	 *
-	 * @param idSesion idSesion
+	 * @param idSesion
+	 *                     idSesion
 	 * @return pagina que realiza la redireccion a Clave
 	 */
 	@RequestMapping(value = "/redirigirLogoutClave.html")
@@ -181,8 +245,10 @@ public final class SesionClaveController {
 	/**
 	 * Retorno de Clave y vuelta a aplicacion externa.
 	 *
-	 * @param idSesion     idSesion.
-	 * @param samlResponse samlResponse.
+	 * @param idSesion
+	 *                         idSesion.
+	 * @param samlResponse
+	 *                         samlResponse.
 	 * @return pagina que realiza la redireccion a aplicacion externa tras el login
 	 *         en Clave
 	 */
@@ -208,8 +274,10 @@ public final class SesionClaveController {
 	/**
 	 * Retorno de logout Clave y vuelta a aplicacion externa.
 	 *
-	 * @param idSesion     idSesion.
-	 * @param samlResponse samlResponse.
+	 * @param idSesion
+	 *                         idSesion.
+	 * @param samlResponse
+	 *                         samlResponse.
 	 * @return pagina que realiza la redireccion a aplicacion externa tras el login
 	 *         en Clave
 	 */
@@ -231,11 +299,16 @@ public final class SesionClaveController {
 	/**
 	 * Simulamos acceso clave.
 	 *
-	 * @param idSesion  idSesion
-	 * @param idp       idp
-	 * @param nif       nif
-	 * @param nombre    nombre
-	 * @param apellidos apellidos
+	 * @param idSesion
+	 *                      idSesion
+	 * @param idp
+	 *                      idp
+	 * @param nif
+	 *                      nif
+	 * @param nombre
+	 *                      nombre
+	 * @param apellidos
+	 *                      apellidos
 	 * @return retorno aplicacion
 	 */
 	@RequestMapping(value = "loginClaveSimulado.html", method = RequestMethod.POST)
@@ -263,7 +336,8 @@ public final class SesionClaveController {
 	/**
 	 * Muestra error.
 	 *
-	 * @param errorCode codigo error
+	 * @param errorCode
+	 *                      codigo error
 	 * @return pagina error
 	 */
 	@RequestMapping("/error.html")
@@ -304,8 +378,10 @@ public final class SesionClaveController {
 	/**
 	 * Handler de excepciones de negocio.
 	 *
-	 * @param pex     Excepción
-	 * @param request Request
+	 * @param pex
+	 *                    Excepción
+	 * @param request
+	 *                    Request
 	 * @return Respuesta JSON indicando el mensaje producido
 	 */
 	@ExceptionHandler({ Exception.class })

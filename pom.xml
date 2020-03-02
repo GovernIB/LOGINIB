@@ -47,6 +47,10 @@
 
 		<eidas.version>1.4.3-clave</eidas.version>
 
+		<cxf.version>3.1.4</cxf.version>
+
+		<pluginsib-validatecertificate-afirmacxf-jboss7.version>2.0.2</pluginsib-validatecertificate-afirmacxf-jboss7.version>
+
 	</properties>
 
 	<repositories>

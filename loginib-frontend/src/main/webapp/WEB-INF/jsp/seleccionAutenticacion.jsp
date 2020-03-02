@@ -38,6 +38,14 @@
 				         	</a>
 						</li>
 					</c:if>
+					<c:if test = "${datos.clientCert}">
+						<li>
+							<a href="client-cert/login.html?idSesion=<c:out value = "${datos.idSesion}"/>" class="imc--certificat">
+				         		<span><fmt:message key="seleccionAutenticacion.clientCert"/></span>
+				         	</a>
+
+						</li>
+					</c:if>
 					<c:if test = "${datos.anonimo}">
 						<li>
 							<a href="loginAnonimo.html?idSesion=<c:out value = "${datos.idSesion}"/>" class="imc--ciutada">

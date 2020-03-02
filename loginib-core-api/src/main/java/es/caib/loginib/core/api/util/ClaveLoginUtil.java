@@ -88,6 +88,17 @@ public final class ClaveLoginUtil {
 	}
 
 	/**
+	 * Indica si permite acceso clientcert.
+	 *
+	 * @param idps
+	 *                 idps
+	 * @return boolean
+	 */
+	public static boolean permiteAccesoClientCert(final List<TypeIdp> idps) {
+		return idps.contains(TypeIdp.CLIENTCERT);
+	}
+
+	/**
 	 * Indica si permite acceso anonimo.
 	 *
 	 * @param idps

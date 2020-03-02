@@ -1,32 +1,20 @@
 package es.caib.loginib.core.api.model.login.types;
 
 /**
- * Tipo autenticación.
+ * Tipo ClientCert.
  *
  * @author Indra
  *
  */
-public enum TypeIdp {
+public enum TypeClientCert {
 	/**
-	 * Anónimo.
+	 * Header.
 	 */
-	ANONIMO("ANONIMO"),
+	HEADER("HEADER"),
 	/**
-	 * Certificado digital.
+	 * AJP.
 	 */
-	CERTIFICADO("CLAVE_CERTIFICADO"),
-	/**
-	 * Clave pin 24h.
-	 */
-	CLAVE_PIN("CLAVE_PIN"),
-	/**
-	 * Clave permanente.
-	 */
-	CLAVE_PERMANENTE("CLAVE_PERMANENTE"),
-	/**
-	 * ClientCert.
-	 */
-	CLIENTCERT("CLIENTCERT");
+	AJP("AJP");
 
 	/**
 	 * Valor como string.
@@ -39,7 +27,7 @@ public enum TypeIdp {
 	 * @param value
 	 *                  Valor como string.
 	 */
-	private TypeIdp(final String value) {
+	private TypeClientCert(final String value) {
 		stringValue = value;
 	}
 
@@ -55,10 +43,10 @@ public enum TypeIdp {
 	 *                 Parámetro text
 	 * @return el type estado documento
 	 */
-	public static TypeIdp fromString(final String text) {
-		TypeIdp respuesta = null;
+	public static TypeClientCert fromString(final String text) {
+		TypeClientCert respuesta = null;
 		if (text != null) {
-			for (final TypeIdp b : TypeIdp.values()) {
+			for (final TypeClientCert b : TypeClientCert.values()) {
 				if (text.equalsIgnoreCase(b.toString())) {
 					respuesta = b;
 					break;

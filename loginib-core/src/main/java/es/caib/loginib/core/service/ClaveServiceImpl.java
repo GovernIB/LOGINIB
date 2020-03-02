@@ -1,15 +1,22 @@
 package es.caib.loginib.core.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.fundaciobit.plugins.certificate.ICertificatePlugin;
+import org.fundaciobit.plugins.certificate.InformacioCertificat;
+import org.fundaciobit.plugins.certificate.ResultatValidacio;
 import org.opensaml.saml2.core.LogoutResponse;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +27,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.UnmodifiableIterator;
 
+import es.caib.loginib.core.api.exception.ClientCertValidateException;
 import es.caib.loginib.core.api.exception.ErrorNoControladoException;
 import es.caib.loginib.core.api.exception.ErrorParametroException;
 import es.caib.loginib.core.api.exception.ErrorRespuestaClaveException;
@@ -34,6 +42,7 @@ import es.caib.loginib.core.api.model.login.PeticionClave;
 import es.caib.loginib.core.api.model.login.PeticionClaveLogout;
 import es.caib.loginib.core.api.model.login.RespuestaClaveLogout;
 import es.caib.loginib.core.api.model.login.TicketClave;
+import es.caib.loginib.core.api.model.login.types.TypeClientCert;
 import es.caib.loginib.core.api.model.login.types.TypeIdp;
 import es.caib.loginib.core.api.service.ClaveService;
 import es.caib.loginib.core.api.util.ClaveLoginUtil;
@@ -551,6 +560,153 @@ public final class ClaveServiceImpl implements ClaveService {
 		return respuesta;
 	}
 
+	@Override
+	@NegocioInterceptor
+	public X509Certificate recuperarCertificadoHeader(final Map<String, String> headers, final String ipFrom) {
+
+		log.debug(" Recupera certificado header");
+
+		// Comprobamos IP origen
+		if (StringUtils.isNotBlank(config.getClientCertHeaderIpFrom())
+				&& !StringUtils.equals(config.getClientCertHeaderIpFrom(), ipFrom)) {
+			throw new ClientCertValidateException(
+					"Ip origen " + ipFrom + " no concuerda con permitida " + config.getClientCertHeaderIpFrom());
+		}
+
+		// Obtiene certificado a partir header
+		X509Certificate cer = null;
+		String headerCert = headers.get(config.getClientCertHeaderName());
+		try {
+			if (StringUtils.isNotBlank(headerCert)) {
+				// El cert viene sin saltos de líneas, no es formato PEM valido
+				// Borramos cabecera y pie y pasamos de B64
+				headerCert = StringUtils.remove(headerCert, "-----BEGIN CERTIFICATE----- ");
+				headerCert = StringUtils.remove(headerCert, " -----END CERTIFICATE-----");
+				headerCert = StringUtils.remove(headerCert, " ");
+				final byte[] certBytes = Base64.getDecoder().decode(headerCert);
+
+				final ByteArrayInputStream bis = new ByteArrayInputStream(certBytes);
+
+				final CertificateFactory fact = CertificateFactory.getInstance("X.509");
+				cer = (X509Certificate) fact.generateCertificate(bis);
+			}
+		} catch (final Exception ex) {
+			throw new ClientCertValidateException("Ha ocurrido un error al extraer certificado : " + ex.getMessage(),
+					ex);
+		}
+
+		return cer;
+
+	}
+
+	@Override
+	@NegocioInterceptor
+	public TicketClave loginClientCert(final String pIdSesion, final X509Certificate cer) {
+
+		// Recuperamos datos sesion
+		final DatosSesion datosSesion = claveDao.obtenerDatosSesionLogin(pIdSesion);
+		if (datosSesion.getFechaTicket() != null) {
+			throw new GenerarPeticionClaveException(
+					"Sesion ya ha sido autenticada [idSesion = " + datosSesion.getIdSesion() + "]");
+		}
+
+		// Verificamos si existe certificado
+		if (cer == null) {
+			throw new ClientCertValidateException("No se encuentra certificado en la petición");
+		}
+
+		final TypeIdp idp = TypeIdp.CLIENTCERT;
+		// TODO VER SI SE SABE CUANDO ES NIVEL 3 (DISPOSITIVO SEGURO)
+		final int qaaAutenticacion = 2;
+		String nif = null;
+		String nombre = null;
+		String apellidos = null;
+		String apellido1 = null;
+		String apellido2 = null;
+		DatosRepresentante representante = null;
+
+		// Valida certificado contra plugin certificados
+		ResultatValidacio infoCert = null;
+		try {
+			final ICertificatePlugin plgCert = (ICertificatePlugin) config
+					.createPlugin("plugin.validacionCertificados");
+			infoCert = plgCert.getInfoCertificate(cer);
+			// final ResultatValidacio infoCert = generateMockClientCert();
+		} catch (final Exception ex) {
+			throw new ClientCertValidateException(
+					"Error al validar certificado contra plugin certificados: " + ex.getMessage(), ex);
+		}
+
+		// Valida respuesta
+		if (infoCert == null || infoCert.getResultatValidacioCodi() != ResultatValidacio.RESULTAT_VALIDACIO_OK) {
+			throw new ClientCertValidateException(
+					"Error al validar certificado: " + infoCert.getResultatValidacioDescripcio());
+		}
+
+		// Recoge datos segun tipo certificado
+		switch (infoCert.getInformacioCertificat().getClassificacio()) {
+		case 0:
+		case 5:
+			// Certificados persona fisica
+			nif = infoCert.getInformacioCertificat().getNifResponsable();
+			nombre = infoCert.getInformacioCertificat().getNomResponsable();
+			apellidos = infoCert.getInformacioCertificat().getLlinatgesResponsable();
+			apellido1 = infoCert.getInformacioCertificat().getPrimerLlinatgeResponsable();
+			apellido2 = infoCert.getInformacioCertificat().getSegonLlinatgeResponsable();
+			break;
+		case 1:
+			// Certificados persona juridica (a extinguir)
+			nif = infoCert.getInformacioCertificat().getUnitatOrganitzativaNifCif();
+			nombre = infoCert.getInformacioCertificat().getRaoSocial();
+			break;
+		case 11:
+		case 12:
+			// Certificados representacion
+			// - Datos representante
+			representante = new DatosRepresentante();
+			representante.setNif(infoCert.getInformacioCertificat().getNifResponsable());
+			representante.setNombre(infoCert.getInformacioCertificat().getNomResponsable());
+			representante.setApellidos(infoCert.getInformacioCertificat().getLlinatgesResponsable());
+			representante.setApellido1(infoCert.getInformacioCertificat().getPrimerLlinatgeResponsable());
+			representante.setApellido2(infoCert.getInformacioCertificat().getSegonLlinatgeResponsable());
+			// - Datos persona juridica
+			nif = infoCert.getInformacioCertificat().getUnitatOrganitzativaNifCif();
+			nombre = infoCert.getInformacioCertificat().getRaoSocial();
+			break;
+
+		default:
+			throw new ClientCertValidateException(
+					"Tipo de certificado no soportado: " + infoCert.getInformacioCertificat().getClassificacio());
+		}
+
+		// Almacenar en tabla y generar ticket sesion (OTP)
+		log.debug(" Datos obtenidos [idSesion = " + pIdSesion + "]: QAA= " + qaaAutenticacion + ", Nivel=" + idp
+				+ ", Nif=" + nif + ", Nombre=" + nombre + " " + apellidos);
+
+		final TicketClave respuesta = claveDao.generateTicketSesionLogin(pIdSesion, idp, qaaAutenticacion, nif, nombre,
+				apellidos, apellido1, apellido2, representante);
+
+		log.debug(" Ticket generado [idSesion = " + pIdSesion + "]: " + respuesta.getTicket());
+
+		return respuesta;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public TypeClientCert getClientCertMetodo() {
+		return TypeClientCert.fromString(config.getClientCertMetodo());
+	}
+
+	@Override
+	@NegocioInterceptor
+	public boolean isAccesoClientCertDeshabilitado() {
+		return config.isAccesoClientCertDeshabilitado();
+	}
+
+	// ---------------------------------------------------------------------------
+	// FUNCIONES AUXILIARES
+	// ---------------------------------------------------------------------------
+
 	/**
 	 * Obtiene engine para saml de Clave.
 	 *
@@ -573,6 +729,21 @@ public final class ClaveServiceImpl implements ClaveService {
 		} catch (final SamlEngineConfigurationException e) {
 			throw new GenerarPeticionClaveException(e);
 		}
+	}
+
+	// TODO BORRAR
+	private ResultatValidacio generateMockClientCert() {
+		final ResultatValidacio res = new ResultatValidacio();
+		res.setResultatValidacioCodi(ResultatValidacio.RESULTAT_VALIDACIO_OK);
+		final InformacioCertificat cer = new InformacioCertificat();
+		res.setInformacioCertificat(cer);
+		cer.setNifResponsable("33456299Q");
+		cer.setNomResponsable("Rafael");
+		cer.setPrimerLlinatgeResponsable("Sanz");
+		cer.setSegonLlinatgeResponsable("Villanueva");
+		cer.setLlinatgesResponsable("Sanz Villanueva");
+		cer.setClassificacio(0);
+		return res;
 	}
 
 }

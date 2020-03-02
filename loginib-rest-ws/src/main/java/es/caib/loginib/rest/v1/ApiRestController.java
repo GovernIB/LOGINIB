@@ -97,7 +97,7 @@ public class ApiRestController {
 	 *
 	 * @return Url redirección Clave
 	 */
-	@ApiOperation(value = "Logout", notes = "Logout")
+	@ApiOperation(value = "Realiza logout en Cl@ve", notes = "Realiza logout en Cl@ve")
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	public String logout(@RequestBody(required = false) final RLogoutParams parametros) {
 

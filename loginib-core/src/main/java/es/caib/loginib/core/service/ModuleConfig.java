@@ -7,9 +7,12 @@ import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
+import org.fundaciobit.pluginsib.core.IPlugin;
+import org.fundaciobit.pluginsib.core.utils.PluginsManager;
 import org.springframework.stereotype.Component;
 
 import es.caib.loginib.core.api.exception.ConfiguracionException;
+import es.caib.loginib.core.api.exception.PluginErrorException;
 
 /**
  *
@@ -49,7 +52,7 @@ public final class ModuleConfig {
 	 * @return pepsUrl
 	 */
 	public String getPepsUrl() {
-		return propiedades.getProperty("pepsUrl");
+		return propiedades.getProperty("clave.pepsUrl");
 	}
 
 	/**
@@ -58,7 +61,7 @@ public final class ModuleConfig {
 	 * @return pepsLogout
 	 */
 	public String getPepsLogout() {
-		return propiedades.getProperty("pepsLogout");
+		return propiedades.getProperty("clave.pepsLogout");
 	}
 
 	/**
@@ -67,7 +70,7 @@ public final class ModuleConfig {
 	 * @return returnUrlExterna
 	 */
 	public String getLoginCallbackClave() {
-		return propiedades.getProperty("loginCallbackClave");
+		return propiedades.getProperty("clave.loginCallbackClave");
 	}
 
 	/**
@@ -76,7 +79,7 @@ public final class ModuleConfig {
 	 * @return logoutCallbackClave
 	 */
 	public String getLogoutCallbackClave() {
-		return propiedades.getProperty("logoutCallbackClave");
+		return propiedades.getProperty("clave.logoutCallbackClave");
 	}
 
 	/**
@@ -85,7 +88,7 @@ public final class ModuleConfig {
 	 * @return timeoutTicketAutenticacion
 	 */
 	public Long getTimeoutTicketAutenticacion() {
-		return Long.parseLong(propiedades.getProperty("timeoutTicketAutenticacion"));
+		return Long.parseLong(propiedades.getProperty("procesos.timeoutTicketAutenticacion"));
 	}
 
 	/**
@@ -94,7 +97,7 @@ public final class ModuleConfig {
 	 * @return timeout para completar proceso autenticacion
 	 */
 	public Long getTimeoutProcesoAutenticacion() {
-		return Long.parseLong(propiedades.getProperty("timeoutProcesoAutenticacion"));
+		return Long.parseLong(propiedades.getProperty("procesos.timeoutProcesoAutenticacion"));
 	}
 
 	/**
@@ -103,7 +106,16 @@ public final class ModuleConfig {
 	 * @return accesoClaveDeshabilitado
 	 */
 	public boolean isAccesoClaveDeshabilitado() {
-		return Boolean.parseBoolean(propiedades.getProperty("deshabilitado"));
+		return Boolean.parseBoolean(propiedades.getProperty("clave.deshabilitado"));
+	}
+
+	/**
+	 * Método de acceso a accesoClientCertDeshabilitado.
+	 *
+	 * @return accesoClientCertDeshabilitado
+	 */
+	public boolean isAccesoClientCertDeshabilitado() {
+		return Boolean.parseBoolean(propiedades.getProperty("clientCert.deshabilitado"));
 	}
 
 	/**
@@ -112,7 +124,7 @@ public final class ModuleConfig {
 	 * @return loginRedireccionClave
 	 */
 	public String getLoginRedireccionClave() {
-		return propiedades.getProperty("loginRedireccionClave");
+		return propiedades.getProperty("clave.loginRedireccionClave");
 	}
 
 	/**
@@ -121,7 +133,7 @@ public final class ModuleConfig {
 	 * @return logoutRedireccionClave
 	 */
 	public String getLogoutRedireccionClave() {
-		return propiedades.getProperty("logoutRedireccionClave");
+		return propiedades.getProperty("clave.logoutRedireccionClave");
 	}
 
 	/**
@@ -130,7 +142,7 @@ public final class ModuleConfig {
 	 * @return accesoClaveSimulado
 	 */
 	public boolean isAccesoClaveSimulado() {
-		return Boolean.parseBoolean(propiedades.getProperty("simulado"));
+		return Boolean.parseBoolean(propiedades.getProperty("clave.simulado"));
 	}
 
 	/**
@@ -141,7 +153,7 @@ public final class ModuleConfig {
 	 * @return provider name
 	 */
 	public String getProviderName(final String entidad) {
-		return propiedades.getProperty(entidad + ".providerName");
+		return propiedades.getProperty("clave." + entidad + ".providerName");
 	}
 
 	/**
@@ -159,7 +171,77 @@ public final class ModuleConfig {
 	 * @return dias para la purga definitiva
 	 */
 	public Long getTimeoutPurga() {
-		return Long.parseLong(propiedades.getProperty("timeoutPurga"));
+		return Long.parseLong(propiedades.getProperty("procesos.timeoutPurga"));
+	}
+
+	/**
+	 * Método usado para ClientCert.
+	 *
+	 * @return dias para la purga definitiva
+	 */
+	public String getClientCertMetodo() {
+		return propiedades.getProperty("clientCert.metodo");
+	}
+
+	/**
+	 * Para HEADER el nombre del header.
+	 *
+	 * @return dias para la purga definitiva
+	 */
+	public String getClientCertHeaderName() {
+		return propiedades.getProperty("clientCert.header.headerName");
+	}
+
+	/**
+	 * Para HEADER si se valida IP del Apache.
+	 *
+	 * @return dias para la purga definitiva
+	 */
+	public String getClientCertHeaderIpFrom() {
+		return propiedades.getProperty("clientCert.header.ipFrom");
+	}
+
+	/**
+	 * Crea plugin.
+	 *
+	 * @param pluginPrefix
+	 *                         Prefijo plugin
+	 * @return plugin
+	 */
+	public IPlugin createPlugin(final String pluginPrefix) {
+
+		IPlugin plg = null;
+
+		try {
+
+			final String prefijoGlobal = "es.caib.loginib";
+			final String prefijoPropiedades = propiedades.getProperty(pluginPrefix + ".prefijoPropiedades");
+			final String prefijoPropiedad = pluginPrefix + ".propiedad.";
+
+			// Recuperamos propiedades plugin
+			final Properties propsPlugin = new Properties();
+			for (final String key : propiedades.stringPropertyNames()) {
+				if (key.startsWith(prefijoPropiedad)) {
+					final String propName = key.substring(prefijoPropiedad.length());
+					final String propValue = propiedades.getProperty(key);
+					propsPlugin.put(prefijoGlobal + "." + prefijoPropiedades + "." + propName, propValue);
+				}
+			}
+
+			// Instanciamos plugin
+			final String classnamePlugin = propiedades.getProperty(pluginPrefix + ".className");
+			plg = (IPlugin) PluginsManager.instancePluginByClassName(classnamePlugin, prefijoGlobal + ".", propsPlugin);
+			if (plg == null) {
+				throw new PluginErrorException("No se ha podido instanciar plugin " + pluginPrefix + " con classname "
+						+ classnamePlugin + ", PluginManager devuelve nulo.");
+			}
+
+			return plg;
+
+		} catch (final Exception e) {
+			throw new PluginErrorException("Error al instanciar plugin " + pluginPrefix, e);
+		}
+
 	}
 
 }

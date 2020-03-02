@@ -1,6 +1,8 @@
 package es.caib.loginib.core.ejb;
 
+import java.security.cert.X509Certificate;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -19,6 +21,7 @@ import es.caib.loginib.core.api.model.login.PeticionClave;
 import es.caib.loginib.core.api.model.login.PeticionClaveLogout;
 import es.caib.loginib.core.api.model.login.RespuestaClaveLogout;
 import es.caib.loginib.core.api.model.login.TicketClave;
+import es.caib.loginib.core.api.model.login.types.TypeClientCert;
 import es.caib.loginib.core.api.model.login.types.TypeIdp;
 import es.caib.loginib.core.api.service.ClaveService;
 
@@ -124,6 +127,30 @@ public class ClaveServiceBean implements ClaveService {
 	@PermitAll
 	public TicketClave loginAnonimo(final String pIdSesion) {
 		return claveService.loginAnonimo(pIdSesion);
+	}
+
+	@Override
+	@PermitAll
+	public TicketClave loginClientCert(final String idSesion, final X509Certificate certificate) {
+		return claveService.loginClientCert(idSesion, certificate);
+	}
+
+	@Override
+	@PermitAll
+	public X509Certificate recuperarCertificadoHeader(final Map<String, String> headers, final String ipFrom) {
+		return claveService.recuperarCertificadoHeader(headers, ipFrom);
+	}
+
+	@Override
+	@PermitAll
+	public TypeClientCert getClientCertMetodo() {
+		return claveService.getClientCertMetodo();
+	}
+
+	@Override
+	@PermitAll
+	public boolean isAccesoClientCertDeshabilitado() {
+		return claveService.isAccesoClientCertDeshabilitado();
 	}
 
 }

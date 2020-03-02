@@ -17,6 +17,14 @@
 			<type>pom</type>
 		</dependency>
 
+		<!-- Plugin IB Validacion certificados -->
+		<dependency>
+			<groupId>org.fundaciobit.pluginsib.validatecertificate</groupId>
+  			<artifactId>pluginsib-validatecertificate-afirmacxf-jboss7</artifactId>
+  			<version>${pluginsib-validatecertificate-afirmacxf-jboss7.version}</version>
+  		</dependency>
+
+
 		<!-- LOG -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
