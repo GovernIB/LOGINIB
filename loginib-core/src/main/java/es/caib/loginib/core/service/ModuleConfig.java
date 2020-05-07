@@ -3,10 +3,13 @@ package es.caib.loginib.core.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.pluginsib.core.IPlugin;
 import org.fundaciobit.pluginsib.core.utils.PluginsManager;
 import org.springframework.stereotype.Component;
@@ -37,7 +40,7 @@ public final class ModuleConfig {
 		try (FileInputStream fis = new FileInputStream(pathFileConfiguracion);) {
 			// Carga propiedades
 			propiedades = new Properties();
-			propiedades.load(fis);
+			propiedades.load(new InputStreamReader(fis, Charset.forName("UTF-8")));
 			// Obtiene directorio configuracion
 			final File file = new File(pathFileConfiguracion);
 			directorioConfiguracion = file.getAbsoluteFile().getParent() + "/";
@@ -148,8 +151,7 @@ public final class ModuleConfig {
 	/**
 	 * Obtiene provider name.
 	 *
-	 * @param entidad
-	 *                    entidad
+	 * @param entidad entidad
 	 * @return provider name
 	 */
 	public String getProviderName(final String entidad) {
@@ -204,8 +206,7 @@ public final class ModuleConfig {
 	/**
 	 * Crea plugin.
 	 *
-	 * @param pluginPrefix
-	 *                         Prefijo plugin
+	 * @param pluginPrefix Prefijo plugin
 	 * @return plugin
 	 */
 	public IPlugin createPlugin(final String pluginPrefix) {
@@ -242,6 +243,78 @@ public final class ModuleConfig {
 			throw new PluginErrorException("Error al instanciar plugin " + pluginPrefix, e);
 		}
 
+	}
+
+	/* ********************************/
+	/* PROPIEDADES DE PERSONALIZACIÓN */
+	/* ********************************/
+
+	/**
+	 * Retorna la propiedad por entidad e idioma correspondiente
+	 *
+	 * <p>
+	 * Valores possibles para propiedad
+	 * <ul>
+	 * <li>title = titulo del navegador</li>
+	 * <li>titulo = titulo en el html</li>
+	 * <li>logo.alt = descripción del logotipo (etiqueta alt)</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param entidad
+	 * @param propiedad posibles valores: title|titulo|logo.alt
+	 * @param idioma
+	 * @return
+	 */
+	public String getPropiedadPersonalizacion(final String entidad, String propiedad, final String idioma) {
+		String res = "";
+		String idiomaDefecto = propiedades.getProperty("clave." + entidad + ".idioma.defecto");
+		res = propiedades.getProperty("clave." + entidad + "." + propiedad + "." + idioma);
+		if (StringUtils.isEmpty(res)) {
+			res = propiedades.getProperty("clave." + entidad + "." + propiedad + "." + idiomaDefecto);
+		}
+		return res;
+	}
+
+	/**
+	 * Retorna la propiedad por entidad correspondiente
+	 * <p>
+	 * Valores posibles para propiedad
+	 * <ul>
+	 * <li>logo.url = url del logotipo</li>
+	 * <li>favicon = url del favicon</li>
+	 * <li>css = etiquetas css que seran embedidas en la página
+	 * <li>idioma.defecto = idioma por defecto que se urará si no existen las
+	 * propiedades en el idioma indicado</li>
+	 * </ul>
+	 * </p>
+	 *
+	 * @param entidad
+	 * @param propiedad Posibles valores: logo.url|favicon|css|idioma.defecto
+	 * @return
+	 */
+	public String getPropiedadPersonalizacion(final String entidad, String propiedad) {
+		return propiedades.getProperty("clave." + entidad + "." + propiedad);
+	}
+
+	/**
+	 * Indica si el acceso a ClientCert se realiza mediante otra opción de
+	 * autenticación (option) o enlace aparte (link)
+	 *
+	 * @return tipodevisualizacion option|link
+	 */
+	public String getClientCertVisualizacion() {
+		return propiedades.getProperty("clientCert.visualizacion");
+	}
+
+	/**
+	 * Indica, en el caso de que solo exista acceso anónimo, iniciar automáticamente
+	 * sin mostrar el login (true/false)
+	 *
+	 * @return boolean
+	 */
+	public boolean isAnonimoInicioAuto() {
+		return "true".equals(propiedades.getProperty("anonimo.inicioAuto"));
 	}
 
 }

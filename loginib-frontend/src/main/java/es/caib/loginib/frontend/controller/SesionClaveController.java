@@ -83,8 +83,30 @@ public final class SesionClaveController {
 		datos.setIdioma(sesion.getIdioma());
 		datos.setClave(ClaveLoginUtil.permiteAccesoClave(sesion.getIdps()));
 		datos.setAnonimo(ClaveLoginUtil.permiteAccesoAnonimo(sesion.getIdps()));
-		datos.setClientCert(!claveService.isAccesoClientCertDeshabilitado() && ClaveLoginUtil.permiteAccesoClientCert(sesion.getIdps()));
-		return new ModelAndView("seleccionAutenticacion", "datos", datos);
+		datos.setClientCert(!claveService.isAccesoClientCertDeshabilitado()
+				&& ClaveLoginUtil.permiteAccesoClientCert(sesion.getIdps()));
+
+		String entidad = sesion.getEntidad();
+		String idioma = sesion.getIdioma();
+		/* Personalización de loginib */
+		datos.setCss(claveService.getPropiedadPersonalizacion(entidad, "css"));
+		datos.setFavicon(claveService.getPropiedadPersonalizacion(entidad, "favicon"));
+		datos.setLogourl(claveService.getPropiedadPersonalizacion(entidad, "logo.url"));
+		datos.setLogoalt(claveService.getPropiedadPersonalizacion(entidad, "logo.alt", idioma));
+		datos.setTitle(claveService.getPropiedadPersonalizacion(entidad, "title", idioma));
+		datos.setTitulo(claveService.getPropiedadPersonalizacion(entidad, "titulo", idioma));
+
+		datos.setClientCertSegundoPlano("link".equals(claveService.getClientCertVisualizacion()));
+		boolean activadoSaltoSiSoloAnonimo = claveService.isAnonimoInicioAuto();
+
+		Boolean saltoAnonimo = datos.isAnonimo() && !datos.isClientCert() && !datos.isClave()
+				&& activadoSaltoSiSoloAnonimo;
+		if (saltoAnonimo) {
+			return new ModelAndView("redirect:loginAnonimo.html?idSesion=" + idSesion);
+		} else {
+			return new ModelAndView("seleccionAutenticacion", "datos", datos);
+		}
+
 	}
 
 	/**
@@ -166,8 +188,7 @@ public final class SesionClaveController {
 	/**
 	 * Recibe peticion de inicio de sesion en Clave y redirige a Clave.
 	 *
-	 * @param idSesion
-	 *                     idSesion
+	 * @param idSesion idSesion
 	 * @return pagina que realiza la redireccion a Clave
 	 */
 	@RequestMapping(value = "/redirigirLoginClave.html")
@@ -207,8 +228,7 @@ public final class SesionClaveController {
 	/**
 	 * Recibe peticion de logout de sesion en Clave y redirige a Clave.
 	 *
-	 * @param idSesion
-	 *                     idSesion
+	 * @param idSesion idSesion
 	 * @return pagina que realiza la redireccion a Clave
 	 */
 	@RequestMapping(value = "/redirigirLogoutClave.html")
@@ -245,10 +265,8 @@ public final class SesionClaveController {
 	/**
 	 * Retorno de Clave y vuelta a aplicacion externa.
 	 *
-	 * @param idSesion
-	 *                         idSesion.
-	 * @param samlResponse
-	 *                         samlResponse.
+	 * @param idSesion     idSesion.
+	 * @param samlResponse samlResponse.
 	 * @return pagina que realiza la redireccion a aplicacion externa tras el login
 	 *         en Clave
 	 */
@@ -274,10 +292,8 @@ public final class SesionClaveController {
 	/**
 	 * Retorno de logout Clave y vuelta a aplicacion externa.
 	 *
-	 * @param idSesion
-	 *                         idSesion.
-	 * @param samlResponse
-	 *                         samlResponse.
+	 * @param idSesion     idSesion.
+	 * @param samlResponse samlResponse.
 	 * @return pagina que realiza la redireccion a aplicacion externa tras el login
 	 *         en Clave
 	 */
@@ -299,16 +315,11 @@ public final class SesionClaveController {
 	/**
 	 * Simulamos acceso clave.
 	 *
-	 * @param idSesion
-	 *                      idSesion
-	 * @param idp
-	 *                      idp
-	 * @param nif
-	 *                      nif
-	 * @param nombre
-	 *                      nombre
-	 * @param apellidos
-	 *                      apellidos
+	 * @param idSesion  idSesion
+	 * @param idp       idp
+	 * @param nif       nif
+	 * @param nombre    nombre
+	 * @param apellidos apellidos
 	 * @return retorno aplicacion
 	 */
 	@RequestMapping(value = "loginClaveSimulado.html", method = RequestMethod.POST)
@@ -336,8 +347,7 @@ public final class SesionClaveController {
 	/**
 	 * Muestra error.
 	 *
-	 * @param errorCode
-	 *                      codigo error
+	 * @param errorCode codigo error
 	 * @return pagina error
 	 */
 	@RequestMapping("/error.html")
@@ -378,10 +388,8 @@ public final class SesionClaveController {
 	/**
 	 * Handler de excepciones de negocio.
 	 *
-	 * @param pex
-	 *                    Excepción
-	 * @param request
-	 *                    Request
+	 * @param pex     Excepción
+	 * @param request Request
 	 * @return Respuesta JSON indicando el mensaje producido
 	 */
 	@ExceptionHandler({ Exception.class })

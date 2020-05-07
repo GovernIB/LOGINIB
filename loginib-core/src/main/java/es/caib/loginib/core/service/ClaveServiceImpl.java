@@ -710,8 +710,7 @@ public final class ClaveServiceImpl implements ClaveService {
 	/**
 	 * Obtiene engine para saml de Clave.
 	 *
-	 * @param entidad
-	 *                    entidad
+	 * @param entidad entidad
 	 * @return engine
 	 */
 	private ProtocolEngineNoMetadataI getEngineSamlFactory(final String entidad) {
@@ -744,6 +743,26 @@ public final class ClaveServiceImpl implements ClaveService {
 		cer.setLlinatgesResponsable("Sanz Villanueva");
 		cer.setClassificacio(0);
 		return res;
+	}
+
+	@Override
+	public String getPropiedadPersonalizacion(String entidad, String propiedad, String idioma) {
+		return config.getPropiedadPersonalizacion(entidad, propiedad, idioma);
+	}
+
+	@Override
+	public String getPropiedadPersonalizacion(String entidad, String propiedad) {
+		return config.getPropiedadPersonalizacion(entidad, propiedad);
+	}
+
+	@Override
+	public String getClientCertVisualizacion() {
+		return config.getClientCertVisualizacion();
+	}
+
+	@Override
+	public boolean isAnonimoInicioAuto() {
+		return config.isAnonimoInicioAuto();
 	}
 
 }

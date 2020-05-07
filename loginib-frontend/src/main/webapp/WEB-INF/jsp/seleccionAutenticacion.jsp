@@ -13,14 +13,49 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>GOIB</title>
+
+	<c:if test="${empty datos.title}">
+    	<title>GOIB</title>
+	</c:if>
+	<c:if test="${not empty datos.title}">
+    	<title><c:out value = "${datos.title}" escapeXml="false"/></title>
+	</c:if>
+
 	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" type="image/x-icon" /><![endif]-->
 	<link rel="apple-touch-icon-precomposed" href="imgs/favicon/favicon-apple.png" />
-	<link rel="icon" href="imgs/favicon/favicon.png" />
+
+	<c:if test="${empty datos.favicon}">
+    	<link rel="icon" href="imgs/favicon/favicon.png" />
+	</c:if>
+	<c:if test="${not empty datos.favicon}">
+    	<link rel="icon" href="<c:out value = "${datos.favicon}"/>"  escapeXml="false"/>
+	</c:if>
+
 
 	<link rel="stylesheet" media="screen" href="estilos/imc-loginib.css" />
+	<style type="text/css">
+		/* Personalización */
+		<c:out value = "${datos.css}"  escapeXml="false"/>
+	</style>
 </head>
 <body>
+
+
+	<!-- cabecera -->
+	<c:if test="${not empty datos.logourl or not empty datos.titulo or not empty datos.css }">
+
+	<div class="imc-cabecera">
+		<h1>
+	    	<c:if test="${not empty datos.logourl}">
+		    	<img src="<c:out value = "${datos.logourl}"  escapeXml="false"/>" alt="<c:out value = "${datos.logoalt}"/>">
+			</c:if>
+	    	<c:if test="${not empty datos.titulo}">
+		    	<span><c:out value = "${datos.titulo}" escapeXml="false"/></span>
+			</c:if>
+
+	    </h1>
+	</div>
+</c:if>
 
 	<!-- contenidor -->
 	<div id="imc-contenidor" class="imc-contenidor">
@@ -38,7 +73,7 @@
 				         	</a>
 						</li>
 					</c:if>
-					<c:if test = "${datos.clientCert}">
+					<c:if test = "${datos.clientCert && !datos.clientCertSegundoPlano }">
 						<li>
 							<a href="client-cert/login.html?idSesion=<c:out value = "${datos.idSesion}"/>" class="imc--certificat">
 				         		<span><fmt:message key="seleccionAutenticacion.clientCert"/></span>
@@ -58,6 +93,14 @@
 				</ul>
 
 			</div>
+
+			<c:if test = "${datos.clientCert && datos.clientCertSegundoPlano }">
+				<div class="imc-txtcc" ><fmt:message key="seleccionAutenticacion.txtenlaceClientCert"/>
+					<a href="client-cert/login.html?idSesion=<c:out value = "${datos.idSesion}"/>">
+		         		<span><fmt:message key="seleccionAutenticacion.enlaceClientCert"/></span>
+		         	</a>
+				</div>
+			</c:if>
 		</div>
 
 	</div>

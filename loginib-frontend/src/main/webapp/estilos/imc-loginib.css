@@ -51,13 +51,14 @@ a:focus span { color: #fff; background-color: #3b8e5d; }
 	width: 30em;
 	height: 20em;
 	font-size: 1.3em;
+	background-color: #eaeaea;
 }
 
 .imc-contingut h1 { font-weight: normal; text-align: center; margin-bottom: 2em; }
 .imc-contingut h1 span { font-size: 1.5em; }
 .imc-contingut h1.imc--atencio { background: transparent url(../imgs/ico_error.svg) no-repeat 10em 0em/ auto 1.6em; }
 
-.imc-contingut ul { display: flex; align-items: center; }
+.imc-contingut ul { display: flex; align-items: center; justify-content: center;}
 .imc-contingut ul li { width: 50%; margin: 0 .3em; background-color: #fff; }
 
 .imc-contingut ul li a { display: block; position: relative; text-align: center; height: 10em; }
@@ -68,19 +69,35 @@ a:focus span { color: #fff; background-color: #3b8e5d; }
 .imc-contingut ul li a span { display: block; position: absolute; left: 0; bottom: 0; width: 100%; padding: .3em 0; }
 
 
+.imc-cabecera{ font-size:1em;	height: 5.5em; }
+.imc-cabecera h1{
+	display: block;
+	position: fixed;
+	z-index: 1;
+	top: auto;
+	left: calc(50% - 30em);
+	width: 60em;
+	margin: 0;
+	text-align: center;
+  	padding:.5em;
+}
+.imc-cabecera h1 img{ vertical-align: middle; height:4.4em}
+.imc-cabecera h1 span{ font-weight: normal ;font-size:2.2em}
+
+.imc-txtcc{font-size: 0.8em;padding: 2em; text-align: center;}
+.imc-txtcc a span {padding: 0 0.3em 0 0.3em;}
+
 /* media */
 
 @media only screen and (max-width : 1024px) {
-
+	.imc-cabecera { font-size:0.8em}
 	.imc-contingut { font-size: 1em; }
-
 }
 
 
 @media only screen and (max-width : 450px) {
-
+	.imc-cabecera { font-size:0.5em}
 	.imc-contingut { left: 0; width: 100%; font-size: .9em; }
-
 	.imc-contingut ul li:first-child { margin-left: .6em; }
 	.imc-contingut ul li:last-child { margin-right: .6em; }
 

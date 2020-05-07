@@ -153,4 +153,28 @@ public class ClaveServiceBean implements ClaveService {
 		return claveService.isAccesoClientCertDeshabilitado();
 	}
 
+	@Override
+	@PermitAll
+	public String getPropiedadPersonalizacion(String entidad, String propiedad, String idioma) {
+		return claveService.getPropiedadPersonalizacion(entidad, propiedad, idioma);
+	}
+
+	@Override
+	@PermitAll
+	public String getPropiedadPersonalizacion(String entidad, String propiedad) {
+		return claveService.getPropiedadPersonalizacion(entidad, propiedad);
+	}
+
+	@Override
+	@PermitAll
+	public String getClientCertVisualizacion() {
+		return claveService.getClientCertVisualizacion();
+	}
+
+	@Override
+	@PermitAll
+	public boolean isAnonimoInicioAuto() {
+		return claveService.isAnonimoInicioAuto();
+	}
+
 }
