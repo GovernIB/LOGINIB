@@ -151,7 +151,8 @@ public final class ModuleConfig {
 	/**
 	 * Obtiene provider name.
 	 *
-	 * @param entidad entidad
+	 * @param entidad
+	 *                    entidad
 	 * @return provider name
 	 */
 	public String getProviderName(final String entidad) {
@@ -206,7 +207,8 @@ public final class ModuleConfig {
 	/**
 	 * Crea plugin.
 	 *
-	 * @param pluginPrefix Prefijo plugin
+	 * @param pluginPrefix
+	 *                         Prefijo plugin
 	 * @return plugin
 	 */
 	public IPlugin createPlugin(final String pluginPrefix) {
@@ -262,13 +264,14 @@ public final class ModuleConfig {
 	 * </p>
 	 *
 	 * @param entidad
-	 * @param propiedad posibles valores: title|titulo|logo.alt
+	 * @param propiedad
+	 *                      posibles valores: title|titulo|logo.alt
 	 * @param idioma
 	 * @return
 	 */
-	public String getPropiedadPersonalizacion(final String entidad, String propiedad, final String idioma) {
+	public String getPropiedadPersonalizacion(final String entidad, final String propiedad, final String idioma) {
 		String res = "";
-		String idiomaDefecto = propiedades.getProperty("clave." + entidad + ".idioma.defecto");
+		final String idiomaDefecto = propiedades.getProperty("clave." + entidad + ".idioma.defecto");
 		res = propiedades.getProperty("clave." + entidad + "." + propiedad + "." + idioma);
 		if (StringUtils.isEmpty(res)) {
 			res = propiedades.getProperty("clave." + entidad + "." + propiedad + "." + idiomaDefecto);
@@ -290,10 +293,11 @@ public final class ModuleConfig {
 	 * </p>
 	 *
 	 * @param entidad
-	 * @param propiedad Posibles valores: logo.url|favicon|css|idioma.defecto
+	 * @param propiedad
+	 *                      Posibles valores: logo.url|favicon|css|idioma.defecto
 	 * @return
 	 */
-	public String getPropiedadPersonalizacion(final String entidad, String propiedad) {
+	public String getPropiedadPersonalizacion(final String entidad, final String propiedad) {
 		return propiedades.getProperty("clave." + entidad + "." + propiedad);
 	}
 
@@ -315,6 +319,32 @@ public final class ModuleConfig {
 	 */
 	public boolean isAnonimoInicioAuto() {
 		return "true".equals(propiedades.getProperty("anonimo.inicioAuto"));
+	}
+
+	/**
+	 * Devuelve milisegundos desfase retraso.
+	 *
+	 * @return milisegundos desfase retraso.
+	 */
+	public int getClaveResponseValidationNotBefore() {
+		int res = 0;
+		if (StringUtils.isNotBlank(propiedades.getProperty("clave.responseValidation.notBefore"))) {
+			res = Integer.parseInt(propiedades.getProperty("clave.responseValidation.notBefore"));
+		}
+		return res;
+	}
+
+	/**
+	 * Devuelve milisegundos desfase adelanto.
+	 *
+	 * @return milisegundos desfase adelanto.
+	 */
+	public int getClaveResponseValidationNotOnOrAfter() {
+		int res = 0;
+		if (StringUtils.isNotBlank(propiedades.getProperty("clave.responseValidation.notOnOrAfter"))) {
+			res = Integer.parseInt(propiedades.getProperty("clave.responseValidation.notOnOrAfter"));
+		}
+		return res;
 	}
 
 }

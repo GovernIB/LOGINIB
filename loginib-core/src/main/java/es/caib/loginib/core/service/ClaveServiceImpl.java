@@ -286,7 +286,8 @@ public final class ClaveServiceImpl implements ClaveService {
 		// En caso de error durante la validación se produce una excepción
 		try {
 			authnResponse = engine.unmarshallResponseAndValidate(decSamlTicket, new URI(config.getPepsUrl()).getHost(),
-					0, 0, config.getLoginCallbackClave() + "/" + datosSesion.getIdSesion() + ".html");
+					config.getClaveResponseValidationNotBefore(), config.getClaveResponseValidationNotBefore(),
+					config.getLoginCallbackClave() + "/" + datosSesion.getIdSesion() + ".html");
 		} catch (EIDASSAMLEngineException | URISyntaxException e) {
 			throw new ErrorRespuestaClaveException(e, pIdSesion);
 		}
@@ -535,7 +536,8 @@ public final class ClaveServiceImpl implements ClaveService {
 		LogoutResponse logoutReq = null;
 		try {
 			logoutReq = engine.unmarshallLogoutResponseAndValidate(decSamlTicket,
-					new URI(config.getPepsLogout()).getHost(), 0, 0,
+					new URI(config.getPepsLogout()).getHost(), config.getClaveResponseValidationNotBefore(),
+					config.getClaveResponseValidationNotBefore(),
 					config.getLogoutCallbackClave() + "/" + pIdSesion + ".html");
 		} catch (EIDASSAMLEngineException | URISyntaxException e) {
 			error = true;
@@ -710,7 +712,8 @@ public final class ClaveServiceImpl implements ClaveService {
 	/**
 	 * Obtiene engine para saml de Clave.
 	 *
-	 * @param entidad entidad
+	 * @param entidad
+	 *                    entidad
 	 * @return engine
 	 */
 	private ProtocolEngineNoMetadataI getEngineSamlFactory(final String entidad) {
@@ -746,12 +749,12 @@ public final class ClaveServiceImpl implements ClaveService {
 	}
 
 	@Override
-	public String getPropiedadPersonalizacion(String entidad, String propiedad, String idioma) {
+	public String getPropiedadPersonalizacion(final String entidad, final String propiedad, final String idioma) {
 		return config.getPropiedadPersonalizacion(entidad, propiedad, idioma);
 	}
 
 	@Override
-	public String getPropiedadPersonalizacion(String entidad, String propiedad) {
+	public String getPropiedadPersonalizacion(final String entidad, final String propiedad) {
 		return config.getPropiedadPersonalizacion(entidad, propiedad);
 	}
 
