@@ -31,8 +31,8 @@ create table LIB_LOGIN
    LGI_AP1RPT           character varying(1000),
    LGI_AP2RPT           character varying(1000),
    LGI_SESION           character varying(100),
-   LGI_QAA              boolean,
-   LGI_QAARES           boolean,
+   LGI_QAA              bigint,
+   LGI_QAARES           bigint,
    LGI_SAMLID           character varying(100),
    LGI_PURGCK           boolean NOT NULL DEFAULT false,
    constraint LIB_LGI_PK primary key (LGI_CODIGO)
