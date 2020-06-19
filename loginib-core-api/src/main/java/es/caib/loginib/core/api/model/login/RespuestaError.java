@@ -8,11 +8,20 @@ package es.caib.loginib.core.api.model.login;
  */
 public final class RespuestaError {
 
+	/** Idioma. */
+	private String idioma = "es";
+
 	/** Url callback. */
 	private String urlCallback;
 
-	/** Indica el mensaje de error. */
-	private String mensaje;
+	/** Indica el mensaje de error general (label resources). */
+	private String mensajeErrorGeneral;
+
+	/** Indica el mensaje de error personalizado. */
+	private String mensajeErrorPersonalizado;
+
+	/** Personalizacion. */
+	private PersonalizacionEntidad personalizacion;
 
 	/**
 	 * @return the urlCallback
@@ -23,7 +32,7 @@ public final class RespuestaError {
 
 	/**
 	 * @param urlCallback
-	 *            the urlCallback to set
+	 *                        the urlCallback to set
 	 */
 	public void setUrlCallback(final String urlCallback) {
 		this.urlCallback = urlCallback;
@@ -32,16 +41,73 @@ public final class RespuestaError {
 	/**
 	 * @return the mensaje
 	 */
-	public String getMensaje() {
-		return mensaje;
+	public String getMensajeErrorGeneral() {
+		return mensajeErrorGeneral;
 	}
 
 	/**
 	 * @param mensaje
-	 *            the mensaje to set
+	 *                    the mensaje to set
 	 */
-	public void setMensaje(final String mensaje) {
-		this.mensaje = mensaje;
+	public void setMensajeErrorGeneral(final String mensaje) {
+		this.mensajeErrorGeneral = mensaje;
+	}
+
+	/**
+	 * Método de acceso a personalizacion.
+	 *
+	 * @return personalizacion
+	 */
+	public PersonalizacionEntidad getPersonalizacion() {
+		return personalizacion;
+	}
+
+	/**
+	 * Método para establecer personalizacion.
+	 *
+	 * @param personalizacion
+	 *                            personalizacion a establecer
+	 */
+	public void setPersonalizacion(final PersonalizacionEntidad personalizacion) {
+		this.personalizacion = personalizacion;
+	}
+
+	/**
+	 * Método de acceso a mensajeErrorPersonalizado.
+	 *
+	 * @return mensajeErrorPersonalizado
+	 */
+	public String getMensajeErrorPersonalizado() {
+		return mensajeErrorPersonalizado;
+	}
+
+	/**
+	 * Método para establecer mensajeErrorPersonalizado.
+	 *
+	 * @param mensajeErrorPersonalizado
+	 *                                      mensajeErrorPersonalizado a establecer
+	 */
+	public void setMensajeErrorPersonalizado(final String mensajeErrorPersonalizado) {
+		this.mensajeErrorPersonalizado = mensajeErrorPersonalizado;
+	}
+
+	/**
+	 * Método de acceso a idioma.
+	 *
+	 * @return idioma
+	 */
+	public String getIdioma() {
+		return idioma;
+	}
+
+	/**
+	 * Método para establecer idioma.
+	 * 
+	 * @param idioma
+	 *                   idioma a establecer
+	 */
+	public void setIdioma(final String idioma) {
+		this.idioma = idioma;
 	}
 
 }

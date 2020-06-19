@@ -13,16 +13,50 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>GOIB</title>
+
+	<c:if test="${empty datos.personalizacion.title}">
+    	<title>GOIB</title>
+	</c:if>
+	<c:if test="${not empty datos.personalizacion.title}">
+    	<title><c:out value = "${datos.personalizacion.title}" escapeXml="false"/></title>
+	</c:if>
 
 	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" type="image/x-icon" /><![endif]-->
 	<link rel="apple-touch-icon-precomposed" href="imgs/favicon/favicon-apple.png" />
-	<link rel="icon" href="imgs/favicon/favicon.png" />
+
+	<c:if test="${empty datos.personalizacion.favicon}">
+    	<link rel="icon" href="imgs/favicon/favicon.png" />
+	</c:if>
+	<c:if test="${not empty datos.personalizacion.favicon}">
+    	<link rel="icon" href="<c:out value = "${datos.personalizacion.favicon}"/>"  escapeXml="false"/>
+	</c:if>
 
 	<link href="estilos/imc-loginib.css" rel="stylesheet" type="text/css"/>
+	<style type="text/css">
+		/* Personalización */
+		<c:out value = "${datos.personalizacion.css}"  escapeXml="false"/>
+	</style>
 
 </head>
 <body>
+
+	<!-- cabecera -->
+	<c:if test="${not empty datos.personalizacion.logourl or not empty datos.personalizacion.titulo or not empty datos.personalizacion.css }">
+
+	<div class="imc-cabecera">
+		<h1>
+	    	<c:if test="${not empty datos.personalizacion.logourl}">
+		    	<img src="<c:out value = "${datos.personalizacion.logourl}"  escapeXml="false"/>" alt="<c:out value = "${datos.personalizacion.logoalt}"/>">
+			</c:if>
+	    	<c:if test="${not empty datos.personalizacion.titulo}">
+		    	<span><c:out value = "${datos.personalizacion.titulo}" escapeXml="false"/></span>
+			</c:if>
+
+	    </h1>
+	</div>
+
+	</c:if>
+
 
 	<!-- contenidor -->
 	<div id="imc-contenidor" class="imc-contenidor">
@@ -31,10 +65,15 @@
 			<div class="imc--c">
 
 				<h1 class="imc--atencio"><span><fmt:message key="atencion"/></span></h1>
-				<span>${respuesta.mensaje}</span>
-				<c:if test="${not empty respuesta.urlCallback}">
+				<c:if test="${not empty datos.mensajeErrorGeneral}">
+				<span><fmt:message key="${datos.mensajeErrorGeneral}"/></span>
+				</c:if>
+				<c:if test="${not empty datos.mensajeErrorPersonalizado}">
+				<span>${datos.mensajeErrorPersonalizado}</span>
+				</c:if>
+				<c:if test="${not empty datos.urlCallback}">
 					<p class="botonVolver">
-						<span><a href="${respuesta.urlCallback}">Volver</a></span>
+						<span><a href="${datos.urlCallback}">Volver</a></span>
 					</p>
 				</c:if>
 			</div>

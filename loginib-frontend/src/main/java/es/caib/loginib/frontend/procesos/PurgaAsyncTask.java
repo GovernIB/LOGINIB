@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import es.caib.loginib.core.api.service.ClaveService;
+import es.caib.loginib.core.api.service.LoginService;
 
 /**
  * Producer Siraj Task.
@@ -19,14 +19,14 @@ public class PurgaAsyncTask implements AsyncTaskIntf {
     private static Logger log = LoggerFactory.getLogger(PurgaAsyncTask.class);
 
     /** Clave service. */
-    @Resource(name = "claveService")
-    private ClaveService claveService;
+    @Resource(name = "loginService")
+    private LoginService loginService;
 
     @Override
     @Async
     public final void doTask() {
         log.info("PurgaAsyncTask: inicio");
-        claveService.purgar();
+        loginService.purgar();
         log.info("PurgaAsyncTask: fin");
     }
 

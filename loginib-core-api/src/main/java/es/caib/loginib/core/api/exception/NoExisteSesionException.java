@@ -10,12 +10,12 @@ package es.caib.loginib.core.api.exception;
 @SuppressWarnings("serial")
 public final class NoExisteSesionException extends ServiceRollbackException {
 
-    /**
-     * Constructor NoExiseSesionException.
-     *
-     */
-    public NoExisteSesionException() {
-        super("No existe sesion");
-    }
+	/**
+	 * Constructor NoExiseSesionException.
+	 *
+	 */
+	public NoExisteSesionException() {
+		super("No existe sesion activa");
+	}
 
 }

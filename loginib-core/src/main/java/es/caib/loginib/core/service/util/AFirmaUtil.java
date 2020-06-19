@@ -14,7 +14,7 @@ import org.dom4j.Node;
 import org.dom4j.XPath;
 import org.dom4j.io.SAXReader;
 
-import es.caib.loginib.core.api.exception.ErrorRespuestaClaveException;
+import es.caib.loginib.core.api.exception.ValidateClaveException;
 
 /**
  * Utilidades AFirma.
@@ -29,11 +29,14 @@ public final class AFirmaUtil {
 	/**
 	 * Extrae info del certificado a partir de la respuesta de AFirma en B64.
 	 *
-	 * @param xmlFirmaB64 respuesta de AFirma en B64
+	 * @param xmlFirmaB64
+	 *                        respuesta de AFirma en B64
+	 * @param idSesion
+	 *                        Idsesion
 	 * @return info del certificado (map con idcampo / valorcampo)
 	 */
 	@SuppressWarnings("unchecked")
-	public static Map<String, String> extraerInfoCertificado(final String xmlFirmaB64) {
+	public static Map<String, String> extraerInfoCertificado(final String xmlFirmaB64, final String idSesion) {
 
 		try {
 
@@ -70,7 +73,7 @@ public final class AFirmaUtil {
 			return values;
 
 		} catch (final DocumentException ex) {
-			throw new ErrorRespuestaClaveException(ex, null);
+			throw new ValidateClaveException("Error al interpretar respuesta de aFirma", ex, idSesion);
 		}
 
 	}

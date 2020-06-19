@@ -13,7 +13,9 @@ public enum ErrorCodes {
 	/** Clave autenticacion deshabilitado. */
 	CLAVE_DESHABILITADO("clave.deshabilitado"),
 	/** Clave autenticacion deshabilitado. */
-	CLIENTCERT_DESHABILITADO("clientcert.deshabilitado");
+	CLIENTCERT_DESHABILITADO("clientcert.deshabilitado"),
+	/** Usuario/password no valido. */
+	USUARIOPASSWORD_NO_VALIDO("usuariopassword.novalido");
 
 	/**
 	 * Valor como string.

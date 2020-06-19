@@ -26,7 +26,11 @@ public enum TypeIdp {
 	/**
 	 * ClientCert.
 	 */
-	CLIENTCERT("CLIENTCERT");
+	CLIENTCERT("CLIENTCERT"),
+	/**
+	 * Usuario/Password.
+	 */
+	USUARIO_PASSWORD("USUARIO_PASSWORD");
 
 	/**
 	 * Valor como string.

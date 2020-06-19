@@ -131,6 +131,22 @@ public final class JSesionLogin {
 	@Column(name = "LGI_PURGCK")
 	private boolean checkPurga;
 
+	/** Si audita autenticación. */
+	@Column(name = "LGI_EVIAUD")
+	private boolean auditar;
+
+	/** Evidencias (JSON). */
+	@Column(name = "LGI_EVIDEN")
+	private String evidenciasJson;
+
+	/** Hash evidencias. */
+	@Column(name = "LGI_EVIHSH")
+	private String evidenciasHash;
+
+	/** Algoritmo hash evidencias. */
+	@Column(name = "LGI_EVIALG")
+	private String evidenciasAlgoritmoHash;
+
 	/**
 	 * Gets the ticket.
 	 *
@@ -608,7 +624,7 @@ public final class JSesionLogin {
 
 	/**
 	 * Método de acceso a qaaAutenticacion.
-	 * 
+	 *
 	 * @return qaaAutenticacion
 	 */
 	public Integer getQaaAutenticacion() {
@@ -617,12 +633,88 @@ public final class JSesionLogin {
 
 	/**
 	 * Método para establecer qaaAutenticacion.
-	 * 
+	 *
 	 * @param qaaAutenticacion
 	 *                             qaaAutenticacion a establecer
 	 */
 	public void setQaaAutenticacion(final Integer qaaAutenticacion) {
 		this.qaaAutenticacion = qaaAutenticacion;
+	}
+
+	/**
+	 * Método de acceso a auditar.
+	 * 
+	 * @return auditar
+	 */
+	public boolean isAuditar() {
+		return auditar;
+	}
+
+	/**
+	 * Método para establecer auditar.
+	 * 
+	 * @param auditar
+	 *                    auditar a establecer
+	 */
+	public void setAuditar(final boolean auditar) {
+		this.auditar = auditar;
+	}
+
+	/**
+	 * Método de acceso a evidenciasJson.
+	 * 
+	 * @return evidenciasJson
+	 */
+	public String getEvidenciasJson() {
+		return evidenciasJson;
+	}
+
+	/**
+	 * Método para establecer evidenciasJson.
+	 * 
+	 * @param evidenciasJson
+	 *                           evidenciasJson a establecer
+	 */
+	public void setEvidenciasJson(final String evidenciasJson) {
+		this.evidenciasJson = evidenciasJson;
+	}
+
+	/**
+	 * Método de acceso a evidenciasHash.
+	 * 
+	 * @return evidenciasHash
+	 */
+	public String getEvidenciasHash() {
+		return evidenciasHash;
+	}
+
+	/**
+	 * Método para establecer evidenciasHash.
+	 * 
+	 * @param evidenciasHash
+	 *                           evidenciasHash a establecer
+	 */
+	public void setEvidenciasHash(final String evidenciasHash) {
+		this.evidenciasHash = evidenciasHash;
+	}
+
+	/**
+	 * Método de acceso a evidenciasAlgoritmoHash.
+	 * 
+	 * @return evidenciasAlgoritmoHash
+	 */
+	public String getEvidenciasAlgoritmoHash() {
+		return evidenciasAlgoritmoHash;
+	}
+
+	/**
+	 * Método para establecer evidenciasAlgoritmoHash.
+	 * 
+	 * @param evidenciasAlgoritmoHash
+	 *                                    evidenciasAlgoritmoHash a establecer
+	 */
+	public void setEvidenciasAlgoritmoHash(final String evidenciasAlgoritmoHash) {
+		this.evidenciasAlgoritmoHash = evidenciasAlgoritmoHash;
 	}
 
 }

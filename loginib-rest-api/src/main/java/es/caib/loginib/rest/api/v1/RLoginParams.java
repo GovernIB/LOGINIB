@@ -32,16 +32,16 @@ public final class RLoginParams {
 
 	/**
 	 * Metodos autenticacion clave (separados por ;). Valores:
-	 * ANONIMO;CLAVE_CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE;CLIENTCERT.
+	 * ANONIMO;CLAVE_CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE;CLIENTCERT;USUARIO_PASSWORD.
 	 */
-	@ApiModelProperty(value = "Metodos autenticacion clave (separados por ;). Valores: ANONIMO;CLAVE_CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE;CLIENTCERT.", required = true)
+	@ApiModelProperty(value = "Metodos autenticacion clave (separados por ;). Valores: ANONIMO;CLAVE_CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE;CLIENTCERT;USUARIO_PASSWORD", required = true)
 	private String metodosAutenticacion;
 
 	/**
 	 * Nivel autenticacion: 1 (Bajo), 2 (Medio) y 3 (Alto).
 	 */
-	@ApiModelProperty(value = "Nivel autenticacion: 1 (Bajo), 2 (Medio) y 3 (Alto).", required = true)
-	private int qaa;
+	@ApiModelProperty(value = "Nivel autenticacion: 1 (Bajo), 2 (Medio) y 3 (Alto).", required = false)
+	private Integer qaa;
 
 	/**
 	 * Idioma.
@@ -56,10 +56,16 @@ public final class RLoginParams {
 	private boolean forzarAutenticacion;
 
 	/**
-	 * Identificador aplicacion.
+	 * Identificador aplicación.
 	 */
-	@ApiModelProperty(value = "Aplicacion", required = false)
+	@ApiModelProperty(value = "Aplicación", required = false)
 	private String aplicacion;
+
+	/**
+	 * Indica si genera auditoría autenticación (con evidencias autenticación).
+	 */
+	@ApiModelProperty(value = "Indica si genera auditoría autenticación (con evidencias autenticación)", required = false)
+	private boolean auditar;
 
 	/**
 	 * Método de acceso a urlCallbackLogin.
@@ -104,7 +110,7 @@ public final class RLoginParams {
 	 *
 	 * @return qaa
 	 */
-	public int getQaa() {
+	public Integer getQaa() {
 		return qaa;
 	}
 
@@ -114,7 +120,7 @@ public final class RLoginParams {
 	 * @param qaa
 	 *                qaa a establecer
 	 */
-	public void setQaa(final int qaa) {
+	public void setQaa(final Integer qaa) {
 		this.qaa = qaa;
 	}
 
@@ -203,6 +209,25 @@ public final class RLoginParams {
 	 */
 	public void setUrlCallbackError(final String urlCallbackError) {
 		this.urlCallbackError = urlCallbackError;
+	}
+
+	/**
+	 * Método de acceso a auditar.
+	 *
+	 * @return auditar
+	 */
+	public boolean isAuditar() {
+		return auditar;
+	}
+
+	/**
+	 * Método para establecer auditar.
+	 *
+	 * @param auditar
+	 *                    auditar a establecer
+	 */
+	public void setAuditar(final boolean auditar) {
+		this.auditar = auditar;
 	}
 
 }

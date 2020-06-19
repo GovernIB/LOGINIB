@@ -17,9 +17,9 @@
 
 	<!-- JBoss 7  -->
 	<jee:local-slsb
-			id="claveService"
-			jndi-name="java:app/loginib-core/ClaveServiceBean"
-			business-interface="es.caib.loginib.core.api.service.ClaveService"/>
+			id="loginService"
+			jndi-name="java:app/loginib-core/LoginServiceBean"
+			business-interface="es.caib.loginib.core.api.service.LoginService"/>
 
 
 </beans>

@@ -117,6 +117,26 @@ public final class ClaveLoginUtil {
 	}
 
 	/**
+	 * Indica si permite solo acceso anonimo.
+	 *
+	 * @param idps
+	 *                 idps
+	 * @return boolean
+	 */
+	public static boolean permiteSoloAnonimo(final List<TypeIdp> idps) {
+		boolean res = permiteAccesoAnonimo(idps);
+		if (res) {
+			for (final TypeIdp idp : idps) {
+				if (idp != TypeIdp.ANONIMO) {
+					res = false;
+					break;
+				}
+			}
+		}
+		return res;
+	}
+
+	/**
 	 * Traduce a valores clave.
 	 *
 	 * @param idps
@@ -357,6 +377,17 @@ public final class ClaveLoginUtil {
 		}
 
 		return idp;
+	}
+
+	/**
+	 * Indica si acceso por usuario password se permite.
+	 *
+	 * @param idps
+	 *                 idps
+	 * @return boolean
+	 */
+	public static boolean permiteAccesoUsuarioPassword(final List<TypeIdp> idps) {
+		return idps.contains(TypeIdp.USUARIO_PASSWORD);
 	}
 
 }

@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +19,11 @@ import org.springframework.stereotype.Component;
 
 import es.caib.loginib.core.api.exception.ConfiguracionException;
 import es.caib.loginib.core.api.exception.PluginErrorException;
+import es.caib.loginib.core.api.model.login.types.TypeClientCert;
+import es.caib.loginib.core.api.model.login.types.TypeHash;
+import es.caib.loginib.core.service.model.ConfiguracionAuditoria;
+import es.caib.loginib.core.service.model.ConfiguracionKeycloak;
+import es.caib.loginib.core.service.model.ConfiguracionProcesos;
 
 /**
  *
@@ -86,21 +94,20 @@ public final class ModuleConfig {
 	}
 
 	/**
-	 * Método de acceso a timeoutTicketAutenticacion.
+	 * Método de acceso a configuracion procesos.
 	 *
-	 * @return timeoutTicketAutenticacion
+	 * @return configuracion procesos
 	 */
-	public Long getTimeoutTicketAutenticacion() {
-		return Long.parseLong(propiedades.getProperty("procesos.timeoutTicketAutenticacion"));
-	}
-
-	/**
-	 * Obtiene timeout para completar proceso autenticacion (login o logout).
-	 *
-	 * @return timeout para completar proceso autenticacion
-	 */
-	public Long getTimeoutProcesoAutenticacion() {
-		return Long.parseLong(propiedades.getProperty("procesos.timeoutProcesoAutenticacion"));
+	public ConfiguracionProcesos getConfiguracionProcesos() {
+		final ConfiguracionProcesos conf = new ConfiguracionProcesos();
+		conf.setTimeoutSesionAutenticacion(
+				Integer.parseInt(propiedades.getProperty("procesos.timeoutSesionAutenticacion")));
+		conf.setTimeoutTicketAutenticacion(
+				Integer.parseInt(propiedades.getProperty("procesos.timeoutTicketAutenticacion")));
+		conf.setTimeoutPurgaAuditadasFinalizadas(
+				Integer.parseInt(propiedades.getProperty("procesos.timeoutPurga.auditadasFinalizadas")));
+		conf.setTimeoutPurgaGeneral(Integer.parseInt(propiedades.getProperty("procesos.timeoutPurga.general")));
+		return conf;
 	}
 
 	/**
@@ -169,21 +176,12 @@ public final class ModuleConfig {
 	}
 
 	/**
-	 * Método de devuelve el Timeout purga definitiva (dias).
-	 *
-	 * @return dias para la purga definitiva
-	 */
-	public Long getTimeoutPurga() {
-		return Long.parseLong(propiedades.getProperty("procesos.timeoutPurga"));
-	}
-
-	/**
 	 * Método usado para ClientCert.
 	 *
-	 * @return dias para la purga definitiva
+	 * @return método
 	 */
-	public String getClientCertMetodo() {
-		return propiedades.getProperty("clientCert.metodo");
+	public TypeClientCert getClientCertMetodo() {
+		return TypeClientCert.fromString(propiedades.getProperty("clientCert.metodo"));
 	}
 
 	/**
@@ -264,41 +262,34 @@ public final class ModuleConfig {
 	 * </p>
 	 *
 	 * @param entidad
+	 *                      entidad
 	 * @param propiedad
-	 *                      posibles valores: title|titulo|logo.alt
+	 *                      propiedad
 	 * @param idioma
+	 *                      idioma
 	 * @return
 	 */
 	public String getPropiedadPersonalizacion(final String entidad, final String propiedad, final String idioma) {
 		String res = "";
-		final String idiomaDefecto = propiedades.getProperty("clave." + entidad + ".idioma.defecto");
-		res = propiedades.getProperty("clave." + entidad + "." + propiedad + "." + idioma);
+		final String idiomaDefecto = propiedades.getProperty("personalizacion." + entidad + ".idioma.defecto");
+		res = propiedades.getProperty("personalizacion." + entidad + "." + propiedad + "." + idioma);
 		if (StringUtils.isEmpty(res)) {
-			res = propiedades.getProperty("clave." + entidad + "." + propiedad + "." + idiomaDefecto);
+			res = propiedades.getProperty("personalizacion." + entidad + "." + propiedad + "." + idiomaDefecto);
 		}
 		return res;
 	}
 
 	/**
 	 * Retorna la propiedad por entidad correspondiente
-	 * <p>
-	 * Valores posibles para propiedad
-	 * <ul>
-	 * <li>logo.url = url del logotipo</li>
-	 * <li>favicon = url del favicon</li>
-	 * <li>css = etiquetas css que seran embedidas en la página
-	 * <li>idioma.defecto = idioma por defecto que se urará si no existen las
-	 * propiedades en el idioma indicado</li>
-	 * </ul>
-	 * </p>
 	 *
 	 * @param entidad
+	 *                      entidad
 	 * @param propiedad
-	 *                      Posibles valores: logo.url|favicon|css|idioma.defecto
+	 *                      propiedad
 	 * @return
 	 */
 	public String getPropiedadPersonalizacion(final String entidad, final String propiedad) {
-		return propiedades.getProperty("clave." + entidad + "." + propiedad);
+		return propiedades.getProperty("personalizacion." + entidad + "." + propiedad);
 	}
 
 	/**
@@ -345,6 +336,52 @@ public final class ModuleConfig {
 			res = Integer.parseInt(propiedades.getProperty("clave.responseValidation.notOnOrAfter"));
 		}
 		return res;
+	}
+
+	/**
+	 * Indica si esta deshabilitado el acceso por usuario/password.
+	 *
+	 * @return boolean
+	 */
+	public boolean isAccesoUsuarioPasswordDeshabilitado() {
+		return "true".equals(propiedades.getProperty("usuariopassword.deshabilitado"));
+	}
+
+	/**
+	 * Obtiene configuracion keycloak.
+	 *
+	 * @return configuracion keycloak
+	 */
+	public ConfiguracionKeycloak getConfiguracionKeycloak() {
+		final ConfiguracionKeycloak conf = new ConfiguracionKeycloak();
+		conf.setConfiguracion(propiedades.getProperty("usuariopassword.keycloak.configuration"));
+		conf.setAtributoNif(propiedades.getProperty("usuariopassword.keycloak.attribute.nif"));
+		conf.setAtributoApellido1(propiedades.getProperty("usuariopassword.keycloak.attribute.apellido1"));
+		conf.setAtributoApellido2(propiedades.getProperty("usuariopassword.keycloak.attribute.apellido2"));
+		return conf;
+	}
+
+	/**
+	 * Obtiene configuracion Auditoría.
+	 *
+	 * @return lista headers
+	 */
+	public ConfiguracionAuditoria getConfiguracionAuditoria() {
+
+		List<String> ipHeaders = new ArrayList<String>();
+		final String headers = propiedades.getProperty("auditoria.ip.headers");
+		if (StringUtils.isNotBlank(headers)) {
+			final String[] headersArray = headers.split(";");
+			ipHeaders = Arrays.asList(headersArray);
+		}
+
+		final ConfiguracionAuditoria conf = new ConfiguracionAuditoria();
+		conf.setIpAuditar("true".equals(propiedades.getProperty("auditoria.ip.auditar")));
+		conf.setIpMostrar("true".equals(propiedades.getProperty("auditoria.ip.mostrar")));
+		conf.setAlgoritmoHash(TypeHash.fromString(propiedades.getProperty("auditoria.hash.algoritmo")));
+		conf.setIpHeaders(ipHeaders);
+		conf.setXmlMostrar("true".equals(propiedades.getProperty("auditoria.xml.mostrar")));
+		return conf;
 	}
 
 }
