@@ -31,11 +31,13 @@
     	<link rel="icon" href="<c:out value = "${datos.personalizacion.favicon}"/>"  escapeXml="false"/>
 	</c:if>
 
+
+	<link rel="stylesheet" media="screen" href="estilos/imc-loginib.css" />
+
 	<style type="text/css">
 		/* Personalización */
 		<c:out value = "${datos.personalizacion.css}"  escapeXml="false"/>
 	</style>
-	<link rel="stylesheet" media="screen" href="estilos/imc-loginib.css" />
 
 	<script src="js/utils/jquery-3.5.0.min.js"></script>
 
