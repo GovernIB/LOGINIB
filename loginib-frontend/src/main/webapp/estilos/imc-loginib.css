@@ -42,7 +42,7 @@ a:focus span { color: #fff; background-color: #3b8e5d; }
 
 /* continguts */
 
-.imc-contingut { display: block; position: fixed; z-index: 1; top: calc(50% - 10em); left: calc(50% - 20em); width: 40em; height: 20em; font-size: 1.3em; }
+.imc-contingut { display: block; position: fixed; z-index: 1; top: calc(50% - 10em); left: calc(50% - 20em); width: 40em; height: 20em; font-size: 1.3em; background-color: #eaeaea; }
 
 .imc-contingut h1 { font-weight: normal; text-align: center; margin-bottom: 2em; }
 .imc-contingut h1 span { font-size: 1.5em; }
@@ -53,7 +53,7 @@ a:focus span { color: #fff; background-color: #3b8e5d; }
 .imc-contingut ul li a { display: block; position: relative; text-align: center; height: 10em; }
 .imc-contingut ul li a.imc--clave { background: transparent url("../imgs/clave.svg") no-repeat 50% 4em / 9em auto; }
 .imc-contingut ul li a.imc--ciutada { background: transparent url("../imgs/ciutada.svg") no-repeat 50% 4.2em / 2.5em auto; }
-.imc-contingut ul li a.imc--certificat { background: transparent url("../imgs/ciutada.svg") no-repeat 50% 4.2em / 2.5em auto; }
+.imc-contingut ul li a.imc--certificat { background: transparent url("../imgs/certificat.png") no-repeat 50% 3.5em / 5em auto; }
 
 .imc-contingut ul li a span { display: block; position: absolute; left: 0; top: 0; width: 100%; padding: .7em 0; }
 
@@ -195,11 +195,29 @@ div[aria-hidden="false"] { visibility: visible; opacity: 1; }
 
 
 
+/* Personalizacion cabeceras */
+.imc-cabecera{ font-size:1em;	height: 5.5em; }
+.imc-cabecera h1{
+	display: block;
+	position: fixed;
+	z-index: 1;
+	top: auto;
+	left: calc(50% - 30em);
+	width: 60em;
+	margin: 0;
+	text-align: center;
+  	padding:.5em;
+}
+.imc-cabecera h1 img{ vertical-align: middle; height:4.4em}
+.imc-cabecera h1 span{ font-weight: normal ;font-size:2.2em}
+
+.imc-txtcc{font-size: 0.8em;padding: 2em; text-align: center;}
+.imc-txtcc a span {padding: 0 0.3em 0 0.3em;}
 
 /* media */
 
 @media only screen and (max-width : 1024px) {
-
+	.imc-cabecera { font-size:0.8em}
 	.imc-contingut { font-size: 1em; }
 
 }
@@ -228,30 +246,13 @@ div[aria-hidden="false"] { visibility: visible; opacity: 1; }
 
 
 @media only screen and (max-width : 450px) {
-
+	.imc-cabecera { font-size:0.5em}
 	.imc-contingut { width: 100%; font-size: .9em; }
 
 	.imc-contingut ul { gap: 1em 1em; }
 
 }
 
-/* Personalizacion cabeceras */
 
-.imc-cabecera{ font-size:1em;	height: 5.5em; }
-.imc-cabecera h1{
-	display: block;
-	position: fixed;
-	z-index: 1;
-	top: auto;
-	left: calc(50% - 30em);
-	width: 60em;
-	margin: 0;
-	text-align: center;
-  	padding:.5em;
-}
-.imc-cabecera h1 img{ vertical-align: middle; height:4.4em}
-.imc-cabecera h1 span{ font-weight: normal ;font-size:2.2em}
 
-.imc-txtcc{font-size: 0.8em;padding: 2em; text-align: center;}
-.imc-txtcc a span {padding: 0 0.3em 0 0.3em;}
 
