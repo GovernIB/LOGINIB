@@ -37,6 +37,9 @@ public final class DatosSesionData {
 	/** QAA autenticacion. */
 	private Integer qaaAutenticacion;
 
+	/** Inicia Cl@ve Automatico. */
+	private boolean iniClaAuto;
+
 	/** Force auth. */
 	private boolean forceAuth;
 
@@ -125,6 +128,25 @@ public final class DatosSesionData {
 	 */
 	public void setQaa(final Integer qaa) {
 		this.qaa = qaa;
+	}
+
+	/**
+	 * Checks if is inicia Cl@ve Automatico. 
+	 *
+	 * @return true, if is force auth
+	 */
+	public boolean isIniClaAuto() {
+		return iniClaAuto;
+	}
+
+	/**
+	 * Sets the inicia Cl@ve Automatico.
+	 *
+	 * @param iniClaAuto
+	 *                      the new inicia Cl@ve Automatico
+	 */
+	public void setIniClaAuto(final boolean iniClaAuto) {
+		this.iniClaAuto = iniClaAuto;
 	}
 
 	/**

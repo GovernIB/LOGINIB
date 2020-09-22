@@ -51,7 +51,7 @@ public final class LoginDaoImpl implements LoginDao {
 
 	@Override
 	public String crearSesionLogin(final String entidad, final String pUrlCallback, final String pUrlCallbackError,
-			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean forceAuth,
+			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto, final boolean forceAuth,
 			final String aplicacion, final boolean auditar) {
 		String idTicket = null;
 
@@ -65,6 +65,7 @@ public final class LoginDaoImpl implements LoginDao {
 		ticketExterna.setIdps(ClaveLoginUtil.convertToStringIdps(idps));
 		ticketExterna.setSesion(GeneradorId.generarId());
 		ticketExterna.setQaa(qaa);
+		ticketExterna.setInicioClaveAutomatico(iniClaAuto);
 		ticketExterna.setForceAuthentication(forceAuth);
 		ticketExterna.setAplicacion(aplicacion);
 		ticketExterna.setAuditar(auditar);
@@ -89,6 +90,7 @@ public final class LoginDaoImpl implements LoginDao {
 		ds.setFechaTicket(ticket.getFechaTicket());
 		ds.setQaa(ticket.getQaa());
 		ds.setQaaAutenticacion(ticket.getQaaAutenticacion());
+		ds.setIniClaAuto(ticket.isInicioClaveAutomatico());
 		ds.setForceAuth(ticket.isForceAuthentication());
 		ds.setSamlIdPeticion(ticket.getSamlIdPeticion());
 		ds.setUrlCallback(ticket.getUrlCallback());

@@ -16,6 +16,7 @@ create table LIB_LOGIN
    LGI_IDPS             character varying(100)   not null,
    LGI_URLCBK           character varying(4000)  not null,
    LGI_URLCER           character varying(4000)  not null,
+   LGI_INCLAU           boolean NOT NULL DEFAULT false,
    LGI_FCAUTH           boolean NOT NULL DEFAULT false,
    LGI_TICKET           character varying(100),
    LGI_FCALTA           timestamp without time zone,
@@ -64,6 +65,9 @@ comment on column LIB_LOGIN.LGI_URLCBK is
 
 comment on column LIB_LOGIN.LGI_URLCER is
 'Url callback error';
+
+comment on column LIB_LOGIN.LGI_INCLAU is
+'Indica si la página de login automáticamente dispara la redirección a Cl@ve';
 
 comment on column LIB_LOGIN.LGI_FCAUTH is
 'Indica si se fuerza la autenticacion (si no se intentara SSO)';

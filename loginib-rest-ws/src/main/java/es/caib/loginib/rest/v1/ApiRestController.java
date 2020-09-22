@@ -52,6 +52,7 @@ public class ApiRestController {
 		final String idSesion = loginService.iniciarSesionLogin(parametros.getEntidad(), parametros.getUrlCallback(),
 				parametros.getUrlCallbackError(), parametros.getIdioma(),
 				ClaveLoginUtil.convertToListIdps(parametros.getMetodosAutenticacion()), parametros.getQaa(),
+				parametros.isInicioClaveAutomatico(), 
 				parametros.isForzarAutenticacion(), parametros.getAplicacion(), parametros.isAuditar());
 
 		// Obtenemos url redireccion inicio sesion
@@ -96,7 +97,9 @@ public class ApiRestController {
 			dr.setApellido2(du.getRepresentante().getApellido2());
 			datos.setRepresentante(dr);
 		}
+
 		return datos;
+
 	}
 
 	/**

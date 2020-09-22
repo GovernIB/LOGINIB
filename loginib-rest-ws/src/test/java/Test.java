@@ -34,6 +34,7 @@ public class Test {
         param.setAplicacion("app1");
         param.setUrlCallback("http://www.google.es");
         param.setIdioma("es");
+        param.setInicioClaveAutomatico(false);
         param.setForzarAutenticacion(false);
         param.setQaa(3);
         param.setMetodosAutenticacion(

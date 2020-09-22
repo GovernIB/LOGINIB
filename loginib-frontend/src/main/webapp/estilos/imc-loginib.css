@@ -219,7 +219,6 @@ div[aria-hidden="false"] { visibility: visible; opacity: 1; }
 @media only screen and (max-width : 1024px) {
 	.imc-cabecera { font-size:0.8em}
 	.imc-contingut { font-size: 1em; }
-
 }
 
 @media only screen and (max-width : 670px) {

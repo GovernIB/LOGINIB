@@ -115,6 +115,10 @@ public final class JSesionLogin {
 	@Column(name = "LGI_QAARES")
 	private Integer qaaAutenticacion;
 
+	/** Iniciar Cl@ve Automatico. */
+	@Column(name = "LGI_INCLAU")
+	private boolean inicioClaveAutomatico;
+	
 	/** Forzar autenticacion. */
 	@Column(name = "LGI_FCAUTH")
 	private boolean forceAuthentication;
@@ -433,6 +437,25 @@ public final class JSesionLogin {
 	}
 
 	/**
+	 * Checks if is inicio Cl@ve Automatico.
+	 *
+	 * @return true, if is inicio Clave Automatico
+	 */
+	public boolean isInicioClaveAutomatico() {
+		return inicioClaveAutomatico;
+	}
+
+	/**
+	 * Sets the inicio Cl@ve Automatico.
+	 *
+	 * @param inicioClaveAutomatico
+	 *                                the new inicio Clave Automatico
+	 */
+	public void setInicioClaveAutomatico(final boolean inicioClaveAutomatico) {
+		this.inicioClaveAutomatico = inicioClaveAutomatico;
+	}
+
+	/**
 	 * Checks if is force authentication.
 	 *
 	 * @return true, if is force authentication
@@ -624,7 +647,7 @@ public final class JSesionLogin {
 
 	/**
 	 * Método de acceso a qaaAutenticacion.
-	 *
+	 * 
 	 * @return qaaAutenticacion
 	 */
 	public Integer getQaaAutenticacion() {
@@ -633,7 +656,7 @@ public final class JSesionLogin {
 
 	/**
 	 * Método para establecer qaaAutenticacion.
-	 *
+	 * 
 	 * @param qaaAutenticacion
 	 *                             qaaAutenticacion a establecer
 	 */

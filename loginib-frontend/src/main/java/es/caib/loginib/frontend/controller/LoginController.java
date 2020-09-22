@@ -92,12 +92,18 @@ public final class LoginController {
 		datos.setClientCertSegundoPlano(sesion.getAccesosPermitidos().isAccesoClientCertLink());
 		datos.setPersonalizacion(sesion.getPersonalizacionEntidad());
 
-		// Si esta activado anonimo auto redirigimos si solo existe idp anonimo
 		ModelAndView modelAndView = null;
+
+		// Si esta activado anonimo auto redirigimos si solo existe idp anonimo
 		if (sesion.getAccesosPermitidos().isAccesoAnonimoAuto()) {
 			modelAndView = new ModelAndView("redirect:loginAnonimo.html?idSesion=" + idSesion);
 		} else {
-			modelAndView = new ModelAndView("seleccionAutenticacion", "datos", datos);
+			// Si se indica por parametro inicio de Cl@ve automatico: se redirige a Cl@ve
+			if (sesion.getSesion().isIniClaAuto()) {
+				modelAndView = new ModelAndView("redirect:redirigirLoginClave.html?idSesion=" + idSesion);
+			} else {
+				modelAndView = new ModelAndView("seleccionAutenticacion", "datos", datos);
+			}
 		}
 		return modelAndView;
 	}

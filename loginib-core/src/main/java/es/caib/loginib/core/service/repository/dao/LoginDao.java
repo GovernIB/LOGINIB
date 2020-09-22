@@ -32,7 +32,9 @@ public interface LoginDao {
 	 * @param idps
 	 *                             idps
 	 * @param qaa
-	 *                             Qaa
+	 *                             Qaa                             
+	 * @param iniClaAuto
+	 *                             iniClaAuto
 	 * @param forceAuth
 	 *                             forceAuth
 	 * @param aplicacion
@@ -43,7 +45,7 @@ public interface LoginDao {
 	 * @return identificador sesion
 	 */
 	String crearSesionLogin(final String entidad, String urlCallback, final String pUrlCallbackError, String idioma,
-			final List<TypeIdp> idps, final Integer qaa, final boolean forceAuth, final String aplicacion,
+			final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto, final boolean forceAuth, final String aplicacion,
 			boolean auditar);
 
 	/**

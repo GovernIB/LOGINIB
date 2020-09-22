@@ -38,6 +38,9 @@ public interface LoginService {
 	 *                             Idps
 	 * @param qaa
 	 *                             Qaa
+	 * @param iniClaAuto
+	 *                             iniClaAuto
+ *                             
 	 * @param forceAuth
 	 *                             forceAuth
 	 * @param aplicacion
@@ -47,7 +50,7 @@ public interface LoginService {
 	 * @return Id sesion
 	 */
 	String iniciarSesionLogin(final String entidad, final String urlCallback, final String urlCallbackError,
-			final String idioma, final List<TypeIdp> idps, Integer qaa, boolean forceAuth, final String aplicacion,
+			final String idioma, final List<TypeIdp> idps, Integer qaa, boolean iniClaAuto, boolean forceAuth, final String aplicacion,
 			final boolean auditar);
 
 	/**

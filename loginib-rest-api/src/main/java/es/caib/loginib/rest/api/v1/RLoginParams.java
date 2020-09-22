@@ -50,6 +50,11 @@ public final class RLoginParams {
 	private String idioma;
 
 	/**
+	 * Iniciar Cl@ve automatico (para Carpeta Ciudadana) .
+	 */
+	@ApiModelProperty(value = "Iniciar Cl@ve automatico", required = true)
+	private boolean inicioClaveAutomatico;
+	/**
 	 * Forzar autenticación (para Cl@ve).
 	 */
 	@ApiModelProperty(value = "Forzar autenticación", required = true)
@@ -142,7 +147,26 @@ public final class RLoginParams {
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
 	}
+	
+	/**
+	 * Método de acceso a inicioClaveAutomatico.
+	 *
+	 * @return inicioClaveAutomatico
+	 */
+	public boolean isInicioClaveAutomatico() {
+		return inicioClaveAutomatico;
+	}
 
+	/**
+	 * Método para establecer inicioClaveAutomatico.
+	 *
+	 * @param inicioClaveAutomatico
+	 *                                inicioClaveAutomatico a establecer
+	 */
+	public void setInicioClaveAutomatico(final boolean inicioClaveAutomatico) {
+		this.inicioClaveAutomatico = inicioClaveAutomatico;
+	}
+	
 	/**
 	 * Método de acceso a forzarAutenticacion.
 	 *

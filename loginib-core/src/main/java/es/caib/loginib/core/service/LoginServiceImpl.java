@@ -114,7 +114,7 @@ public final class LoginServiceImpl implements LoginService {
 	@Override
 	@NegocioInterceptor
 	public String iniciarSesionLogin(final String entidad, final String pUrlCallback, final String pUrlCallbackError,
-			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean forceAuth,
+			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto, final boolean forceAuth,
 			final String aplicacion, final boolean auditar) {
 		log.debug(" Crea sesion clave: [idps = " + idps + "] [urlCallback = " + pUrlCallback + "]");
 
@@ -145,7 +145,7 @@ public final class LoginServiceImpl implements LoginService {
 		}
 
 		final String idSesion = loginDao.crearSesionLogin(entidad, pUrlCallback, pUrlCallbackError, idioma, idps, qaa,
-				forceAuth, aplicacion, auditar);
+				iniClaAuto, forceAuth, aplicacion, auditar);
 		log.debug(" Creada sesion clave:  [idSesion = " + idSesion + "] [idps = " + idps + "] [urlCallback = "
 				+ pUrlCallback + "]");
 		return idSesion;
