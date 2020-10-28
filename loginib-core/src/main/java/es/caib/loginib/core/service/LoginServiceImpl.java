@@ -114,8 +114,8 @@ public final class LoginServiceImpl implements LoginService {
 	@Override
 	@NegocioInterceptor
 	public String iniciarSesionLogin(final String entidad, final String pUrlCallback, final String pUrlCallbackError,
-			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto, final boolean forceAuth,
-			final String aplicacion, final boolean auditar) {
+			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto,
+			final boolean forceAuth, final String aplicacion, final boolean auditar) {
 		log.debug(" Crea sesion clave: [idps = " + idps + "] [urlCallback = " + pUrlCallback + "]");
 
 		if (StringUtils.isBlank(entidad)) {
@@ -202,7 +202,7 @@ public final class LoginServiceImpl implements LoginService {
 		// Recuperamos datos sesion
 		final DatosSesion datosSesion = recuperarDatosSesionLogin(pIdSesion);
 		if (!datosSesion.getAccesosPermitidos().isAccesoClave()) {
-			throw new ValidateClientCertException("No se permite acceso por Clave", pIdSesion);
+			throw new ValidateClaveException("No se permite acceso por Clave", pIdSesion);
 		}
 		if (datosSesion.getSesion().getFechaTicket() != null) {
 			throw new GenerarPeticionClaveException(
@@ -596,6 +596,18 @@ public final class LoginServiceImpl implements LoginService {
 	@NegocioInterceptor
 	public EvidenciasAutenticacion obtenerEvidenciasSesionLogin(final String idSesion) {
 		return loginDao.obtenerEvidenciasSesionLogin(idSesion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public Map<String, String> obtenerMapeoErroresValidacion(final String key) {
+		final Map<String, String> errores = new HashMap<>();
+		final String prefix = key + ".error.";
+		final Map<String, String> props = config.getPropiedadesByPrefix(prefix);
+		for (final String propKey : props.keySet()) {
+			errores.put(propKey.substring(prefix.length()), props.get(propKey));
+		}
+		return errores;
 	}
 
 	// ---------------------------------------------------------------------------

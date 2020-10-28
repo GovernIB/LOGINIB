@@ -9,7 +9,6 @@ import javax.annotation.Resource;
 import javax.ejb.EJBException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.loginib.core.api.exception.ServiceException;
+import es.caib.loginib.core.api.exception.ValidateClaveException;
 import es.caib.loginib.core.api.exception.ValidateLoginException;
 import es.caib.loginib.core.api.model.login.DatosPersona;
 import es.caib.loginib.core.api.model.login.DatosSesion;
@@ -56,8 +56,8 @@ public final class LoginController {
 	/** Log. */
 	private final Logger log = LoggerFactory.getLogger(LoginController.class);
 
-	/** Mensaje error particularizado usuario. */
-	private static final String ERROR_MESSAGE_USER = "ERROR_MESSAGE_USER";
+	/** Detalle error. */
+	private static final String ERROR_DETALLE = "ERROR_DETALLE";
 
 	/** Sesion ID . **/
 	private static final String ERROR_ID_SESION = "ERROR_ID_SESION";
@@ -380,13 +380,13 @@ public final class LoginController {
 		String urlCallbackError = null;
 		String idioma = "es";
 		String mensajeErrorGeneral = null;
-		String mensajeErrorPersonalizado = null;
+		String detalleError = null;
 
-		// Parametros pasados por sesion: Id sesion y mensaje particularizado
+		// Parametros pasados por sesion: Id sesion y detalle error
 		final String idSesion = (String) request.getSession().getAttribute(ERROR_ID_SESION);
-		mensajeErrorPersonalizado = (String) request.getSession().getAttribute(ERROR_MESSAGE_USER);
+		detalleError = (String) request.getSession().getAttribute(ERROR_DETALLE);
 		request.getSession().removeAttribute(ERROR_ID_SESION);
-		request.getSession().removeAttribute(ERROR_MESSAGE_USER);
+		request.getSession().removeAttribute(ERROR_DETALLE);
 
 		// Cargamos sesion (particularizacion entidad y url callback)
 		if (idSesion != null) {
@@ -401,20 +401,18 @@ public final class LoginController {
 			urlCallbackError = "seleccionAutenticacion.html?idSesion=" + idSesion;
 		}
 
-		// Error general si no hay mensaje personalizado
-		if (StringUtils.isBlank(mensajeErrorPersonalizado)) {
-			ErrorCodes error = ErrorCodes.fromString(errorCode);
-			if (error == null) {
-				error = ErrorCodes.ERROR_GENERAL;
-			}
-			mensajeErrorGeneral = error.toString();
+		// Código error
+		ErrorCodes error = ErrorCodes.fromString(errorCode);
+		if (error == null) {
+			error = ErrorCodes.ERROR_GENERAL;
 		}
+		mensajeErrorGeneral = error.toString();
 
 		// Retornamos respuesta
 		final RespuestaError respuesta = new RespuestaError();
 		respuesta.setIdioma(idioma);
 		respuesta.setMensajeErrorGeneral(mensajeErrorGeneral);
-		respuesta.setMensajeErrorPersonalizado(mensajeErrorPersonalizado);
+		respuesta.setMensajeErrorDetalle(detalleError);
 		respuesta.setUrlCallback(urlCallbackError);
 		respuesta.setPersonalizacion(personalizacion);
 		return new ModelAndView("errorDetalle", "datos", respuesta);
@@ -443,17 +441,44 @@ public final class LoginController {
 
 		// Si es una excepcion al procesar la respuesta de Clave, mostramos
 		// detalle al usuario
+		ErrorCodes errorCode = ErrorCodes.ERROR_GENERAL;
 		String errorMessage = null;
 		String idSesion = null;
 		if (ex instanceof ValidateLoginException) {
+
+			errorCode = ErrorCodes.ERROR_LOGIN;
+
 			errorMessage = ((ValidateLoginException) ex).getMensajeError();
 			idSesion = ((ValidateLoginException) ex).getIdSesion();
+
+			// Detectamos errores particularizados
+			// - Clave
+			if (ex instanceof ValidateClaveException) {
+				final Map<String, String> mapErrores = loginService.obtenerMapeoErroresValidacion("clave");
+				String errorCodeStr = null;
+				for (final String mapErrorKey : mapErrores.keySet()) {
+					if (errorMessage.contains(mapErrores.get(mapErrorKey))) {
+						errorCodeStr = mapErrorKey;
+						break;
+					}
+				}
+				if (errorCodeStr != null && ErrorCodes.fromEnum(errorCodeStr) != null) {
+					errorCode = ErrorCodes.fromEnum(errorCodeStr);
+				}
+			}
+
+			// Si particularizamos error, no mostramos error original
+			/*
+			 * if (errorCode != ErrorCodes.ERROR_LOGIN) { errorMessage = null; }
+			 */
+
 		}
-		request.getSession().setAttribute(ERROR_MESSAGE_USER, errorMessage);
+
+		request.getSession().setAttribute(ERROR_DETALLE, errorMessage);
 		request.getSession().setAttribute(ERROR_ID_SESION, idSesion);
 
-		// Mostramos pagina generica de error
-		return new ModelAndView("redirect:/error.html?code=" + ErrorCodes.ERROR_GENERAL.toString());
+		// Mostramos pagina de error
+		return new ModelAndView("redirect:/error.html?code=" + errorCode.toString());
 	}
 
 	/**

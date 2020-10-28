@@ -40,7 +40,7 @@ public interface LoginService {
 	 *                             Qaa
 	 * @param iniClaAuto
 	 *                             iniClaAuto
- *                             
+	 *
 	 * @param forceAuth
 	 *                             forceAuth
 	 * @param aplicacion
@@ -50,8 +50,8 @@ public interface LoginService {
 	 * @return Id sesion
 	 */
 	String iniciarSesionLogin(final String entidad, final String urlCallback, final String urlCallbackError,
-			final String idioma, final List<TypeIdp> idps, Integer qaa, boolean iniClaAuto, boolean forceAuth, final String aplicacion,
-			final boolean auditar);
+			final String idioma, final List<TypeIdp> idps, Integer qaa, boolean iniClaAuto, boolean forceAuth,
+			final String aplicacion, final boolean auditar);
 
 	/**
 	 * Inicia sesión logout (solo aplica de momento a Cl@ve).
@@ -241,5 +241,14 @@ public interface LoginService {
 	 * Realiza purga sesiones.
 	 */
 	void purgar();
+
+	/**
+	 * Obtiene mapeo errores personalizados.
+	 * 
+	 * @param key
+	 *                Key
+	 * @return map con error y cadena que debe contener.
+	 */
+	Map<String, String> obtenerMapeoErroresValidacion(String key);
 
 }
