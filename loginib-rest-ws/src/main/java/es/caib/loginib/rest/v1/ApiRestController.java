@@ -1,7 +1,9 @@
 package es.caib.loginib.rest.v1;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,8 @@ import es.caib.loginib.rest.api.v1.RDatosRepresentante;
 import es.caib.loginib.rest.api.v1.REvidenciasAutenticacion;
 import es.caib.loginib.rest.api.v1.RLoginParams;
 import es.caib.loginib.rest.api.v1.RLogoutParams;
+import es.caib.loginib.rest.api.v1.RParamApp;
+import es.caib.loginib.rest.api.v1.RParamsApp;
 import es.caib.loginib.rest.api.v1.RPropiedad;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,12 +52,13 @@ public class ApiRestController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(@RequestBody(required = false) final RLoginParams parametros) {
 
+		final Map<String, String> params = getParams(parametros.getParamsApp());
 		// Creamos sesion
 		final String idSesion = loginService.iniciarSesionLogin(parametros.getEntidad(), parametros.getUrlCallback(),
 				parametros.getUrlCallbackError(), parametros.getIdioma(),
 				ClaveLoginUtil.convertToListIdps(parametros.getMetodosAutenticacion()), parametros.getQaa(),
-				parametros.isInicioClaveAutomatico(), 
-				parametros.isForzarAutenticacion(), parametros.getAplicacion(), parametros.isAuditar());
+				parametros.isInicioClaveAutomatico(), parametros.isForzarAutenticacion(), parametros.getAplicacion(),
+				parametros.isAuditar(), params);
 
 		// Obtenemos url redireccion inicio sesion
 		final String url = loginService.obtenerUrlRedireccionLoginClave(idSesion, parametros.getIdioma());
@@ -63,10 +68,26 @@ public class ApiRestController {
 	}
 
 	/**
+	 * Convierte el RParamsApp a Map.
+	 *
+	 * @param paramsApp
+	 * @return
+	 */
+	private Map<String, String> getParams(final RParamsApp paramsApp) {
+		Map<String, String> params = null;
+		if (paramsApp != null && paramsApp.getParametros() != null && !paramsApp.getParametros().isEmpty()) {
+			params = new LinkedHashMap<>();
+			for (final RParamApp param : paramsApp.getParametros()) {
+				params.put(param.getPropiedad(), param.getValor());
+			}
+		}
+		return params;
+	}
+
+	/**
 	 * Recupera datos ticket.
 	 *
-	 * @param ticket
-	 *                   ticket
+	 * @param ticket ticket
 	 * @return datos ticket
 	 */
 	@ApiOperation(value = "Obtiene datos autenticación a partir del ticket", notes = "Obtiene datos autenticación a partir del ticket", response = RDatosAutenticacion.class)
@@ -75,6 +96,7 @@ public class ApiRestController {
 		final DatosAutenticacion du = loginService.obtenerDatosAutenticacion(ticket);
 		final RDatosAutenticacion datos = new RDatosAutenticacion();
 		datos.setIdSesion(du.getIdSesion());
+		datos.setParamsApp(du.getParamsApp());
 		if (du.getMetodoAutenticacion() != null) {
 			datos.setMetodoAutenticacion(du.getMetodoAutenticacion().toString());
 		}
@@ -97,7 +119,6 @@ public class ApiRestController {
 			dr.setApellido2(du.getRepresentante().getApellido2());
 			datos.setRepresentante(dr);
 		}
-
 		return datos;
 
 	}

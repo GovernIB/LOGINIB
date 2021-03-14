@@ -2,6 +2,7 @@ package es.caib.loginib.core.api.model.login;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import es.caib.loginib.core.api.model.login.types.TypeIdp;
 
@@ -58,6 +59,9 @@ public final class DatosSesionData {
 	/** Auditar. */
 	private boolean auditar;
 
+	/** Params app **/
+	private Map<String, String> paramsApp;
+
 	/**
 	 * Gets the fecha.
 	 *
@@ -70,8 +74,7 @@ public final class DatosSesionData {
 	/**
 	 * Sets the fecha.
 	 *
-	 * @param pFecha
-	 *                   the fecha to set
+	 * @param pFecha the fecha to set
 	 */
 	public void setFechaInicioSesion(final Date pFecha) {
 		fechaInicioSesion = pFecha;
@@ -89,8 +92,7 @@ public final class DatosSesionData {
 	/**
 	 * Sets the idioma.
 	 *
-	 * @param pIdioma
-	 *                    the idioma to set
+	 * @param pIdioma the idioma to set
 	 */
 	public void setIdioma(final String pIdioma) {
 		idioma = pIdioma;
@@ -108,8 +110,7 @@ public final class DatosSesionData {
 	/**
 	 * Sets the fecha ticket.
 	 *
-	 * @param pFechaTicket
-	 *                         the fechaTicket to set
+	 * @param pFechaTicket the fechaTicket to set
 	 */
 	public void setFechaTicket(final Date pFechaTicket) {
 		fechaTicket = pFechaTicket;
@@ -123,15 +124,14 @@ public final class DatosSesionData {
 	}
 
 	/**
-	 * @param qaa
-	 *                the qaa to set
+	 * @param qaa the qaa to set
 	 */
 	public void setQaa(final Integer qaa) {
 		this.qaa = qaa;
 	}
 
 	/**
-	 * Checks if is inicia Cl@ve Automatico. 
+	 * Checks if is inicia Cl@ve Automatico.
 	 *
 	 * @return true, if is force auth
 	 */
@@ -142,8 +142,7 @@ public final class DatosSesionData {
 	/**
 	 * Sets the inicia Cl@ve Automatico.
 	 *
-	 * @param iniClaAuto
-	 *                      the new inicia Cl@ve Automatico
+	 * @param iniClaAuto the new inicia Cl@ve Automatico
 	 */
 	public void setIniClaAuto(final boolean iniClaAuto) {
 		this.iniClaAuto = iniClaAuto;
@@ -161,8 +160,7 @@ public final class DatosSesionData {
 	/**
 	 * Sets the force auth.
 	 *
-	 * @param forceAuth
-	 *                      the new force auth
+	 * @param forceAuth the new force auth
 	 */
 	public void setForceAuth(final boolean forceAuth) {
 		this.forceAuth = forceAuth;
@@ -188,8 +186,7 @@ public final class DatosSesionData {
 	/**
 	 * Método para establecer entidad.
 	 *
-	 * @param entidad
-	 *                    entidad a establecer
+	 * @param entidad entidad a establecer
 	 */
 	public void setEntidad(final String entidad) {
 		this.entidad = entidad;
@@ -207,8 +204,7 @@ public final class DatosSesionData {
 	/**
 	 * Método para establecer idSesion.
 	 *
-	 * @param idSesion
-	 *                     idSesion a establecer
+	 * @param idSesion idSesion a establecer
 	 */
 	public void setIdSesion(final String idSesion) {
 		this.idSesion = idSesion;
@@ -226,8 +222,7 @@ public final class DatosSesionData {
 	/**
 	 * Método para establecer idps.
 	 *
-	 * @param idps
-	 *                 idps a establecer
+	 * @param idps idps a establecer
 	 */
 	public void setIdps(final List<TypeIdp> idps) {
 		this.idps = idps;
@@ -245,8 +240,7 @@ public final class DatosSesionData {
 	/**
 	 * Método para establecer urlCallback.
 	 *
-	 * @param urlCallback
-	 *                        urlCallback a establecer
+	 * @param urlCallback urlCallback a establecer
 	 */
 	public void setUrlCallback(final String urlCallback) {
 		this.urlCallback = urlCallback;
@@ -260,8 +254,7 @@ public final class DatosSesionData {
 	}
 
 	/**
-	 * @param aplicacion
-	 *                       the aplicacion to set
+	 * @param aplicacion the aplicacion to set
 	 */
 	public void setAplicacion(final String aplicacion) {
 		this.aplicacion = aplicacion;
@@ -275,8 +268,7 @@ public final class DatosSesionData {
 	}
 
 	/**
-	 * @param urlCallbackError
-	 *                             the urlCallbackError to set
+	 * @param urlCallbackError the urlCallbackError to set
 	 */
 	public void setUrlCallbackError(final String urlCallbackError) {
 		this.urlCallbackError = urlCallbackError;
@@ -294,8 +286,7 @@ public final class DatosSesionData {
 	/**
 	 * Método para establecer qaaAutenticacion.
 	 *
-	 * @param qaaAutenticacion
-	 *                             qaaAutenticacion a establecer
+	 * @param qaaAutenticacion qaaAutenticacion a establecer
 	 */
 	public void setQaaAutenticacion(final Integer qaaAutenticacion) {
 		this.qaaAutenticacion = qaaAutenticacion;
@@ -303,7 +294,7 @@ public final class DatosSesionData {
 
 	/**
 	 * Método de acceso a auditar.
-	 * 
+	 *
 	 * @return auditar
 	 */
 	public boolean isAuditar() {
@@ -312,12 +303,19 @@ public final class DatosSesionData {
 
 	/**
 	 * Método para establecer auditar.
-	 * 
-	 * @param auditar
-	 *                    auditar a establecer
+	 *
+	 * @param auditar auditar a establecer
 	 */
 	public void setAuditar(final boolean auditar) {
 		this.auditar = auditar;
+	}
+
+	public Map<String, String> getParamsApp() {
+		return paramsApp;
+	}
+
+	public void setParamsApp(final Map<String, String> paramsApp) {
+		this.paramsApp = paramsApp;
 	}
 
 }

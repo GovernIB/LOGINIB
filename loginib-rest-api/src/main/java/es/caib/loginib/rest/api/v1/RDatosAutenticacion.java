@@ -1,5 +1,7 @@
 package es.caib.loginib.rest.api.v1;
 
+import java.util.Map;
+
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -72,6 +74,13 @@ public final class RDatosAutenticacion {
 	private RDatosRepresentante representante;
 
 	/**
+	 * Apellido 2.
+	 *
+	 */
+	@ApiModelProperty(value = "Params APP", required = false)
+	private Map<String, String> paramsApp;
+
+	/**
 	 * Método de acceso a metodoAutenticacion.
 	 *
 	 * @return metodoAutenticacion
@@ -83,8 +92,7 @@ public final class RDatosAutenticacion {
 	/**
 	 * Método para establecer metodoAutenticacion.
 	 *
-	 * @param metodoAutenticacion
-	 *                                metodoAutenticacion a establecer
+	 * @param metodoAutenticacion metodoAutenticacion a establecer
 	 */
 	public void setMetodoAutenticacion(final String metodoAutenticacion) {
 		this.metodoAutenticacion = metodoAutenticacion;
@@ -102,8 +110,7 @@ public final class RDatosAutenticacion {
 	/**
 	 * Método para establecer nif.
 	 *
-	 * @param nif
-	 *                nif a establecer
+	 * @param nif nif a establecer
 	 */
 	public void setNif(final String nif) {
 		this.nif = nif;
@@ -121,8 +128,7 @@ public final class RDatosAutenticacion {
 	/**
 	 * Método para establecer nombre.
 	 *
-	 * @param nombre
-	 *                   nombre a establecer
+	 * @param nombre nombre a establecer
 	 */
 	public void setNombre(final String nombre) {
 		this.nombre = nombre;
@@ -140,8 +146,7 @@ public final class RDatosAutenticacion {
 	/**
 	 * Método para establecer apellidos.
 	 *
-	 * @param apellidos
-	 *                      apellidos a establecer
+	 * @param apellidos apellidos a establecer
 	 */
 	public void setApellidos(final String apellidos) {
 		this.apellidos = apellidos;
@@ -159,8 +164,7 @@ public final class RDatosAutenticacion {
 	/**
 	 * Método para establecer apellido1.
 	 *
-	 * @param apellido1
-	 *                      apellido1 a establecer
+	 * @param apellido1 apellido1 a establecer
 	 */
 	public void setApellido1(final String apellido1) {
 		this.apellido1 = apellido1;
@@ -178,8 +182,7 @@ public final class RDatosAutenticacion {
 	/**
 	 * Método para establecer apellido2.
 	 *
-	 * @param apellido2
-	 *                      apellido2 a establecer
+	 * @param apellido2 apellido2 a establecer
 	 */
 	public void setApellido2(final String apellido2) {
 		this.apellido2 = apellido2;
@@ -197,8 +200,7 @@ public final class RDatosAutenticacion {
 	/**
 	 * Método para establecer representante.
 	 *
-	 * @param representante
-	 *                          representante a establecer
+	 * @param representante representante a establecer
 	 */
 	public void setRepresentante(final RDatosRepresentante representante) {
 		this.representante = representante;
@@ -216,8 +218,7 @@ public final class RDatosAutenticacion {
 	/**
 	 * Método para establecer qaa.
 	 *
-	 * @param qaa
-	 *                qaa a establecer
+	 * @param qaa qaa a establecer
 	 */
 	public void setQaa(final String qaa) {
 		this.qaa = qaa;
@@ -225,7 +226,7 @@ public final class RDatosAutenticacion {
 
 	/**
 	 * Método de acceso a idSesion.
-	 * 
+	 *
 	 * @return idSesion
 	 */
 	public String getIdSesion() {
@@ -234,12 +235,19 @@ public final class RDatosAutenticacion {
 
 	/**
 	 * Método para establecer idSesion.
-	 * 
-	 * @param idSesion
-	 *                     idSesion a establecer
+	 *
+	 * @param idSesion idSesion a establecer
 	 */
 	public void setIdSesion(final String idSesion) {
 		this.idSesion = idSesion;
+	}
+
+	public Map<String, String> getParamsApp() {
+		return paramsApp;
+	}
+
+	public void setParamsApp(final Map<String, String> paramsApp) {
+		this.paramsApp = paramsApp;
 	}
 
 }
