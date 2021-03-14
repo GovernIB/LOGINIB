@@ -73,12 +73,6 @@ public final class RLoginParams {
 	private boolean auditar;
 
 	/**
-	 * Parametros extras de la peticion
-	 */
-	@ApiModelProperty(value = "Parametros extras de la peticion", required = false)
-	private RParamsApp paramsApp;
-
-	/**
 	 * Método de acceso a urlCallbackLogin.
 	 *
 	 * @return urlCallbackLogin
@@ -90,7 +84,8 @@ public final class RLoginParams {
 	/**
 	 * Método para establecer urlCallbackLogin.
 	 *
-	 * @param urlCallbackLogin urlCallbackLogin a establecer
+	 * @param urlCallbackLogin
+	 *                             urlCallbackLogin a establecer
 	 */
 	public void setUrlCallback(final String urlCallbackLogin) {
 		this.urlCallback = urlCallbackLogin;
@@ -108,7 +103,8 @@ public final class RLoginParams {
 	/**
 	 * Método para establecer metodosAutenticacion.
 	 *
-	 * @param metodosAutenticacion metodosAutenticacion a establecer
+	 * @param metodosAutenticacion
+	 *                                 metodosAutenticacion a establecer
 	 */
 	public void setMetodosAutenticacion(final String metodosAutenticacion) {
 		this.metodosAutenticacion = metodosAutenticacion;
@@ -126,7 +122,8 @@ public final class RLoginParams {
 	/**
 	 * Método para establecer qaa.
 	 *
-	 * @param qaa qaa a establecer
+	 * @param qaa
+	 *                qaa a establecer
 	 */
 	public void setQaa(final Integer qaa) {
 		this.qaa = qaa;
@@ -144,12 +141,13 @@ public final class RLoginParams {
 	/**
 	 * Método para establecer idioma.
 	 *
-	 * @param idioma idioma a establecer
+	 * @param idioma
+	 *                   idioma a establecer
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
 	}
-
+	
 	/**
 	 * Método de acceso a inicioClaveAutomatico.
 	 *
@@ -162,12 +160,13 @@ public final class RLoginParams {
 	/**
 	 * Método para establecer inicioClaveAutomatico.
 	 *
-	 * @param inicioClaveAutomatico inicioClaveAutomatico a establecer
+	 * @param inicioClaveAutomatico
+	 *                                inicioClaveAutomatico a establecer
 	 */
 	public void setInicioClaveAutomatico(final boolean inicioClaveAutomatico) {
 		this.inicioClaveAutomatico = inicioClaveAutomatico;
 	}
-
+	
 	/**
 	 * Método de acceso a forzarAutenticacion.
 	 *
@@ -180,7 +179,8 @@ public final class RLoginParams {
 	/**
 	 * Método para establecer forzarAutenticacion.
 	 *
-	 * @param forzarAutenticacion forzarAutenticacion a establecer
+	 * @param forzarAutenticacion
+	 *                                forzarAutenticacion a establecer
 	 */
 	public void setForzarAutenticacion(final boolean forzarAutenticacion) {
 		this.forzarAutenticacion = forzarAutenticacion;
@@ -198,7 +198,8 @@ public final class RLoginParams {
 	/**
 	 * Método para establecer entidad.
 	 *
-	 * @param entidad entidad a establecer
+	 * @param entidad
+	 *                    entidad a establecer
 	 */
 	public void setEntidad(final String entidad) {
 		this.entidad = entidad;
@@ -212,7 +213,8 @@ public final class RLoginParams {
 	}
 
 	/**
-	 * @param aplicacion the aplicacion to set
+	 * @param aplicacion
+	 *                       the aplicacion to set
 	 */
 	public void setAplicacion(final String aplicacion) {
 		this.aplicacion = aplicacion;
@@ -226,7 +228,8 @@ public final class RLoginParams {
 	}
 
 	/**
-	 * @param urlCallbackError the urlCallbackError to set
+	 * @param urlCallbackError
+	 *                             the urlCallbackError to set
 	 */
 	public void setUrlCallbackError(final String urlCallbackError) {
 		this.urlCallbackError = urlCallbackError;
@@ -244,18 +247,11 @@ public final class RLoginParams {
 	/**
 	 * Método para establecer auditar.
 	 *
-	 * @param auditar auditar a establecer
+	 * @param auditar
+	 *                    auditar a establecer
 	 */
 	public void setAuditar(final boolean auditar) {
 		this.auditar = auditar;
-	}
-
-	public RParamsApp getParamsApp() {
-		return paramsApp;
-	}
-
-	public void setParamsApp(final RParamsApp paramsApp) {
-		this.paramsApp = paramsApp;
 	}
 
 }

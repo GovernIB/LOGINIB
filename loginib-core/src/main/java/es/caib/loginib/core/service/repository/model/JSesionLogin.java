@@ -118,7 +118,7 @@ public final class JSesionLogin {
 	/** Iniciar Cl@ve Automatico. */
 	@Column(name = "LGI_INCLAU")
 	private boolean inicioClaveAutomatico;
-
+	
 	/** Forzar autenticacion. */
 	@Column(name = "LGI_FCAUTH")
 	private boolean forceAuthentication;
@@ -151,10 +151,6 @@ public final class JSesionLogin {
 	@Column(name = "LGI_EVIALG")
 	private String evidenciasAlgoritmoHash;
 
-	/** Params. */
-	@Column(name = "LGI_PARAPP")
-	private String params;
-
 	/**
 	 * Gets the ticket.
 	 *
@@ -167,7 +163,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the ticket.
 	 *
-	 * @param pTicket the ticket to set
+	 * @param pTicket
+	 *                    the ticket to set
 	 */
 	public void setTicket(final String pTicket) {
 		ticket = pTicket;
@@ -185,7 +182,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the fecha ticket.
 	 *
-	 * @param pFecha the fecha to set
+	 * @param pFecha
+	 *                   the fecha to set
 	 */
 	public void setFechaTicket(final Date pFecha) {
 		fechaTicket = pFecha;
@@ -203,7 +201,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the nivel autenticacion.
 	 *
-	 * @param pNivelAutenticacion the nivelAutenticacion to set
+	 * @param pNivelAutenticacion
+	 *                                the nivelAutenticacion to set
 	 */
 	public void setIdp(final String pNivelAutenticacion) {
 		idp = pNivelAutenticacion;
@@ -221,7 +220,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the nif.
 	 *
-	 * @param pNif the nif to set
+	 * @param pNif
+	 *                 the nif to set
 	 */
 	public void setNif(final String pNif) {
 		nif = pNif;
@@ -239,7 +239,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the id.
 	 *
-	 * @param pId the id to set
+	 * @param pId
+	 *                the id to set
 	 */
 	public void setId(final Long pId) {
 		id = pId;
@@ -257,7 +258,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the fecha inicio sesion.
 	 *
-	 * @param pFechaInicioSesion the fechaInicioSesion to set
+	 * @param pFechaInicioSesion
+	 *                               the fechaInicioSesion to set
 	 */
 	public void setFechaInicioSesion(final Date pFechaInicioSesion) {
 		fechaInicioSesion = pFechaInicioSesion;
@@ -275,7 +277,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the url callback.
 	 *
-	 * @param pUrlCallback the urlCallback to set
+	 * @param pUrlCallback
+	 *                         the urlCallback to set
 	 */
 	public void setUrlCallback(final String pUrlCallback) {
 		urlCallback = pUrlCallback;
@@ -293,7 +296,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the idioma.
 	 *
-	 * @param pIdioma the idioma to set
+	 * @param pIdioma
+	 *                    the idioma to set
 	 */
 	public void setIdioma(final String pIdioma) {
 		idioma = pIdioma;
@@ -311,7 +315,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the nombre.
 	 *
-	 * @param pNombre the new nombre
+	 * @param pNombre
+	 *                    the new nombre
 	 */
 	public void setNombre(final String pNombre) {
 		nombre = pNombre;
@@ -329,7 +334,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the apellidos.
 	 *
-	 * @param pApellidos the new apellidos
+	 * @param pApellidos
+	 *                       the new apellidos
 	 */
 	public void setApellidos(final String pApellidos) {
 		apellidos = pApellidos;
@@ -347,7 +353,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the idps.
 	 *
-	 * @param pIdps the new idps
+	 * @param pIdps
+	 *                  the new idps
 	 */
 	public void setIdps(final String pIdps) {
 		idps = pIdps;
@@ -365,7 +372,8 @@ public final class JSesionLogin {
 	/**
 	 * Método para establecer apellido1.
 	 *
-	 * @param pApellido1 apellido1 a establecer
+	 * @param pApellido1
+	 *                       apellido1 a establecer
 	 */
 	public void setApellido1(final String pApellido1) {
 		apellido1 = pApellido1;
@@ -383,7 +391,8 @@ public final class JSesionLogin {
 	/**
 	 * Método para establecer apellido2.
 	 *
-	 * @param pApellido2 apellido2 a establecer
+	 * @param pApellido2
+	 *                       apellido2 a establecer
 	 */
 	public void setApellido2(final String pApellido2) {
 		apellido2 = pApellido2;
@@ -401,7 +410,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the sesion.
 	 *
-	 * @param sesion the sesion to set
+	 * @param sesion
+	 *                   the sesion to set
 	 */
 	public void setSesion(final String sesion) {
 		this.sesion = sesion;
@@ -419,7 +429,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the qaa.
 	 *
-	 * @param qaa the qaa to set
+	 * @param qaa
+	 *                the qaa to set
 	 */
 	public void setQaa(final Integer qaa) {
 		this.qaa = qaa;
@@ -437,7 +448,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the inicio Cl@ve Automatico.
 	 *
-	 * @param inicioClaveAutomatico the new inicio Clave Automatico
+	 * @param inicioClaveAutomatico
+	 *                                the new inicio Clave Automatico
 	 */
 	public void setInicioClaveAutomatico(final boolean inicioClaveAutomatico) {
 		this.inicioClaveAutomatico = inicioClaveAutomatico;
@@ -455,7 +467,8 @@ public final class JSesionLogin {
 	/**
 	 * Sets the force authentication.
 	 *
-	 * @param forceAuthentication the new force authentication
+	 * @param forceAuthentication
+	 *                                the new force authentication
 	 */
 	public void setForceAuthentication(final boolean forceAuthentication) {
 		this.forceAuthentication = forceAuthentication;
@@ -481,7 +494,8 @@ public final class JSesionLogin {
 	/**
 	 * Método para establecer entidad.
 	 *
-	 * @param entidad entidad a establecer
+	 * @param entidad
+	 *                    entidad a establecer
 	 */
 	public void setEntidad(final String entidad) {
 		this.entidad = entidad;
@@ -499,7 +513,8 @@ public final class JSesionLogin {
 	/**
 	 * Método para establecer representanteNif.
 	 *
-	 * @param representanteNif representanteNif a establecer
+	 * @param representanteNif
+	 *                             representanteNif a establecer
 	 */
 	public void setRepresentanteNif(final String representanteNif) {
 		this.representanteNif = representanteNif;
@@ -517,7 +532,8 @@ public final class JSesionLogin {
 	/**
 	 * Método para establecer representanteNombre.
 	 *
-	 * @param representanteNombre representanteNombre a establecer
+	 * @param representanteNombre
+	 *                                representanteNombre a establecer
 	 */
 	public void setRepresentanteNombre(final String representanteNombre) {
 		this.representanteNombre = representanteNombre;
@@ -535,7 +551,8 @@ public final class JSesionLogin {
 	/**
 	 * Método para establecer representanteApellidos.
 	 *
-	 * @param representanteApellidos representanteApellidos a establecer
+	 * @param representanteApellidos
+	 *                                   representanteApellidos a establecer
 	 */
 	public void setRepresentanteApellidos(final String representanteApellidos) {
 		this.representanteApellidos = representanteApellidos;
@@ -553,7 +570,8 @@ public final class JSesionLogin {
 	/**
 	 * Método para establecer representanteApellido1.
 	 *
-	 * @param representanteApellido1 representanteApellido1 a establecer
+	 * @param representanteApellido1
+	 *                                   representanteApellido1 a establecer
 	 */
 	public void setRepresentanteApellido1(final String representanteApellido1) {
 		this.representanteApellido1 = representanteApellido1;
@@ -571,7 +589,8 @@ public final class JSesionLogin {
 	/**
 	 * Método para establecer representanteApellido2.
 	 *
-	 * @param representanteApellido2 representanteApellido2 a establecer
+	 * @param representanteApellido2
+	 *                                   representanteApellido2 a establecer
 	 */
 	public void setRepresentanteApellido2(final String representanteApellido2) {
 		this.representanteApellido2 = representanteApellido2;
@@ -589,7 +608,8 @@ public final class JSesionLogin {
 	/**
 	 * Método para obtener el identificador aplicación
 	 *
-	 * @param aplicacion the aplicacion to set
+	 * @param aplicacion
+	 *                       the aplicacion to set
 	 */
 	public void setAplicacion(final String aplicacion) {
 		this.aplicacion = aplicacion;
@@ -603,7 +623,8 @@ public final class JSesionLogin {
 	}
 
 	/**
-	 * @param urlCallbackError the urlCallbackError to set
+	 * @param urlCallbackError
+	 *                             the urlCallbackError to set
 	 */
 	public void setUrlCallbackError(final String urlCallbackError) {
 		this.urlCallbackError = urlCallbackError;
@@ -617,7 +638,8 @@ public final class JSesionLogin {
 	}
 
 	/**
-	 * @param checkPurga the checkPurga to set
+	 * @param checkPurga
+	 *                       the checkPurga to set
 	 */
 	public void setCheckPurga(final boolean checkPurga) {
 		this.checkPurga = checkPurga;
@@ -625,7 +647,7 @@ public final class JSesionLogin {
 
 	/**
 	 * Método de acceso a qaaAutenticacion.
-	 *
+	 * 
 	 * @return qaaAutenticacion
 	 */
 	public Integer getQaaAutenticacion() {
@@ -634,8 +656,9 @@ public final class JSesionLogin {
 
 	/**
 	 * Método para establecer qaaAutenticacion.
-	 *
-	 * @param qaaAutenticacion qaaAutenticacion a establecer
+	 * 
+	 * @param qaaAutenticacion
+	 *                             qaaAutenticacion a establecer
 	 */
 	public void setQaaAutenticacion(final Integer qaaAutenticacion) {
 		this.qaaAutenticacion = qaaAutenticacion;
@@ -643,7 +666,7 @@ public final class JSesionLogin {
 
 	/**
 	 * Método de acceso a auditar.
-	 *
+	 * 
 	 * @return auditar
 	 */
 	public boolean isAuditar() {
@@ -652,8 +675,9 @@ public final class JSesionLogin {
 
 	/**
 	 * Método para establecer auditar.
-	 *
-	 * @param auditar auditar a establecer
+	 * 
+	 * @param auditar
+	 *                    auditar a establecer
 	 */
 	public void setAuditar(final boolean auditar) {
 		this.auditar = auditar;
@@ -661,7 +685,7 @@ public final class JSesionLogin {
 
 	/**
 	 * Método de acceso a evidenciasJson.
-	 *
+	 * 
 	 * @return evidenciasJson
 	 */
 	public String getEvidenciasJson() {
@@ -670,8 +694,9 @@ public final class JSesionLogin {
 
 	/**
 	 * Método para establecer evidenciasJson.
-	 *
-	 * @param evidenciasJson evidenciasJson a establecer
+	 * 
+	 * @param evidenciasJson
+	 *                           evidenciasJson a establecer
 	 */
 	public void setEvidenciasJson(final String evidenciasJson) {
 		this.evidenciasJson = evidenciasJson;
@@ -679,7 +704,7 @@ public final class JSesionLogin {
 
 	/**
 	 * Método de acceso a evidenciasHash.
-	 *
+	 * 
 	 * @return evidenciasHash
 	 */
 	public String getEvidenciasHash() {
@@ -688,8 +713,9 @@ public final class JSesionLogin {
 
 	/**
 	 * Método para establecer evidenciasHash.
-	 *
-	 * @param evidenciasHash evidenciasHash a establecer
+	 * 
+	 * @param evidenciasHash
+	 *                           evidenciasHash a establecer
 	 */
 	public void setEvidenciasHash(final String evidenciasHash) {
 		this.evidenciasHash = evidenciasHash;
@@ -697,7 +723,7 @@ public final class JSesionLogin {
 
 	/**
 	 * Método de acceso a evidenciasAlgoritmoHash.
-	 *
+	 * 
 	 * @return evidenciasAlgoritmoHash
 	 */
 	public String getEvidenciasAlgoritmoHash() {
@@ -706,19 +732,12 @@ public final class JSesionLogin {
 
 	/**
 	 * Método para establecer evidenciasAlgoritmoHash.
-	 *
-	 * @param evidenciasAlgoritmoHash evidenciasAlgoritmoHash a establecer
+	 * 
+	 * @param evidenciasAlgoritmoHash
+	 *                                    evidenciasAlgoritmoHash a establecer
 	 */
 	public void setEvidenciasAlgoritmoHash(final String evidenciasAlgoritmoHash) {
 		this.evidenciasAlgoritmoHash = evidenciasAlgoritmoHash;
-	}
-
-	public String getParams() {
-		return params;
-	}
-
-	public void setParams(final String params) {
-		this.params = params;
 	}
 
 }

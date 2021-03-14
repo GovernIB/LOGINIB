@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -52,9 +51,8 @@ public final class LoginDaoImpl implements LoginDao {
 
 	@Override
 	public String crearSesionLogin(final String entidad, final String pUrlCallback, final String pUrlCallbackError,
-			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto,
-			final boolean forceAuth, final String aplicacion, final boolean auditar,
-			final Map<String, String> paramsApp) {
+			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto, final boolean forceAuth,
+			final String aplicacion, final boolean auditar) {
 		String idTicket = null;
 
 		// Crea sesion para aplicacion externa
@@ -71,10 +69,7 @@ public final class LoginDaoImpl implements LoginDao {
 		ticketExterna.setForceAuthentication(forceAuth);
 		ticketExterna.setAplicacion(aplicacion);
 		ticketExterna.setAuditar(auditar);
-		if (paramsApp != null && !paramsApp.isEmpty()) {
-			final String paramsJSON = JsonUtil.toJson(paramsApp);
-			ticketExterna.setParams(paramsJSON);
-		}
+
 		entityManager.persist(ticketExterna);
 		idTicket = ticketExterna.getSesion();
 
@@ -102,11 +97,6 @@ public final class LoginDaoImpl implements LoginDao {
 		ds.setUrlCallbackError(ticket.getUrlCallbackError());
 		ds.setAplicacion(ticket.getAplicacion());
 		ds.setAuditar(ticket.isAuditar());
-		if (ticket.getParams() != null && !ticket.getParams().isEmpty()) {
-			final Map<String, String> paramJSON = (Map<String, String>) JsonUtil.fromJson(ticket.getParams(),
-					Map.class);
-			ds.setParamsApp(paramJSON);
-		}
 		return ds;
 	}
 
@@ -201,7 +191,8 @@ public final class LoginDaoImpl implements LoginDao {
 	/**
 	 * Recupera sesion logout.
 	 *
-	 * @param idSesion id sesion
+	 * @param idSesion
+	 *                     id sesion
 	 * @return sesion
 	 */
 	private JSesionLogout getSesionLogout(final String idSesion, final boolean activa) {
@@ -256,12 +247,8 @@ public final class LoginDaoImpl implements LoginDao {
 			representante = new DatosPersona(t.getRepresentanteNif(), t.getRepresentanteNombre(),
 					t.getRepresentanteApellidos(), t.getRepresentanteApellido1(), t.getRepresentanteApellido2());
 		}
-		Map<String, String> params = null;
-		if (t.getParams() != null && !t.getParams().isEmpty()) {
-			params = (Map<String, String>) JsonUtil.fromJson(t.getParams(), Map.class);
-		}
 		final DatosAutenticacion du = new DatosAutenticacion(t.getSesion(), t.getFechaTicket(), t.getQaaAutenticacion(),
-				TypeIdp.fromString(t.getIdp()), autenticado, representante, params);
+				TypeIdp.fromString(t.getIdp()), autenticado, representante);
 
 		return du;
 	}
@@ -393,7 +380,8 @@ public final class LoginDaoImpl implements LoginDao {
 	/**
 	 * Recupera sesion login activa.
 	 *
-	 * @param idSesion id sesion
+	 * @param idSesion
+	 *                     id sesion
 	 * @return sesion
 	 */
 	private JSesionLogin getSesionLogin(final String idSesion, final boolean activa) {
@@ -424,7 +412,8 @@ public final class LoginDaoImpl implements LoginDao {
 	/**
 	 * Recupera sesion login activa.
 	 *
-	 * @param idSesion id sesion
+	 * @param idSesion
+	 *                     id sesion
 	 * @return sesion
 	 */
 	private JSesionLogin getSesionLoginByTicket(final String ticket, final boolean activa) {

@@ -26,30 +26,44 @@ public interface LoginService {
 	/**
 	 * Crea sesion para clave.
 	 *
-	 * @param entidad          entidad
-	 * @param urlCallback      Url callback
-	 * @param urlCallbackError Url callback error
-	 * @param idioma           idioma
-	 * @param idps             Idps
-	 * @param qaa              Qaa
-	 * @param iniClaAuto       iniClaAuto
-	 *
-	 * @param forceAuth        forceAuth
-	 * @param aplicacion       Aplicacion
-	 * @param auditar          auditar
+	 * @param entidad
+	 *                             entidad
+	 * @param urlCallback
+	 *                             Url callback
+	 * @param urlCallbackError
+	 *                             Url callback error
+	 * @param idioma
+	 *                             idioma
+	 * @param idps
+	 *                             Idps
+	 * @param qaa
+	 *                             Qaa
+	 * @param iniClaAuto
+	 *                             iniClaAuto
+ *                             
+	 * @param forceAuth
+	 *                             forceAuth
+	 * @param aplicacion
+	 *                             Aplicacion
+	 * @param auditar
+	 *                             auditar
 	 * @return Id sesion
 	 */
 	String iniciarSesionLogin(final String entidad, final String urlCallback, final String urlCallbackError,
-			final String idioma, final List<TypeIdp> idps, Integer qaa, boolean iniClaAuto, boolean forceAuth,
-			final String aplicacion, final boolean auditar, final Map<String, String> paramsApp);
+			final String idioma, final List<TypeIdp> idps, Integer qaa, boolean iniClaAuto, boolean forceAuth, final String aplicacion,
+			final boolean auditar);
 
 	/**
 	 * Inicia sesión logout (solo aplica de momento a Cl@ve).
 	 *
-	 * @param entidad      entidad
-	 * @param pUrlCallback url callback
-	 * @param idioma       idioma
-	 * @param aplicacion   identificador aplicacion
+	 * @param entidad
+	 *                         entidad
+	 * @param pUrlCallback
+	 *                         url callback
+	 * @param idioma
+	 *                         idioma
+	 * @param aplicacion
+	 *                         identificador aplicacion
 	 * @return id sesion
 	 */
 	String iniciarSesionLogout(final String entidad, final String pUrlCallback, final String idioma,
@@ -58,14 +72,16 @@ public interface LoginService {
 	/**
 	 * Obtener datos sesión login.
 	 *
-	 * @param idSesion id sesion
+	 * @param idSesion
+	 *                     id sesion
 	 */
 	DatosSesion obtenerDatosSesionLogin(String idSesion);
 
 	/**
 	 * Genera petición de autenticación para Clave.
 	 *
-	 * @param idSesion id sesion
+	 * @param idSesion
+	 *                     id sesion
 	 * @return Petición Clave
 	 */
 	PeticionClave generarPeticionLoginClave(final String idSesion);
@@ -74,11 +90,17 @@ public interface LoginService {
 	 * Procesa peticion clave, extrae los datos de autenticacion, los almacena en
 	 * bbdd y devuelve ticket de autenticacion.
 	 *
-	 * @param samlResponseB64 respuesta clave
-	 * @param idSesion        idSesion
-	 * @param relayState      relayState
-	 * @param headersRequest  Headers request (obtención ip)
-	 * @param ipAddressFrom   Ip desde donde se hace la petición (getRemoteAddress)
+	 * @param samlResponseB64
+	 *                            respuesta clave
+	 * @param idSesion
+	 *                            idSesion
+	 * @param relayState
+	 *                            relayState
+	 * @param headersRequest
+	 *                            Headers request (obtención ip)
+	 * @param ipAddressFrom
+	 *                            Ip desde donde se hace la petición
+	 *                            (getRemoteAddress)
 	 *
 	 * @return ticket de acceso
 	 */
@@ -88,7 +110,8 @@ public interface LoginService {
 	/**
 	 * Obtiene datos usuario para aplicacion externa.
 	 *
-	 * @param ticket Ticket
+	 * @param ticket
+	 *                   Ticket
 	 * @return Datos usuario
 	 */
 	DatosAutenticacion obtenerDatosAutenticacion(String ticket);
@@ -96,8 +119,10 @@ public interface LoginService {
 	/**
 	 * Obtener url inicio sesion clave para aplicacion externas.
 	 *
-	 * @param idSesion Id sesion
-	 * @param idioma   idioma
+	 * @param idSesion
+	 *                     Id sesion
+	 * @param idioma
+	 *                     idioma
 	 * @return url
 	 */
 	String obtenerUrlRedireccionLoginClave(String idSesion, String idioma);
@@ -105,7 +130,8 @@ public interface LoginService {
 	/**
 	 * Obtener url logout sesion clave para aplicacion externas.
 	 *
-	 * @param idSesion Id sesion
+	 * @param idSesion
+	 *                     Id sesion
 	 * @return url
 	 */
 	String obtenerUrlRedireccionLogoutClave(final String pIdSesion);
@@ -113,11 +139,17 @@ public interface LoginService {
 	/**
 	 * Simula respuesta Clave.
 	 *
-	 * @param pIdSesion      id sesion
-	 * @param pIdp           idp
-	 * @param persona        persona
-	 * @param headersRequest Headers request (obtención ip)
-	 * @param ipAddressFrom  Ip desde donde se hace la petición (getRemoteAddress)
+	 * @param pIdSesion
+	 *                           id sesion
+	 * @param pIdp
+	 *                           idp
+	 * @param persona
+	 *                           persona
+	 * @param headersRequest
+	 *                           Headers request (obtención ip)
+	 * @param ipAddressFrom
+	 *                           Ip desde donde se hace la petición
+	 *                           (getRemoteAddress)
 	 * @return Ticket retorno
 	 */
 	TicketClave simularRespuestaClave(String pIdSesion, TypeIdp pIdp, final DatosPersona persona,
@@ -126,7 +158,8 @@ public interface LoginService {
 	/**
 	 * Generar peticion logout.
 	 *
-	 * @param idSesion id sesion
+	 * @param idSesion
+	 *                     id sesion
 	 *
 	 * @return Datos para redirigira a Clave para hacer logout
 	 */
@@ -135,9 +168,12 @@ public interface LoginService {
 	/**
 	 * Respuesta peticion logout.
 	 *
-	 * @param pIdSesion        Id Sesion
-	 * @param pSamlResponseB64 Saml response
-	 * @param relayState       relayState
+	 * @param pIdSesion
+	 *                             Id Sesion
+	 * @param pSamlResponseB64
+	 *                             Saml response
+	 * @param relayState
+	 *                             relayState
 	 * @return Redireccion a aplicacion origen
 	 */
 	RespuestaClaveLogout procesarRespuestaLogoutClave(final String pIdSesion, final String pSamlResponseB64);
@@ -145,10 +181,14 @@ public interface LoginService {
 	/**
 	 * Realiza login mediante Client Cert.
 	 *
-	 * @param idSesion      idSesion
-	 * @param headers       Headers request (para HEADER y obtención ip)
-	 * @param certificate   certificate request (para AJP)
-	 * @param ipAddressFrom Ip desde donde se hace la petición
+	 * @param idSesion
+	 *                          idSesion
+	 * @param headers
+	 *                          Headers request (para HEADER y obtención ip)
+	 * @param certificate
+	 *                          certificate request (para AJP)
+	 * @param ipAddressFrom
+	 *                          Ip desde donde se hace la petición
 	 *
 	 * @return ticket de acceso
 	 */
@@ -158,11 +198,17 @@ public interface LoginService {
 	/**
 	 * Valida usuario/password.
 	 *
-	 * @param idSesion       id sesion
-	 * @param usuario        usuario
-	 * @param password       password
-	 * @param headersRequest Headers request (obtención ip)
-	 * @param ipAddressFrom  Ip desde donde se hace la petición (getRemoteAddress)
+	 * @param idSesion
+	 *                           id sesion
+	 * @param usuario
+	 *                           usuario
+	 * @param password
+	 *                           password
+	 * @param headersRequest
+	 *                           Headers request (obtención ip)
+	 * @param ipAddressFrom
+	 *                           Ip desde donde se hace la petición
+	 *                           (getRemoteAddress)
 	 * @return validación
 	 */
 	ValidacionUsuarioPassword loginUsuarioPassword(String idSesion, String usuario, String password,
@@ -171,9 +217,13 @@ public interface LoginService {
 	/**
 	 * Genera ticket para acceso anonimo.
 	 *
-	 * @param pIdSesion      Id sesion
-	 * @param headersRequest Headers request (obtención ip)
-	 * @param ipAddressFrom  Ip desde donde se hace la petición (getRemoteAddress)
+	 * @param pIdSesion
+	 *                           Id sesion
+	 * @param headersRequest
+	 *                           Headers request (obtención ip)
+	 * @param ipAddressFrom
+	 *                           Ip desde donde se hace la petición
+	 *                           (getRemoteAddress)
 	 * @return ticket
 	 */
 	TicketClave loginAnonimo(final String pIdSesion, final Map<String, String> headers, final String ipAddressFrom);
@@ -181,7 +231,8 @@ public interface LoginService {
 	/**
 	 * Obtiene evidencias autenticación.
 	 *
-	 * @param idSesion id sesión
+	 * @param idSesion
+	 *                     id sesión
 	 * @return evidencias
 	 */
 	EvidenciasAutenticacion obtenerEvidenciasSesionLogin(final String idSesion);
@@ -190,13 +241,5 @@ public interface LoginService {
 	 * Realiza purga sesiones.
 	 */
 	void purgar();
-
-	/**
-	 * Obtiene mapeo errores personalizados.
-	 *
-	 * @param key Key
-	 * @return map con error y cadena que debe contener.
-	 */
-	Map<String, String> obtenerMapeoErroresValidacion(String key);
 
 }

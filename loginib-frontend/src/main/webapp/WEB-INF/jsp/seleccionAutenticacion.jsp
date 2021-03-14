@@ -154,10 +154,5 @@
 	</div>
 
 
-	<div style="display:none">
-		<input type="text" value="DEBUG" />
-		<input type="text" value="V:${datos.version}" />
-		<input type="text" value="C:${datos.commit}"  />
-	</div>
 </body>
 </html>

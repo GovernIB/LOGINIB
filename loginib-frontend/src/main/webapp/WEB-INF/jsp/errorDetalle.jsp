@@ -65,28 +65,17 @@
 			<div class="imc--c">
 
 				<h1 class="imc--atencio"><span><fmt:message key="atencion"/></span></h1>
-
 				<c:if test="${not empty datos.mensajeErrorGeneral}">
-					<p>
-						<span><fmt:message key="${datos.mensajeErrorGeneral}"/></span>
-					</p>
+				<span><fmt:message key="${datos.mensajeErrorGeneral}"/></span>
 				</c:if>
-
-				<c:if test="${not empty datos.mensajeErrorDetalle}">
-					<br/>
-					<p>
-						<span><fmt:message key="errorDetalle"/><i>${datos.mensajeErrorDetalle}</i></span>
-					</p>
+				<c:if test="${not empty datos.mensajeErrorPersonalizado}">
+				<span>${datos.mensajeErrorPersonalizado}</span>
 				</c:if>
-
-
 				<c:if test="${not empty datos.urlCallback}">
-				    <br/>
 					<p class="botonVolver">
-						<span><a href="${datos.urlCallback}"><fmt:message key="volver"/></a></span>
+						<span><a href="${datos.urlCallback}">Volver</a></span>
 					</p>
 				</c:if>
-
 			</div>
 		</div>
 
