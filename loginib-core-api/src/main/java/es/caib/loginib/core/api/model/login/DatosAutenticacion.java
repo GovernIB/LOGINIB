@@ -1,6 +1,7 @@
 package es.caib.loginib.core.api.model.login;
 
 import java.util.Date;
+import java.util.Map;
 
 import es.caib.loginib.core.api.model.login.types.TypeIdp;
 
@@ -30,9 +31,12 @@ public final class DatosAutenticacion {
 	/** Datos representante. */
 	private DatosPersona representante;
 
+	/** Params app **/
+	private Map<String, String> paramsApp;
+
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param idSesion
 	 * @param fechaTicket
 	 * @param qaa
@@ -41,7 +45,8 @@ public final class DatosAutenticacion {
 	 * @param representante
 	 */
 	public DatosAutenticacion(final String idSesion, final Date fechaTicket, final Integer qaa,
-			final TypeIdp metodoAutenticacion, final DatosPersona autenticado, final DatosPersona representante) {
+			final TypeIdp metodoAutenticacion, final DatosPersona autenticado, final DatosPersona representante,
+			final Map<String, String> params) {
 		super();
 		this.idSesion = idSesion;
 		this.fechaTicket = fechaTicket;
@@ -49,6 +54,7 @@ public final class DatosAutenticacion {
 		this.metodoAutenticacion = metodoAutenticacion;
 		this.autenticado = autenticado;
 		this.representante = representante;
+		this.paramsApp = params;
 	}
 
 	/** Muestra en un string los datos de autenticacion. */
@@ -69,8 +75,7 @@ public final class DatosAutenticacion {
 	/**
 	 * Método para establecer fechaTicket.
 	 *
-	 * @param fechaTicket
-	 *                        fechaTicket a establecer
+	 * @param fechaTicket fechaTicket a establecer
 	 */
 	public void setFechaTicket(final Date fechaTicket) {
 		this.fechaTicket = fechaTicket;
@@ -88,8 +93,7 @@ public final class DatosAutenticacion {
 	/**
 	 * Método para establecer autenticacion.
 	 *
-	 * @param autenticacion
-	 *                          autenticacion a establecer
+	 * @param autenticacion autenticacion a establecer
 	 */
 	public void setAutenticado(final DatosPersona autenticacion) {
 		this.autenticado = autenticacion;
@@ -107,8 +111,7 @@ public final class DatosAutenticacion {
 	/**
 	 * Método para establecer metodoAutenticacion.
 	 *
-	 * @param metodoAutenticacion
-	 *                                metodoAutenticacion a establecer
+	 * @param metodoAutenticacion metodoAutenticacion a establecer
 	 */
 	public void setMetodoAutenticacion(final TypeIdp metodoAutenticacion) {
 		this.metodoAutenticacion = metodoAutenticacion;
@@ -126,8 +129,7 @@ public final class DatosAutenticacion {
 	/**
 	 * Método para establecer qaa.
 	 *
-	 * @param qaa
-	 *                qaa a establecer
+	 * @param qaa qaa a establecer
 	 */
 	public void setQaa(final Integer qaa) {
 		this.qaa = qaa;
@@ -145,8 +147,7 @@ public final class DatosAutenticacion {
 	/**
 	 * Método para establecer representante.
 	 *
-	 * @param representante
-	 *                          representante a establecer
+	 * @param representante representante a establecer
 	 */
 	public void setRepresentante(final DatosPersona representante) {
 		this.representante = representante;
@@ -164,11 +165,18 @@ public final class DatosAutenticacion {
 	/**
 	 * Método para establecer idSesion.
 	 *
-	 * @param idSesion
-	 *                     idSesion a establecer
+	 * @param idSesion idSesion a establecer
 	 */
 	public void setIdSesion(final String idSesion) {
 		this.idSesion = idSesion;
+	}
+
+	public Map<String, String> getParamsApp() {
+		return paramsApp;
+	}
+
+	public void setParamsApp(final Map<String, String> paramsApp) {
+		this.paramsApp = paramsApp;
 	}
 
 }

@@ -34,6 +34,12 @@ public final class DatosSeleccionAutenticacion {
 	/** Customizacion entidad. */
 	private PersonalizacionEntidad personalizacion;
 
+	/** Version **/
+	private String version;
+
+	/** Commit **/
+	private String commit;
+
 	/**
 	 * Método de acceso a idSesion.
 	 *
@@ -46,8 +52,7 @@ public final class DatosSeleccionAutenticacion {
 	/**
 	 * Método para establecer idSesion.
 	 *
-	 * @param idSesion
-	 *                     idSesion a establecer
+	 * @param idSesion idSesion a establecer
 	 */
 	public void setIdSesion(final String idSesion) {
 		this.idSesion = idSesion;
@@ -65,8 +70,7 @@ public final class DatosSeleccionAutenticacion {
 	/**
 	 * Método para establecer idioma.
 	 *
-	 * @param idioma
-	 *                   idioma a establecer
+	 * @param idioma idioma a establecer
 	 */
 	public void setIdioma(final String idioma) {
 		this.idioma = idioma;
@@ -84,8 +88,7 @@ public final class DatosSeleccionAutenticacion {
 	/**
 	 * Método para establecer clave.
 	 *
-	 * @param clave
-	 *                  clave a establecer
+	 * @param clave clave a establecer
 	 */
 	public void setClave(final boolean clave) {
 		this.clave = clave;
@@ -103,8 +106,7 @@ public final class DatosSeleccionAutenticacion {
 	/**
 	 * Método para establecer anonimo.
 	 *
-	 * @param anonimo
-	 *                    anonimo a establecer
+	 * @param anonimo anonimo a establecer
 	 */
 	public void setAnonimo(final boolean anonimo) {
 		this.anonimo = anonimo;
@@ -122,8 +124,7 @@ public final class DatosSeleccionAutenticacion {
 	/**
 	 * Método para establecer clientCert.
 	 *
-	 * @param clientCert
-	 *                       clientCert a establecer
+	 * @param clientCert clientCert a establecer
 	 */
 	public void setClientCert(final boolean clientCert) {
 		this.clientCert = clientCert;
@@ -137,8 +138,7 @@ public final class DatosSeleccionAutenticacion {
 	}
 
 	/**
-	 * @param clientCertSegundoPlano
-	 *                                   the clientCertSegundoPlano to set
+	 * @param clientCertSegundoPlano the clientCertSegundoPlano to set
 	 */
 	public void setClientCertSegundoPlano(final boolean clientCertSegundoPlano) {
 		this.clientCertSegundoPlano = clientCertSegundoPlano;
@@ -156,8 +156,7 @@ public final class DatosSeleccionAutenticacion {
 	/**
 	 * Método para establecer usuarioPassword.
 	 *
-	 * @param usuarioPassword
-	 *                            usuarioPassword a establecer
+	 * @param usuarioPassword usuarioPassword a establecer
 	 */
 	public void setUsuarioPassword(final boolean usuarioPassword) {
 		this.usuarioPassword = usuarioPassword;
@@ -165,7 +164,7 @@ public final class DatosSeleccionAutenticacion {
 
 	/**
 	 * Método de acceso a customizacion.
-	 * 
+	 *
 	 * @return customizacion
 	 */
 	public PersonalizacionEntidad getPersonalizacion() {
@@ -174,12 +173,27 @@ public final class DatosSeleccionAutenticacion {
 
 	/**
 	 * Método para establecer customizacion.
-	 * 
-	 * @param customizacion
-	 *                          customizacion a establecer
+	 *
+	 * @param customizacion customizacion a establecer
 	 */
 	public void setPersonalizacion(final PersonalizacionEntidad customizacion) {
 		this.personalizacion = customizacion;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(final String version) {
+		this.version = version;
+	}
+
+	public String getCommit() {
+		return commit;
+	}
+
+	public void setCommit(final String commit) {
+		this.commit = commit;
 	}
 
 }

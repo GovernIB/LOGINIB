@@ -103,15 +103,21 @@ public class LoginServiceBean implements LoginService {
 		return loginService.loginUsuarioPassword(idSesion, usuario, password, headersRequest, ipAddressFrom);
 	}
 
+	@Override
+	@PermitAll
+	public Map<String, String> obtenerMapeoErroresValidacion(final String key) {
+		return loginService.obtenerMapeoErroresValidacion(key);
+	}
+
 	// --------- FUNCIONES API -----------------------------------
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.API })
 	public String iniciarSesionLogin(final String entidad, final String urlCallback, final String urlCallbackError,
-			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto, final boolean forceAuth,
-			final String aplicacion, final boolean auditar) {
-		return loginService.iniciarSesionLogin(entidad, urlCallback, urlCallbackError, idioma, idps, qaa, iniClaAuto, forceAuth,
-				aplicacion, auditar);
+			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto,
+			final boolean forceAuth, final String aplicacion, final boolean auditar, final Map<String, String> paramsApp) {
+		return loginService.iniciarSesionLogin(entidad, urlCallback, urlCallbackError, idioma, idps, qaa, iniClaAuto,
+				forceAuth, aplicacion, auditar, paramsApp);
 	}
 
 	@Override

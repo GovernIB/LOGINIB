@@ -1,6 +1,7 @@
 package es.caib.loginib.core.service.repository.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import es.caib.loginib.core.api.model.login.DatosAutenticacion;
 import es.caib.loginib.core.api.model.login.DatosLogoutSesion;
@@ -21,38 +22,27 @@ public interface LoginDao {
 	/**
 	 * Iniciar sesion.
 	 *
-	 * @param entidad
-	 *                             entidad
-	 * @param urlCallback
-	 *                             url Callback
-	 * @param urlCallbackError
-	 *                             url Callback error
-	 * @param idioma
-	 *                             idioma
-	 * @param idps
-	 *                             idps
-	 * @param qaa
-	 *                             Qaa                             
-	 * @param iniClaAuto
-	 *                             iniClaAuto
-	 * @param forceAuth
-	 *                             forceAuth
-	 * @param aplicacion
-	 *                             Aplicacion
-	 * @param auditar
-	 *                             Auditar
+	 * @param entidad          entidad
+	 * @param urlCallback      url Callback
+	 * @param urlCallbackError url Callback error
+	 * @param idioma           idioma
+	 * @param idps             idps
+	 * @param qaa              Qaa
+	 * @param iniClaAuto       iniClaAuto
+	 * @param forceAuth        forceAuth
+	 * @param aplicacion       Aplicacion
+	 * @param auditar          Auditar
 	 *
 	 * @return identificador sesion
 	 */
 	String crearSesionLogin(final String entidad, String urlCallback, final String pUrlCallbackError, String idioma,
-			final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto, final boolean forceAuth, final String aplicacion,
-			boolean auditar);
+			final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto, final boolean forceAuth,
+			final String aplicacion, boolean auditar, final Map<String, String> paramsApp);
 
 	/**
 	 * Obtener datos sesion.
 	 *
-	 * @param idSesion
-	 *                     Id sesion
+	 * @param idSesion Id sesion
 	 * @return Datos sesion
 	 */
 	DatosSesionData obtenerDatosSesionLogin(String idSesion);
@@ -60,8 +50,7 @@ public interface LoginDao {
 	/**
 	 * Obtener datos sesion logout.
 	 *
-	 * @param idSesion
-	 *                     Id sesion
+	 * @param idSesion Id sesion
 	 * @return Datos sesion
 	 */
 	DatosLogoutSesion obtenerDatosSesionLogout(String idSesion);
@@ -69,32 +58,25 @@ public interface LoginDao {
 	/**
 	 * Establecer id externo peticion login.
 	 *
-	 * @param idSesion
-	 *                     Id sesion
-	 * @param samlId
-	 *                     Saml Id
+	 * @param idSesion Id sesion
+	 * @param samlId   Saml Id
 	 */
 	void establecerIdPeticionLogin(String idSesion, String samlId);
 
 	/**
 	 * Establecer id externo peticion logout.
 	 *
-	 * @param idSesion
-	 *                     Id sesion
-	 * @param samlId
-	 *                     Saml Id
+	 * @param idSesion Id sesion
+	 * @param samlId   Saml Id
 	 */
 	void establecerIdPeticionLogout(String idSesion, String samlId);
 
 	/**
 	 * Crea ticket.
 	 *
-	 * @param idSesion
-	 *                               id sesion
-	 * @param datosAutenticacion
-	 *                               datos autenticacion
-	 * @param evidencias
-	 *                               Evidencias autenticación
+	 * @param idSesion           id sesion
+	 * @param datosAutenticacion datos autenticacion
+	 * @param evidencias         Evidencias autenticación
 	 * @return Ticket
 	 */
 	TicketClave generateTicketSesionLogin(String idSesion, DatosAutenticacion datosAutenticacion,
@@ -103,10 +85,8 @@ public interface LoginDao {
 	/**
 	 * Consume ticket (lo marca como usado).
 	 *
-	 * @param ticket
-	 *                          Ticket
-	 * @param timeoutTicket
-	 *                          Timeout ticket
+	 * @param ticket        Ticket
+	 * @param timeoutTicket Timeout ticket
 	 * @return DatosUsuario
 	 */
 	DatosAutenticacion consumirTicketSesionLogin(final String ticket, long timeoutTicket);
@@ -114,14 +94,10 @@ public interface LoginDao {
 	/**
 	 * Iniciar logout sesion.
 	 *
-	 * @param entidad
-	 *                        entidad
-	 * @param urlCallback
-	 *                        url Callback
-	 * @param idioma
-	 *                        idioma
-	 * @param aplicacion
-	 *                        Identificador aplicacion
+	 * @param entidad     entidad
+	 * @param urlCallback url Callback
+	 * @param idioma      idioma
+	 * @param aplicacion  Identificador aplicacion
 	 * @return identificador sesion
 	 */
 	String crearSesionLogut(final String entidad, String pUrlCallback, String idioma, String aplicacion);
@@ -129,8 +105,7 @@ public interface LoginDao {
 	/**
 	 * Obtiene evidencias autenticación.
 	 *
-	 * @param idSesion
-	 *                     id sesión
+	 * @param idSesion id sesión
 	 * @return evidencias
 	 */
 	EvidenciasAutenticacion obtenerEvidenciasSesionLogin(final String idSesion);
@@ -138,16 +113,14 @@ public interface LoginDao {
 	/**
 	 * Realiza purga tickets aplicaciones externas.
 	 *
-	 * @param ConfiguracionProcesos
-	 *                                  conf
+	 * @param ConfiguracionProcesos conf
 	 */
 	void purgaTicketSesionLogin(ConfiguracionProcesos conf);
 
 	/**
 	 * Realiza purga logouts.
 	 *
-	 * @param ConfiguracionProcesos
-	 *                                  conf
+	 * @param ConfiguracionProcesos conf
 	 */
 	void purgaTicketSesionLogout(ConfiguracionProcesos conf);
 

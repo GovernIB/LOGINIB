@@ -7,7 +7,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -382,6 +384,24 @@ public final class ModuleConfig {
 		conf.setIpHeaders(ipHeaders);
 		conf.setXmlMostrar("true".equals(propiedades.getProperty("auditoria.xml.mostrar")));
 		return conf;
+	}
+
+	/**
+	 * Obtiene propiedades que empiezan con un prefijo.
+	 * 
+	 * @param prefix
+	 *                   Prefijo
+	 * @return propiedades
+	 */
+	public Map<String, String> getPropiedadesByPrefix(final String prefix) {
+		final Map<String, String> res = new HashMap<>();
+		for (final Object key : propiedades.keySet()) {
+			final String keyStr = key.toString();
+			if (keyStr.startsWith(prefix)) {
+				res.put(keyStr, propiedades.getProperty(keyStr));
+			}
+		}
+		return res;
 	}
 
 }

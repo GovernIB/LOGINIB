@@ -17,8 +17,8 @@ public final class RespuestaError {
 	/** Indica el mensaje de error general (label resources). */
 	private String mensajeErrorGeneral;
 
-	/** Indica el mensaje de error personalizado. */
-	private String mensajeErrorPersonalizado;
+	/** Indica el detalle del error. */
+	private String mensajeErrorDetalle;
 
 	/** Personalizacion. */
 	private PersonalizacionEntidad personalizacion;
@@ -77,8 +77,8 @@ public final class RespuestaError {
 	 *
 	 * @return mensajeErrorPersonalizado
 	 */
-	public String getMensajeErrorPersonalizado() {
-		return mensajeErrorPersonalizado;
+	public String getMensajeErrorDetalle() {
+		return mensajeErrorDetalle;
 	}
 
 	/**
@@ -87,8 +87,8 @@ public final class RespuestaError {
 	 * @param mensajeErrorPersonalizado
 	 *                                      mensajeErrorPersonalizado a establecer
 	 */
-	public void setMensajeErrorPersonalizado(final String mensajeErrorPersonalizado) {
-		this.mensajeErrorPersonalizado = mensajeErrorPersonalizado;
+	public void setMensajeErrorDetalle(final String mensajeErrorPersonalizado) {
+		this.mensajeErrorDetalle = mensajeErrorPersonalizado;
 	}
 
 	/**
@@ -102,7 +102,7 @@ public final class RespuestaError {
 
 	/**
 	 * Método para establecer idioma.
-	 * 
+	 *
 	 * @param idioma
 	 *                   idioma a establecer
 	 */

@@ -9,9 +9,9 @@ import javax.annotation.Resource;
 import javax.ejb.EJBException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.loginib.core.api.exception.ServiceException;
+import es.caib.loginib.core.api.exception.ValidateClaveException;
 import es.caib.loginib.core.api.exception.ValidateLoginException;
 import es.caib.loginib.core.api.model.login.DatosPersona;
 import es.caib.loginib.core.api.model.login.DatosSesion;
@@ -39,6 +40,7 @@ import es.caib.loginib.frontend.model.DatosLogoutClave;
 import es.caib.loginib.frontend.model.DatosRetornoClave;
 import es.caib.loginib.frontend.model.DatosSeleccionAutenticacion;
 import es.caib.loginib.frontend.model.ErrorCodes;
+import es.caib.loginib.frontend.model.ModuleConfig;
 
 /**
  * Controller login.
@@ -53,11 +55,14 @@ public final class LoginController {
 	@Resource(name = "loginService")
 	private LoginService loginService;
 
+	@Autowired
+	private ModuleConfig moduleConfig;
+
 	/** Log. */
 	private final Logger log = LoggerFactory.getLogger(LoginController.class);
 
-	/** Mensaje error particularizado usuario. */
-	private static final String ERROR_MESSAGE_USER = "ERROR_MESSAGE_USER";
+	/** Detalle error. */
+	private static final String ERROR_DETALLE = "ERROR_DETALLE";
 
 	/** Sesion ID . **/
 	private static final String ERROR_ID_SESION = "ERROR_ID_SESION";
@@ -91,6 +96,13 @@ public final class LoginController {
 		datos.setUsuarioPassword(sesion.getAccesosPermitidos().isAccesoUsuarioPassword());
 		datos.setClientCertSegundoPlano(sesion.getAccesosPermitidos().isAccesoClientCertLink());
 		datos.setPersonalizacion(sesion.getPersonalizacionEntidad());
+		datos.setVersion(moduleConfig.getVersion());
+		if (moduleConfig.getCommitGit() != null && !moduleConfig.getCommitGit().isEmpty()
+				&& !moduleConfig.getCommitGit().equals("${git.commit.id.abbrev}")) {
+			datos.setCommit(moduleConfig.getCommitGit());
+		} else {
+			datos.setCommit(moduleConfig.getCommitSvn());
+		}
 
 		ModelAndView modelAndView = null;
 
@@ -164,8 +176,7 @@ public final class LoginController {
 	/**
 	 * Redirige a página para hacer login por usuario/password.
 	 *
-	 * @param idSesion
-	 *                     idSesion
+	 * @param idSesion idSesion
 	 * @return pagina que realiza la redireccion a Clave
 	 */
 	@RequestMapping(value = "/loginUsuarioPassword.html")
@@ -205,8 +216,7 @@ public final class LoginController {
 	/**
 	 * Recibe peticion de inicio de sesion en Clave y redirige a Clave.
 	 *
-	 * @param idSesion
-	 *                     idSesion
+	 * @param idSesion idSesion
 	 * @return pagina que realiza la redireccion a Clave
 	 */
 	@RequestMapping(value = "/redirigirLoginClave.html")
@@ -240,8 +250,7 @@ public final class LoginController {
 	/**
 	 * Recibe peticion de logout de sesion en Clave y redirige a Clave.
 	 *
-	 * @param idSesion
-	 *                     idSesion
+	 * @param idSesion idSesion
 	 * @return pagina que realiza la redireccion a Clave
 	 */
 	@RequestMapping(value = "/redirigirLogoutClave.html")
@@ -266,10 +275,8 @@ public final class LoginController {
 	/**
 	 * Retorno de Clave y vuelta a aplicacion externa.
 	 *
-	 * @param idSesion
-	 *                         idSesion.
-	 * @param samlResponse
-	 *                         samlResponse.
+	 * @param idSesion     idSesion.
+	 * @param samlResponse samlResponse.
 	 * @return pagina que realiza la redireccion a aplicacion externa tras el login
 	 *         en Clave
 	 */
@@ -300,10 +307,8 @@ public final class LoginController {
 	/**
 	 * Retorno de logout Clave y vuelta a aplicacion externa.
 	 *
-	 * @param idSesion
-	 *                         idSesion.
-	 * @param samlResponse
-	 *                         samlResponse.
+	 * @param idSesion     idSesion.
+	 * @param samlResponse samlResponse.
 	 * @return pagina que realiza la redireccion a aplicacion externa tras el login
 	 *         en Clave
 	 */
@@ -325,16 +330,11 @@ public final class LoginController {
 	/**
 	 * Simulamos acceso clave.
 	 *
-	 * @param idSesion
-	 *                      idSesion
-	 * @param idp
-	 *                      idp
-	 * @param nif
-	 *                      nif
-	 * @param nombre
-	 *                      nombre
-	 * @param apellidos
-	 *                      apellidos
+	 * @param idSesion  idSesion
+	 * @param idp       idp
+	 * @param nif       nif
+	 * @param nombre    nombre
+	 * @param apellidos apellidos
 	 * @return retorno aplicacion
 	 */
 	@RequestMapping(value = "loginClaveSimulado.html", method = RequestMethod.POST)
@@ -367,8 +367,7 @@ public final class LoginController {
 	/**
 	 * Muestra error.
 	 *
-	 * @param errorCode
-	 *                      codigo error
+	 * @param errorCode codigo error
 	 * @return pagina error
 	 */
 	@RequestMapping("/error.html")
@@ -380,13 +379,13 @@ public final class LoginController {
 		String urlCallbackError = null;
 		String idioma = "es";
 		String mensajeErrorGeneral = null;
-		String mensajeErrorPersonalizado = null;
+		String detalleError = null;
 
-		// Parametros pasados por sesion: Id sesion y mensaje particularizado
+		// Parametros pasados por sesion: Id sesion y detalle error
 		final String idSesion = (String) request.getSession().getAttribute(ERROR_ID_SESION);
-		mensajeErrorPersonalizado = (String) request.getSession().getAttribute(ERROR_MESSAGE_USER);
+		detalleError = (String) request.getSession().getAttribute(ERROR_DETALLE);
 		request.getSession().removeAttribute(ERROR_ID_SESION);
-		request.getSession().removeAttribute(ERROR_MESSAGE_USER);
+		request.getSession().removeAttribute(ERROR_DETALLE);
 
 		// Cargamos sesion (particularizacion entidad y url callback)
 		if (idSesion != null) {
@@ -401,20 +400,18 @@ public final class LoginController {
 			urlCallbackError = "seleccionAutenticacion.html?idSesion=" + idSesion;
 		}
 
-		// Error general si no hay mensaje personalizado
-		if (StringUtils.isBlank(mensajeErrorPersonalizado)) {
-			ErrorCodes error = ErrorCodes.fromString(errorCode);
-			if (error == null) {
-				error = ErrorCodes.ERROR_GENERAL;
-			}
-			mensajeErrorGeneral = error.toString();
+		// Código error
+		ErrorCodes error = ErrorCodes.fromString(errorCode);
+		if (error == null) {
+			error = ErrorCodes.ERROR_GENERAL;
 		}
+		mensajeErrorGeneral = error.toString();
 
 		// Retornamos respuesta
 		final RespuestaError respuesta = new RespuestaError();
 		respuesta.setIdioma(idioma);
 		respuesta.setMensajeErrorGeneral(mensajeErrorGeneral);
-		respuesta.setMensajeErrorPersonalizado(mensajeErrorPersonalizado);
+		respuesta.setMensajeErrorDetalle(detalleError);
 		respuesta.setUrlCallback(urlCallbackError);
 		respuesta.setPersonalizacion(personalizacion);
 		return new ModelAndView("errorDetalle", "datos", respuesta);
@@ -424,10 +421,8 @@ public final class LoginController {
 	/**
 	 * Handler de excepciones de negocio.
 	 *
-	 * @param pex
-	 *                    Excepción
-	 * @param request
-	 *                    Request
+	 * @param pex     Excepción
+	 * @param request Request
 	 * @return Respuesta JSON indicando el mensaje producido
 	 */
 	@ExceptionHandler({ Exception.class })
@@ -443,24 +438,50 @@ public final class LoginController {
 
 		// Si es una excepcion al procesar la respuesta de Clave, mostramos
 		// detalle al usuario
+		ErrorCodes errorCode = ErrorCodes.ERROR_GENERAL;
 		String errorMessage = null;
 		String idSesion = null;
 		if (ex instanceof ValidateLoginException) {
+
+			errorCode = ErrorCodes.ERROR_LOGIN;
+
 			errorMessage = ((ValidateLoginException) ex).getMensajeError();
 			idSesion = ((ValidateLoginException) ex).getIdSesion();
+
+			// Detectamos errores particularizados
+			// - Clave
+			if (ex instanceof ValidateClaveException) {
+				final Map<String, String> mapErrores = loginService.obtenerMapeoErroresValidacion("clave");
+				String errorCodeStr = null;
+				for (final String mapErrorKey : mapErrores.keySet()) {
+					if (errorMessage.contains(mapErrores.get(mapErrorKey))) {
+						errorCodeStr = mapErrorKey;
+						break;
+					}
+				}
+				if (errorCodeStr != null && ErrorCodes.fromEnum(errorCodeStr) != null) {
+					errorCode = ErrorCodes.fromEnum(errorCodeStr);
+				}
+			}
+
+			// Si particularizamos error, no mostramos error original
+			/*
+			 * if (errorCode != ErrorCodes.ERROR_LOGIN) { errorMessage = null; }
+			 */
+
 		}
-		request.getSession().setAttribute(ERROR_MESSAGE_USER, errorMessage);
+
+		request.getSession().setAttribute(ERROR_DETALLE, errorMessage);
 		request.getSession().setAttribute(ERROR_ID_SESION, idSesion);
 
-		// Mostramos pagina generica de error
-		return new ModelAndView("redirect:/error.html?code=" + ErrorCodes.ERROR_GENERAL.toString());
+		// Mostramos pagina de error
+		return new ModelAndView("redirect:/error.html?code=" + errorCode.toString());
 	}
 
 	/**
 	 * Extrae headers de la request.
 	 *
-	 * @param request
-	 *                    request
+	 * @param request request
 	 * @return headers
 	 */
 	private Map<String, String> extractHeaders(final HttpServletRequest request) {
@@ -476,8 +497,7 @@ public final class LoginController {
 	/**
 	 * Extrae certificado de la request.
 	 *
-	 * @param request
-	 *                    request
+	 * @param request request
 	 * @return certificado
 	 */
 	private X509Certificate extractCertificate(final HttpServletRequest request) {
