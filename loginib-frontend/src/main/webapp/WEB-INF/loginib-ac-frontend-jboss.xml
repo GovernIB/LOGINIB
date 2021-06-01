@@ -13,8 +13,8 @@
 	<bean id="negocioModuleConfig" class="es.caib.loginib.frontend.model.ModuleConfig">
 		<property name="entorno" value="${entorno}" />
 		<property name="version" value="${loginib.version}" />
-		<property name="commitSvn" value="${prefix.revision}" />
-		<property name="commitGit" value="${git.commit.id.abbrev}" />
+		<property name="commitSvn" value="${commitSvn}" />
+		<property name="commitGit" value="${commitGit}" />
 	</bean>
 
 </beans>
