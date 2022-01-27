@@ -95,6 +95,13 @@
 		    <version>${commons-lang3.version}</version>
 		</dependency>
 
+		<!-- paso a nuevo kit integracion inicio-->
+		<dependency>
+		    <groupId>commons-lang</groupId>
+		    <artifactId>commons-lang</artifactId>
+		    <version>${commons-lang.version}</version>
+		</dependency>
+		<!-- paso a nuevo kit integracion FIN-->
 
 		<!-- CXF -->
 		<dependency>
@@ -140,14 +147,6 @@
 	      <artifactId>cxf-rt-bindings-soap</artifactId>
 	      <version>${cxf.version}</version>
 	    </dependency>
-
-<!--
-		<dependency>
-		    <groupId>commons-lang</groupId>
-		    <artifactId>commons-lang</artifactId>
-		    <version>${commons-lang.version}</version>
-		</dependency>
- -->
 
   </dependencies>
 </project>

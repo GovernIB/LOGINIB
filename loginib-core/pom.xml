@@ -78,7 +78,7 @@
 
 
         <!-- LIBRERIAS CLAVE -->
-        <dependency>
+     <!-- DEPENDENCIAS ANTIGUAS CLAVE inicio --><!--  <dependency>
 			<groupId>eu.eidas</groupId>
 			<artifactId>eidas-commons</artifactId>
 			<version>${eidas.version}</version>
@@ -108,7 +108,12 @@
 					<artifactId>xercesImpl</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
+		</dependency> --><!-- DEPENDENCIAS ANTIGUAS CLAVE FIN -->
+
+
+
+
+
 
         <!-- Dependencias Clave -->
         <dependency>
@@ -118,6 +123,44 @@
 		</dependency>
 
 
+
+		<!-- DEPENDENCIAS NUEVAS CLAVE (kit 2.1.1) inicio -->
+
+		<dependency>
+	        <groupId>es.gob.sgad</groupId>
+			<artifactId>clave-j20068.commons</artifactId>
+			<version>${clave-j20068.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>es.gob.sgad</groupId>
+			<artifactId>clave-j20068.saml-engine</artifactId>
+			<version>${clave-j20068.version}</version>
+		</dependency>
+
+
+
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>openws</artifactId>
+            <version>${openws.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>xmltooling</artifactId>
+            <version>${xmltooling.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml</artifactId>
+            <version>${opensaml.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+            <version>${xmlsec.version}</version>
+        </dependency>
+
+		<!-- DEPENDENCIAS NUEVAS CLAVE (kit 2.1.1) FIN -->
 
   	</dependencies>
 

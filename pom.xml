@@ -47,6 +47,15 @@
 
 		<eidas.version>1.4.3-clave</eidas.version>
 
+
+		<!-- paso a nuevo kit integracion inicio-->
+		<clave-j20068.version>2.7</clave-j20068.version>
+		<openws.version>1.5.5</openws.version>
+		<xmltooling.version>1.4.5</xmltooling.version>
+		<opensaml.version>2.6.5-eidas_1</opensaml.version>
+		<xmlsec.version>2.0.5</xmlsec.version>
+		<!-- paso a nuevo kit integracion fin-->
+
 		<cxf.version>3.1.4</cxf.version>
 
 		<pluginsib-validatecertificate-afirmacxf-jboss7.version>2.0.2</pluginsib-validatecertificate-afirmacxf-jboss7.version>

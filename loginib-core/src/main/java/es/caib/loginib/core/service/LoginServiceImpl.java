@@ -114,8 +114,8 @@ public final class LoginServiceImpl implements LoginService {
 	@Override
 	@NegocioInterceptor
 	public String iniciarSesionLogin(final String entidad, final String pUrlCallback, final String pUrlCallbackError,
-			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto, final boolean forceAuth,
-			final String aplicacion, final boolean auditar) {
+			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto,
+			final boolean forceAuth, final String aplicacion, final boolean auditar) {
 		log.debug(" Crea sesion clave: [idps = " + idps + "] [urlCallback = " + pUrlCallback + "]");
 
 		if (StringUtils.isBlank(entidad)) {
@@ -605,10 +605,8 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Obtiene personalizacion entidad.
 	 *
-	 * @param entidad
-	 *                    entidad
-	 * @param idioma
-	 *                    idioma
+	 * @param entidad entidad
+	 * @param idioma  idioma
 	 * @return personalizacion
 	 */
 	private PersonalizacionEntidad getPersonalizacionEntidad(final String entidad, final String idioma) {
@@ -625,8 +623,7 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Obtiene engine para saml de Clave.
 	 *
-	 * @param entidad
-	 *                    entidad
+	 * @param entidad entidad
 	 * @return engine
 	 */
 	private ProtocolEngineNoMetadataI getEngineSamlFactory(final String entidad) {
@@ -649,8 +646,7 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Genera petición clave.
 	 *
-	 * @param datosSesion
-	 *                        datos sesión
+	 * @param datosSesion datos sesión
 	 * @return petición clave
 	 */
 	private PeticionClave generarPeticionClaveReal(final DatosSesion datosSesion) {
@@ -727,7 +723,7 @@ public final class LoginServiceImpl implements LoginService {
 		final EidasAuthenticationRequestNoMetadata buildRequest = reqBuilder.build();
 		IRequestMessageNoMetadata message = null;
 		try {
-			message = engine.generateRequestMessage(buildRequest);
+			message = engine.generateRequestMessage(buildRequest, true);
 		} catch (final EIDASSAMLEngineException e) {
 			throw new GenerarPeticionClaveException(e);
 		}
@@ -757,10 +753,8 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Calcula accesos permitidos en la sesión.
 	 *
-	 * @param idps
-	 *                 idps
-	 * @param qaa
-	 *                 qaa
+	 * @param idps idps
+	 * @param qaa  qaa
 	 * @return accesos permitidos en la sesión.
 	 */
 	private AccesosPermitidos calcularAccesosPermitidos(final List<TypeIdp> idps, final Integer qaa) {
@@ -800,8 +794,7 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Recupera datos sesión login.
 	 *
-	 * @param idSesion
-	 *                     id sesión
+	 * @param idSesion id sesión
 	 * @return Datos sesión
 	 */
 	private DatosSesion recuperarDatosSesionLogin(final String idSesion) {
@@ -817,8 +810,7 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Obtiene ip.
 	 *
-	 * @param headers
-	 *                    Headers
+	 * @param headers Headers
 	 * @return ip
 	 */
 	private String getClientIpAddress(final List<String> ipHeaders, final Map<String, String> headers,
@@ -842,8 +834,7 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Recupera certificado de headers.
 	 *
-	 * @param idSesion
-	 *                     idSesion
+	 * @param idSesion idSesion
 	 * @param headers
 	 * @param ipFrom
 	 * @return
@@ -890,10 +881,8 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Obtiene años entre 2 fechas.
 	 *
-	 * @param fechaInicio
-	 *                        Fecha inicio.
-	 * @param fechaFin
-	 *                        Fecha fin.
+	 * @param fechaInicio Fecha inicio.
+	 * @param fechaFin    Fecha fin.
 	 * @return años
 	 */
 	private int diferenciaAnyos(final Date fechaInicio, final Date fechaFin) {
@@ -907,12 +896,9 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Extraer datos autenticación Clave.
 	 *
-	 * @param datosSesion
-	 *                              datos sesión
-	 * @param relayStateRequest
-	 *                              relayStateRequest
-	 * @param authnResponse
-	 *                              authnResponse
+	 * @param datosSesion       datos sesión
+	 * @param relayStateRequest relayStateRequest
+	 * @param authnResponse     authnResponse
 	 * @return datos autenticación Clave
 	 */
 	private DatosAutenticacion extractDatosAutenticacionClave(final DatosSesion datosSesion,
@@ -1001,10 +987,8 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Extrae datos autenticación del certificado.
 	 *
-	 * @param pIdSesion
-	 *                        id sesión
-	 * @param certificado
-	 *                        certificado
+	 * @param pIdSesion   id sesión
+	 * @param certificado certificado
 	 * @return datos autenticación
 	 */
 	private DatosAutenticacion extractDatosAutenticacionCertificado(final String pIdSesion,
@@ -1082,12 +1066,9 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Extrae datos autenticación keycloak.
 	 *
-	 * @param idSesion
-	 *                           idSesion
-	 * @param accessToken
-	 *                           accessToken
-	 * @param keycloakConfig
-	 *                           keycloakConfig
+	 * @param idSesion       idSesion
+	 * @param accessToken    accessToken
+	 * @param keycloakConfig keycloakConfig
 	 * @return datos autenticación
 	 */
 	private DatosAutenticacion extractDatosAutenticacionKeycloak(final String idSesion, final AccessToken accessToken,
@@ -1116,14 +1097,10 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Genera evidencias autenticación.
 	 *
-	 * @param datosAutenticacion
-	 *                               Datos autenticación
-	 * @param headers
-	 *                               Headers
-	 * @param ipAddressFrom
-	 *                               Ip (getRemoteAddress)
-	 * @param evidenciasMetodo
-	 *                               Evidencias propias del método usado
+	 * @param datosAutenticacion Datos autenticación
+	 * @param headers            Headers
+	 * @param ipAddressFrom      Ip (getRemoteAddress)
+	 * @param evidenciasMetodo   Evidencias propias del método usado
 	 */
 	private EvidenciasAutenticacion generarEvidenciasAutenticacion(final DatosAutenticacion datosAutenticacion,
 			final Map<String, String> headers, final String ipAddressFrom,
@@ -1245,8 +1222,7 @@ public final class LoginServiceImpl implements LoginService {
 	/**
 	 * Obtiene configuración keycloak.
 	 *
-	 * @param idSesion
-	 *                     idSesion
+	 * @param idSesion idSesion
 	 * @return configuración
 	 */
 	private ConfiguracionKeycloak obtenerConfiguracionKeycloak(final String idSesion) {
