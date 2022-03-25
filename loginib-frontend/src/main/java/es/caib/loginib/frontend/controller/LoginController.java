@@ -1,6 +1,7 @@
 package es.caib.loginib.frontend.controller;
 
 import java.security.cert.X509Certificate;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,20 +22,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import es.caib.loginib.core.api.exception.NoDesgloseException;
 import es.caib.loginib.core.api.exception.ServiceException;
 import es.caib.loginib.core.api.exception.ValidateClaveException;
 import es.caib.loginib.core.api.exception.ValidateLoginException;
+import es.caib.loginib.core.api.model.login.DatosAutenticacion;
 import es.caib.loginib.core.api.model.login.DatosPersona;
 import es.caib.loginib.core.api.model.login.DatosSesion;
+import es.caib.loginib.core.api.model.login.DesgloseApellidos;
 import es.caib.loginib.core.api.model.login.PersonalizacionEntidad;
 import es.caib.loginib.core.api.model.login.PeticionClave;
 import es.caib.loginib.core.api.model.login.PeticionClaveLogout;
 import es.caib.loginib.core.api.model.login.RespuestaClaveLogout;
 import es.caib.loginib.core.api.model.login.RespuestaError;
+import es.caib.loginib.core.api.model.login.SesionLogin;
 import es.caib.loginib.core.api.model.login.SimularClave;
 import es.caib.loginib.core.api.model.login.TicketClave;
+import es.caib.loginib.core.api.model.login.TicketDesglose;
 import es.caib.loginib.core.api.model.login.ValidacionUsuarioPassword;
 import es.caib.loginib.core.api.model.login.types.TypeIdp;
+import es.caib.loginib.core.api.service.DesgloseApellidosService;
 import es.caib.loginib.core.api.service.LoginService;
 import es.caib.loginib.frontend.model.DatosInicioSesionClave;
 import es.caib.loginib.frontend.model.DatosLogoutClave;
@@ -55,6 +63,10 @@ public final class LoginController {
 	@Resource(name = "loginService")
 	private LoginService loginService;
 
+	/** Servicio Desglose. */
+	@Resource(name = "desgloseService")
+	private DesgloseApellidosService desgloseService;
+
 	@Autowired
 	private ModuleConfig moduleConfig;
 
@@ -67,6 +79,7 @@ public final class LoginController {
 	/** Sesion ID . **/
 	private static final String ERROR_ID_SESION = "ERROR_ID_SESION";
 
+
 	/**
 	 * Muestra pagina de bienvenida.
 	 *
@@ -75,6 +88,76 @@ public final class LoginController {
 	@RequestMapping("/index.html")
 	public ModelAndView index() {
 		return new ModelAndView("index");
+	}
+
+
+	/**
+	 * Muestra página con toda la información propia del usuario.
+	 *
+	 * @return página de info.
+	 */
+	@RequestMapping("/test.html")
+	public ModelAndView test(@RequestParam(value = "idioma", required = false) final String idioma) {
+
+		//Generamos el id sesion
+		String idSesion = loginService.iniciarSesionTest(idioma, "desgloseCertificado.html" , false);
+		return  new ModelAndView("redirect:seleccionAutenticacion.html?idSesion=" + idSesion);
+	}
+
+	/**
+	 * Forzar el desglose en la autenticacion.
+	 *
+	 * @return página de desglose datos.
+	 */
+	@RequestMapping("/forzarDesglose.html")
+	public ModelAndView forzarDesglose(@RequestParam(value = "idioma", required = false) final String idioma) {
+
+		//Generamos el id sesion
+		String idSesion = loginService.iniciarSesionTest(idioma, "retornoClaveSimulado/forzarDesgloseRetorno.html" , true);
+		return  new ModelAndView("redirect:seleccionAutenticacion.html?idSesion=" + idSesion);
+	}
+
+	/**
+	 * Forzar el desglose en la autenticacion.
+	 *
+	 * @return página de desglose datos.
+	 */
+	@RequestMapping("/retornoClaveSimulado/forzarDesgloseRetorno.html")
+	public ModelAndView forzarDesgloseRetorno(@RequestParam(value = "ticket", required = false) final String ticket, @RequestParam(value = "idioma", required = false) final String idioma) {
+
+		//Generamos el id sesion
+		final DatosAutenticacion datos = loginService.obtenerDatosAutenticacionAll(ticket);
+		final PersonalizacionEntidad personalizacion = this.loginService.obtenerDatosPersonalizacionEntidad(datos.getIdSesion());
+
+		DesgloseApellidos desglose = desgloseService.loadDesglose(datos.getAutenticado().getNif());
+		ModelMap map = new ModelMap();
+		if (desglose != null) {
+			//Si se fuerza y ya existe desglose, pasar los datos ya almacenados.
+			map.addAttribute("nombre", desglose.getNombre());
+			map.addAttribute("apellido1", desglose.getApellido1());
+			map.addAttribute("apellido2", desglose.getApellido2());
+			map.addAttribute("nif", datos.getAutenticado().getNif());
+			map.addAttribute("nombreDef", datos.getAutenticado().getNombre());
+			map.addAttribute("apellido1Def", datos.getAutenticado().getApellido1());
+			map.addAttribute("apellido2Def", datos.getAutenticado().getApellido2());
+			map.addAttribute("callback", "desgloseNombre.html");
+			map.addAttribute("ticket", ticket);
+
+		} else {
+			map.addAttribute("nombre", datos.getAutenticado().getNombre());
+			map.addAttribute("apellido1", datos.getAutenticado().getApellido1());
+			map.addAttribute("apellido2", datos.getAutenticado().getApellido2());
+			map.addAttribute("nif", datos.getAutenticado().getNif());
+			map.addAttribute("nombreDef", datos.getAutenticado().getNombre());
+			map.addAttribute("apellido1Def", datos.getAutenticado().getApellido1());
+			map.addAttribute("apellido2Def", datos.getAutenticado().getApellido2());
+			map.addAttribute("callback", "desgloseNombre.html");
+			map.addAttribute("ticket", ticket);
+		}
+		map.addAttribute("personalizacion", personalizacion );
+
+		ModelAndView model = new ModelAndView("desgloseApellidos", map);
+		return model;
 	}
 
 	/**
@@ -86,7 +169,6 @@ public final class LoginController {
 	public ModelAndView seleccionAutenticacion(@RequestParam("idSesion") final String idSesion) {
 
 		final DatosSesion sesion = loginService.obtenerDatosSesionLogin(idSesion);
-
 		final DatosSeleccionAutenticacion datos = new DatosSeleccionAutenticacion();
 		datos.setIdSesion(idSesion);
 		datos.setIdioma(sesion.getSesion().getIdioma());
@@ -286,23 +368,176 @@ public final class LoginController {
 			@RequestParam("RelayState") final String relayState, final HttpServletRequest request) {
 
 		log.debug("Retorno clave: id sesion = " + idSesion);
-
+		moduleConfig.init();
 		// Recupera datos de la request
 		final String ipAddress = request.getRemoteAddr();
 		final Map<String, String> headers = extractHeaders(request);
 
-		// Generamos ticket autenticacion
-		final TicketClave ticket = loginService.procesarRespuestaLoginClave(idSesion, samlResponse, relayState, headers,
-				ipAddress);
+		final TicketClave ticket;
+		try {
+			ticket =  loginService.procesarRespuestaLoginClave(idSesion, samlResponse, relayState, headers, ipAddress);
+		} catch (NoDesgloseException e) {
+			// Mostramos pagina generica de error
+			log.debug("Error en retorno clave por no desglose correcto", e);
+			request.getSession().setAttribute(ERROR_ID_SESION, idSesion);
+			if ( e.getCause().getClass() == NoDesgloseException.class) {
+				return new ModelAndView("redirect:/error.html?code=" + ErrorCodes.DESGLOSE_APELLIDOS_INCORRECTO.toString() );
+			} else {
+				return new ModelAndView("redirect:/error.html?code=" + ErrorCodes.ERROR_GENERAL.toString() );
+			}
+		}
+		if (ticket.isTest()) {
 
-		// Retornamos aplicacion
-		log.debug("Retornamos a aplicacion: ticket = " + ticket.getTicket());
-		final DatosRetornoClave drc = new DatosRetornoClave();
-		drc.setTicket(ticket.getTicket());
-		drc.setUrlCallbackLogin(ticket.getUrlCallback());
-		drc.setIdioma(ticket.getIdioma());
-		return new ModelAndView("retornoClave", "datos", drc);
+			//Cuando viene de test.html
+			return desgloseCertificado(ticket.getTicket(), ticket.getNif(), ticket.getPersonalizacion(), samlResponse);
+
+		} else {
+
+			if (ticket.isYaDesglosado()) {
+
+				log.debug("Retornamos a aplicacion: ticket = " + ticket.getTicket());
+				final DatosRetornoClave drc = new DatosRetornoClave();
+				drc.setTicket(ticket.getTicket());
+				drc.setUrlCallbackLogin(ticket.getUrlCallback());
+				drc.setIdioma(ticket.getIdioma());
+				return new ModelAndView("retornoClave", "datos", drc);
+
+			} else {
+
+				return cargarDatos(ticket);
+
+			}
+
+		}
+ 	}
+
+	/**
+	 * Carga los datos dependiendo de si es representante o no.
+	 * @param ticket
+	 * @param datos
+	 * @return
+	 */
+	private ModelAndView cargarDatos(TicketClave ticket) {
+		ModelMap map = new ModelMap();
+
+		if (ticket.isRepresentante()) {
+
+			map.addAttribute("nif", ticket.getPersonaRepresentante());
+			map.addAttribute("representante", "S");
+			map.addAttribute("nombre", ticket.getPersonaRepresentante().getNombre());
+			map.addAttribute("razonSocialDef", ticket.getPersonaAutenticado().getNombre());
+			map.addAttribute("apellido1", ticket.getPersonaRepresentante().getApellido1());
+			map.addAttribute("apellido2", ticket.getPersonaRepresentante().getApellido2());
+			map.addAttribute("nombreDef", ticket.getPersonaRepresentante().getNombre());
+			map.addAttribute("apellido1Def", ticket.getPersonaRepresentante().getApellido1());
+			map.addAttribute("apellido2Def", ticket.getPersonaRepresentante().getApellido2());
+			map.addAttribute("callback", "desgloseNombre.html");
+
+		} else {
+
+			map.addAttribute("nif", ticket.getNif());
+			map.addAttribute("representante", "N");
+			map.addAttribute("nombre", ticket.getPersonaAutenticado().getNombre());
+			map.addAttribute("apellido1", ticket.getPersonaAutenticado().getApellido1());
+			map.addAttribute("apellido2", ticket.getPersonaAutenticado().getApellido2());
+			map.addAttribute("nombreDef", ticket.getPersonaAutenticado().getNombre());
+			map.addAttribute("apellido1Def", ticket.getPersonaAutenticado().getApellido1());
+			map.addAttribute("apellido2Def", ticket.getPersonaAutenticado().getApellido2());
+			map.addAttribute("callback", "desgloseNombre.html");
+		}
+		map.addAttribute("ticket",ticket.getTicket());
+		map.addAttribute("personalizacion", ticket.getPersonalizacion() );
+		return new ModelAndView(ticket.getUrlDesglose(), map);
 	}
+
+
+	private ModelAndView desgloseCertificado(String ticket, String nif, PersonalizacionEntidad personalizacion, String samlResponse) {
+		// aqui manda a la vista con la info
+		SesionLogin sesion = loginService.loginByTicket(ticket, true);
+		String idp = sesion.getIdp();
+		String nombre = sesion.getNombre();
+		String apellidos = sesion.getApellidos();
+		String apellido1 = sesion.getApellido1();
+		String apellido2 = sesion.getApellido2();
+		String representanteNombre = sesion.getRepresentanteNombre();
+		String representanteApellidos = sesion.getRepresentanteApellidos();
+		String representanteApellido1 = sesion.getRepresentanteApellido1();
+		String representanteApellido2 = sesion.getRepresentanteApellido2();
+		String representanteNif = sesion.getRepresentanteNif();
+		Integer qaa = sesion.getQaa();
+		DesgloseApellidos desglose = desgloseService.loadDesglose(nif);
+		String isDesglose = (desglose == null) ? "N" : "S";
+		String isRepresentante = (sesion.getRepresentanteNif() == null || sesion.getRepresentanteNif().isEmpty()) ? "N" : "S";
+		ModelMap map = new ModelMap();
+		map.addAttribute("idp", idp);
+		map.addAttribute("nif", nif);
+		map.addAttribute("nombre", nombre);
+		map.addAttribute("apellidos", apellidos);
+		map.addAttribute("apellido1", apellido1);
+		map.addAttribute("apellido2", apellido2);
+		map.addAttribute("representanteNombre", representanteNombre);
+		map.addAttribute("representanteApellidos", representanteApellidos);
+		map.addAttribute("representanteApellido1", representanteApellido1);
+		map.addAttribute("representanteApellido2", representanteApellido2);
+		map.addAttribute("representanteNif", representanteNif);
+		map.addAttribute("qaa", qaa);
+		map.addAttribute("isDesglose", isDesglose);
+		map.addAttribute("isRepresentante", isRepresentante);
+		map.addAttribute("personalizacion", personalizacion );
+
+		String loginIBnombre, loginIBapellido1, loginIBapellido2, loginIBfechaCreacion, loginIBFechaMod;
+		if (desglose == null) {
+			loginIBnombre = ""; loginIBapellido1 = null; loginIBapellido2 = null; loginIBfechaCreacion = null; loginIBFechaMod = null;
+		} else {
+			loginIBnombre =desglose.getNombre();
+			loginIBapellido1 = desglose.getApellido1();
+			loginIBapellido2 = desglose.getApellido2();
+			loginIBfechaCreacion = desglose.getFechaCreacion() == null ? "" : desglose.getFechaCreacion().toGMTString();
+			loginIBFechaMod = desglose.getFechaActualizacion() == null ? "" : desglose.getFechaActualizacion().toGMTString();
+		}
+		map.addAttribute("loginIBnombre", loginIBnombre);
+		map.addAttribute("loginIBapellido1", loginIBapellido1);
+		map.addAttribute("loginIBapellido2", loginIBapellido2);
+		map.addAttribute("loginIBfechaCreacion", loginIBfechaCreacion);
+		map.addAttribute("loginIBFechaMod", loginIBFechaMod);
+		map.addAttribute("datosB64", getDatosB64(nif, nombre, apellidos, apellido1, apellido2, idp, qaa, isDesglose,  sesion.getSamlRequestB64(), samlResponse, loginIBnombre, loginIBapellido1, loginIBapellido2, loginIBfechaCreacion, loginIBFechaMod, representanteNombre, representanteApellidos, representanteApellido1, representanteApellido2, representanteNif));
+		return new ModelAndView("desgloseCertificado", map);
+	}
+
+
+	private Object getDatosB64(String nif, String nombre, String apellidos, String apellido1, String apellido2,
+			String idp, Integer qaa, String isDesglose, String samlRequest, String samlResponse, String loginIBnombre, String loginIBapellido1, String loginIBapellido2, String loginIBfechaCreacion, String loginIBFechaMod,
+			String representanteNombre, String representanteApellidos, String representanteApellido1, String representanteApellido2, String representanteNif) {
+		StringBuilder retorno = new StringBuilder();
+		retorno.append(" { \n");
+		retorno.append("  \"nif\": \""+nif+"\", \n");
+		retorno.append("  \"nombre\": \""+nombre+"\", \n");
+		retorno.append("  \"apellidos\": \""+apellidos+"\", \n");
+		retorno.append("  \"apellido1\": \""+apellido1+"\", \n");
+		retorno.append("  \"apellido2\": \""+apellido2+"\", \n");
+
+		retorno.append("  \"nifRepresentante\": \""+representanteNif+"\", \n");
+		retorno.append("  \"nombreRepresentante\": \""+representanteNombre+"\", \n");
+		retorno.append("  \"apellidosRepresentante\": \""+representanteApellidos+"\", \n");
+		retorno.append("  \"apellido1Representante\": \""+representanteApellido1+"\", \n");
+		retorno.append("  \"apellido2Representante\": \""+representanteApellido2+"\", \n");
+
+		retorno.append("  \"nivelAutenticacion\": \""+idp+"\", \n");
+		//retorno.append("  \"clasificacionCertificado\": 0, ");
+		retorno.append("  \"qaaSeleccionado\": "+qaa+", \n");
+		retorno.append("  \"desgloseApellidosClave\": \""+isDesglose+"\", \n");
+		retorno.append("  \"loginIBnombre\": \""+loginIBnombre+"\", \n");
+		retorno.append("  \"loginIBapellido1\": \""+loginIBapellido1+"\", \n");
+		retorno.append("  \"loginIBapellido2\": \""+loginIBapellido2+"\", \n");
+		retorno.append("  \"loginIBfechaCreacion\": \""+loginIBfechaCreacion+"\", \n");
+		retorno.append("  \"loginIBFechaMod\": \""+loginIBFechaMod+"\", \n");
+		retorno.append("  \"samlRequest\": \""+samlRequest+"\",  \n");
+		retorno.append("  \"samlResponse\": \""+samlResponse+"\", \n");
+		retorno.append(" } ");
+
+		return Base64.getEncoder().encodeToString(retorno.toString().getBytes());
+	}
+
 
 	/**
 	 * Retorno de logout Clave y vuelta a aplicacion externa.
@@ -351,9 +586,22 @@ public final class LoginController {
 		final Map<String, String> headers = extractHeaders(request);
 
 		// Generamos ticket autenticacion
-		final TicketClave ticket = loginService.simularRespuestaClave(idSesion, TypeIdp.fromString(idp),
+		final TicketClave ticket;
+		try {
+			ticket = loginService.simularRespuestaClave(idSesion, TypeIdp.fromString(idp),
 				new DatosPersona(nif, nombre, apellidos, apellido1, apellido2), headers, ipAddress);
+		} catch (Exception e) {
 
+			log.debug("Error en clave simulado por no desglose correcto", e);
+			request.getSession().setAttribute(ERROR_ID_SESION, idSesion);
+
+			if ( e.getCause().getClass() == NoDesgloseException.class) {
+				return new ModelAndView("redirect:/error.html?code=" + ErrorCodes.DESGLOSE_APELLIDOS_INCORRECTO.toString() );
+			} else {
+				return new ModelAndView("redirect:/error.html?code=" + ErrorCodes.ERROR_GENERAL.toString() );
+			}
+
+		}
 		// Retornamos aplicacion
 		log.debug("Retornamos a aplicacion: ticket = " + ticket.getTicket());
 		final DatosRetornoClave drc = new DatosRetornoClave();
@@ -361,7 +609,11 @@ public final class LoginController {
 		drc.setUrlCallbackLogin(ticket.getUrlCallback());
 		drc.setIdioma(ticket.getIdioma());
 
-		return new ModelAndView("retornoClave", "datos", drc);
+		if (ticket.isTest()) {
+			return desgloseCertificado(ticket.getTicket(), ticket.getNif(), ticket.getPersonalizacion(), "");
+		} else {
+			return new ModelAndView("retornoClave", "datos", drc);
+		}
 	}
 
 	/**
@@ -508,6 +760,25 @@ public final class LoginController {
 			certificado = certs[0];
 		}
 		return certificado;
+	}
+
+	@RequestMapping(value = {"/retornoLoginClave/desgloseNombre.html", "/retornoClaveSimulado/desgloseNombre.html"}, method = RequestMethod.POST)
+	public ModelAndView desgloseNombre(DesgloseApellidos desglose) {
+
+		//Procesamos la respuesta del desglose
+		final TicketDesglose ticket = loginService.procesarRespuestaDesglose(desglose);
+
+		if (ticket.isForzarDesglose()) {
+			return desgloseCertificado(ticket.getTicket(), ticket.getNif(), ticket.getPersonalizacion(), "");
+		} else {
+
+			//Mandar hacia el callback
+			final DatosRetornoClave drc = new DatosRetornoClave();
+			drc.setTicket(ticket.getTicket());
+			drc.setUrlCallbackLogin(ticket.getUrlCallback());
+			drc.setIdioma(ticket.getIdioma());
+			return new ModelAndView("retornoClave", "datos", drc);
+		}
 	}
 
 }

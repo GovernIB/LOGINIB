@@ -214,6 +214,180 @@ div[aria-hidden="false"] { visibility: visible; opacity: 1; }
 .imc-txtcc{font-size: 0.8em;padding: 2em; text-align: center;}
 .imc-txtcc a span {padding: 0 0.3em 0 0.3em;}
 
+
+.lib-cabecera h1{
+    z-index: 0;
+}
+
+
+
+.lib-desglose {
+	position: relative;
+	width: 66% !important;
+	margin: auto;
+	margin-top: 3em;
+    margin-bottom: 3em;
+	max-width: 40em;
+}
+
+.lib-desglose-list {
+	padding: 1em 0.6em;
+	border-color: #cecccc;
+	border-style: solid;
+	width: 66% !important;
+	display:flex;
+    flex-direction: column;
+	justify-content:center;
+    align-items: center;
+    background-color: #fff;
+    margin:auto;
+}
+
+
+.lib-desglose .lib-desglose-list div:hover {
+	box-shadow:none;
+}
+
+
+
+.lib-desglose .lib-desglose-form {
+	font-size:.9em;
+    min-height: 20em;
+    align-content: center;
+    width: 66% !important;
+}
+
+.lib-desglose .lib-desglose-info {
+    align-items: center;
+    width:90% !important;
+    margin-top:1em;
+    margin-bottom:1em;
+}
+
+
+.lib-desglose-info p{
+    font-size: .9em;
+    text-align: justify;
+}
+
+.lib-desglose .lib-desglose-val {
+	align-items: center;
+    width:90% !important;
+    margin-bottom:1em;
+	border: 1.5px solid red;
+}
+
+.lib-desglose-val #errores {
+	font-weight: bold;
+    text-align: center;
+    margin-bottom: .2em;
+}
+
+.lib-desglose-val li, span, p {
+	font-size: .9em;
+    margin-bottom: .1em;
+    padding: 0 .2em;
+}
+
+.lib-desglose-form input, label{
+    display: block;
+    width: 100%;
+    max-width: 100%;
+}
+
+.lib-desglose-form input{
+	margin-top: .4em;
+    margin-bottom: .6em;
+    border: 1px solid;
+}
+
+.lib-desglose-form #nombreCompleto, #nombreCompletoCert, #razonSocial{
+	background-color:#c5c5c5;
+    margin-bottom:1em;
+}
+
+.lib-desglose-form #enviar {
+	color: #3b8e5d;
+	border: 1px #3b8e5d solid;
+    margin-top: 1em;
+    background-color: #fff;
+    width: 100%;
+    text-align:center;
+    padding:0;
+}
+
+.lib-desglose-form #enviar:hover {
+	background-color: #3b8e5d;
+	color: #fff;
+}
+
+.lib-desglose .lib-desglose-copiar {
+	justify-content:center;
+	height: 7em;
+	text-align: center;
+    width: 80% !important;
+    font-size: .8em;
+}
+
+.lib-desglose-copiar button{
+    margin-top: 1.5em;
+}
+
+.lib-desglose .lib-desglose-info-cert {
+    align-items: center;
+    height: .5em;
+    margin-top:1em;
+}
+
+.lib-desglose-list-cert{
+	width:100% !important;
+	padding: 1em 0.6em;
+	border-color: #cecccc;
+	border-style: solid;
+	display:flex;
+    flex-direction: column;
+	justify-content:center;
+    align-items: center;
+    background-color: #fff;
+}
+
+.lib-desglose .lib-desglose-info-cert {
+    align-items: center;
+    height: 2.5em;
+    margin-top:.5em;
+    text-align: center;
+}
+
+.lib-desglose .lib-desglose-list-cert div:hover {
+	box-shadow:none;
+}
+
+.lib-desglose-cert{
+	width: 80% !important;
+	display:grid;
+	grid-template-columns:1fr 1fr;
+
+	/*! min-height: none; */
+	font-size: .9em;
+	gap: 0 .8em;
+}
+.lib-desglose-cert div{
+	height: 3em;
+    /*! text-align:center; */
+    display: grid;
+    grid-template-columns: 5em 1fr;
+    gap: .5em;
+}
+
+.lib-desglose-cert input{
+	background-color: #c5c5c5;
+	text-align: center;
+}
+.lib-desglose-cert .lib-desglose-cert-head{
+	font-weight: bold;
+}
+
+
 /* media */
 
 @media only screen and (max-width : 1024px) {
@@ -239,7 +413,11 @@ div[aria-hidden="false"] { visibility: visible; opacity: 1; }
 	.imc--missatge .imc--contingut { position: fixed; z-index: 12; top: 50%; left: 50%; width: 80%; text-align: center; padding: 6em 1em 1em 1em; background-color: #fff; transform: translate(-50%, -50%); transition: border-color .2s ease-out; }
 
 	.imc--missatge .imc--contingut::before { content: ""; position: absolute; top: 1.5em; left: calc(50% - 1.5em); width: 3em; height: 3em; background: transparent url() no-repeat center center / auto 100%; }
-
+    .lib-desglose .lib-desglose-copiar {height: 10em;}
+    .lib-desglose .lib-desglose-copiar {height: 10em;}
+    .lib-desglose-list{width:100% !important;}
+    .lib-desglose-cert{grid-template-columns:1fr}
+    .lib-desglose-form input{font-size: .8em;}
 
 }
 
@@ -249,9 +427,12 @@ div[aria-hidden="false"] { visibility: visible; opacity: 1; }
 	.imc-contingut { width: 100%; font-size: .9em; }
 
 	.imc-contingut ul { gap: 1em 1em; }
-
+	.imc--c .lib-desglose-list .lib-desglose-form { width: 80% !important;}
+    .lib-desglose-list-cert{width: 100% !important;}
+    .lib-desglose .lib-desglose-copiar {height: 12em;}
+    .lib-desglose-cert{grid-template-columns:1fr; text-align:center;}
+    .lib-desglose-cert div{grid-template-columns:1fr; height: 3em; gap: 0;}
+    .lib-desglose-list{width:100% !important;}
+    .lib-cabecera-child span {font-size: .8em;}
+    .lib-desglose-form input, button{font-size: .8em;}
 }
-
-
-
-

@@ -7,11 +7,15 @@ import java.util.Map;
 import es.caib.loginib.core.api.model.login.DatosAutenticacion;
 import es.caib.loginib.core.api.model.login.DatosPersona;
 import es.caib.loginib.core.api.model.login.DatosSesion;
+import es.caib.loginib.core.api.model.login.DesgloseApellidos;
 import es.caib.loginib.core.api.model.login.EvidenciasAutenticacion;
+import es.caib.loginib.core.api.model.login.PersonalizacionEntidad;
 import es.caib.loginib.core.api.model.login.PeticionClave;
 import es.caib.loginib.core.api.model.login.PeticionClaveLogout;
 import es.caib.loginib.core.api.model.login.RespuestaClaveLogout;
+import es.caib.loginib.core.api.model.login.SesionLogin;
 import es.caib.loginib.core.api.model.login.TicketClave;
+import es.caib.loginib.core.api.model.login.TicketDesglose;
 import es.caib.loginib.core.api.model.login.ValidacionUsuarioPassword;
 import es.caib.loginib.core.api.model.login.types.TypeIdp;
 
@@ -199,4 +203,17 @@ public interface LoginService {
 	 */
 	Map<String, String> obtenerMapeoErroresValidacion(String key);
 
+	DatosAutenticacion obtenerDatosAutenticacionAll(String ticket);
+
+	SesionLogin loginByTicket(String ticket, boolean activa);
+
+	void mergeDesglose(SesionLogin sl);
+
+	/** Crea session para test. Se pasa la url y si se desea forzar el desglose **/
+	String iniciarSesionTest(String iIdioma, String url, boolean forzarDesglose);
+
+	PersonalizacionEntidad obtenerDatosPersonalizacionEntidad(String idSesion);
+
+	/** Procesa la respuesta del desglose **/
+	TicketDesglose procesarRespuestaDesglose(DesgloseApellidos desglose);
 }

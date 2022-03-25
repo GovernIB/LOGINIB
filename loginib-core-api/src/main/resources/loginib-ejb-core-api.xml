@@ -21,5 +21,9 @@
 			jndi-name="java:app/loginib-core/LoginServiceBean"
 			business-interface="es.caib.loginib.core.api.service.LoginService"/>
 
+	<jee:local-slsb
+			id="desgloseService"
+			jndi-name="java:app/loginib-core/DesgloseApellidosServiceBean"
+			business-interface="es.caib.loginib.core.api.service.DesgloseApellidosService"/>
 
 </beans>

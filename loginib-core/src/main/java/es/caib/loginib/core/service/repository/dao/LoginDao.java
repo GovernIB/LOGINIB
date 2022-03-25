@@ -6,10 +6,14 @@ import java.util.Map;
 import es.caib.loginib.core.api.model.login.DatosAutenticacion;
 import es.caib.loginib.core.api.model.login.DatosLogoutSesion;
 import es.caib.loginib.core.api.model.login.DatosSesionData;
+import es.caib.loginib.core.api.model.login.DesgloseApellidos;
 import es.caib.loginib.core.api.model.login.EvidenciasAutenticacion;
+import es.caib.loginib.core.api.model.login.PersonalizacionEntidad;
+import es.caib.loginib.core.api.model.login.SesionLogin;
 import es.caib.loginib.core.api.model.login.TicketClave;
 import es.caib.loginib.core.api.model.login.types.TypeIdp;
 import es.caib.loginib.core.service.model.ConfiguracionProcesos;
+import es.caib.loginib.core.service.repository.model.JSesionLogin;
 
 /**
  * Interfaz de acceso a base de datos para gestión login.
@@ -37,7 +41,7 @@ public interface LoginDao {
 	 */
 	String crearSesionLogin(final String entidad, String urlCallback, final String pUrlCallbackError, String idioma,
 			final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto, final boolean forceAuth,
-			final String aplicacion, boolean auditar, final Map<String, String> paramsApp);
+			final String aplicacion, boolean auditar, final Map<String, String> paramsApp, boolean isTipoTest);
 
 	/**
 	 * Obtener datos sesion.
@@ -72,15 +76,16 @@ public interface LoginDao {
 	void establecerIdPeticionLogout(String idSesion, String samlId);
 
 	/**
-	 * Crea ticket.
+	 * Crea ticket
+	 * @param idSesion
+	 * @param datosAutenticacion
+	 * @param evidencias
+	 * @param omitirDesglose
 	 *
-	 * @param idSesion           id sesion
-	 * @param datosAutenticacion datos autenticacion
-	 * @param evidencias         Evidencias autenticación
-	 * @return Ticket
+	 * @return
 	 */
 	TicketClave generateTicketSesionLogin(String idSesion, DatosAutenticacion datosAutenticacion,
-			EvidenciasAutenticacion evidencias);
+			EvidenciasAutenticacion evidencias, final boolean omitirDesglose);
 
 	/**
 	 * Consume ticket (lo marca como usado).
@@ -123,5 +128,17 @@ public interface LoginDao {
 	 * @param ConfiguracionProcesos conf
 	 */
 	void purgaTicketSesionLogout(ConfiguracionProcesos conf);
+
+	DatosAutenticacion consumirTicketSesionLoginAll(String pTicket, long timeoutTicket);
+
+	SesionLogin getSesionLoginByTicketModel(String ticket, boolean activa);
+
+	void update(SesionLogin sl);
+
+	void updateSesionSamlResponse(String idSesion, String samlRequestB64);
+
+	DatosSesionData obtenerDatosSesionLogin(String idSesion, boolean activa);
+
+	void updateNombre(Long idSesion, boolean isRepresentante, String nombre, String apellido1, String apellido2);
 
 }

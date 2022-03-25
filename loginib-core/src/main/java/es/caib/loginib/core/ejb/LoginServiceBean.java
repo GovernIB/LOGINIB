@@ -1,6 +1,8 @@
 package es.caib.loginib.core.ejb;
 
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,11 +20,15 @@ import es.caib.loginib.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.loginib.core.api.model.login.DatosAutenticacion;
 import es.caib.loginib.core.api.model.login.DatosPersona;
 import es.caib.loginib.core.api.model.login.DatosSesion;
+import es.caib.loginib.core.api.model.login.DesgloseApellidos;
 import es.caib.loginib.core.api.model.login.EvidenciasAutenticacion;
+import es.caib.loginib.core.api.model.login.PersonalizacionEntidad;
 import es.caib.loginib.core.api.model.login.PeticionClave;
 import es.caib.loginib.core.api.model.login.PeticionClaveLogout;
 import es.caib.loginib.core.api.model.login.RespuestaClaveLogout;
+import es.caib.loginib.core.api.model.login.SesionLogin;
 import es.caib.loginib.core.api.model.login.TicketClave;
+import es.caib.loginib.core.api.model.login.TicketDesglose;
 import es.caib.loginib.core.api.model.login.ValidacionUsuarioPassword;
 import es.caib.loginib.core.api.model.login.types.TypeIdp;
 import es.caib.loginib.core.api.service.LoginService;
@@ -109,13 +115,26 @@ public class LoginServiceBean implements LoginService {
 		return loginService.obtenerMapeoErroresValidacion(key);
 	}
 
+	@Override
+	@PermitAll
+	public String iniciarSesionTest(String iIdioma,String url, boolean forzarDesglose) {
+		return loginService.iniciarSesionTest(iIdioma, url, forzarDesglose);
+	}
+
+	@Override
+	@PermitAll
+	public PersonalizacionEntidad obtenerDatosPersonalizacionEntidad(String idSesion) {
+		return loginService.obtenerDatosPersonalizacionEntidad(idSesion);
+	}
+
 	// --------- FUNCIONES API -----------------------------------
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.API })
 	public String iniciarSesionLogin(final String entidad, final String urlCallback, final String urlCallbackError,
 			final String idioma, final List<TypeIdp> idps, final Integer qaa, final boolean iniClaAuto,
-			final boolean forceAuth, final String aplicacion, final boolean auditar, final Map<String, String> paramsApp) {
+			final boolean forceAuth, final String aplicacion, final boolean auditar,
+			final Map<String, String> paramsApp) {
 		return loginService.iniciarSesionLogin(entidad, urlCallback, urlCallbackError, idioma, idps, qaa, iniClaAuto,
 				forceAuth, aplicacion, auditar, paramsApp);
 	}
@@ -150,5 +169,30 @@ public class LoginServiceBean implements LoginService {
 	public EvidenciasAutenticacion obtenerEvidenciasSesionLogin(final String idSesion) {
 		return loginService.obtenerEvidenciasSesionLogin(idSesion);
 	}
+
+	@Override
+	@PermitAll
+	public DatosAutenticacion obtenerDatosAutenticacionAll(final String ticket) {
+		return loginService.obtenerDatosAutenticacion(ticket);
+	}
+
+	@Override
+	@PermitAll
+	public SesionLogin loginByTicket(String ticket, boolean activa) {
+		return loginService.loginByTicket(ticket, activa);
+	}
+
+	@Override
+	@PermitAll
+	public void mergeDesglose(SesionLogin sl) {
+		loginService.mergeDesglose(sl);
+	}
+
+	@Override
+	@PermitAll
+	public TicketDesglose procesarRespuestaDesglose(DesgloseApellidos desglose) {
+		return loginService.procesarRespuestaDesglose(desglose);
+	}
+
 
 }

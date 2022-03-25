@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogDefinicionVersionDesgloses.titulo']}"/></title>
+</h:head>
+<h:body style="overflow:hidden;">
+  	<f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogDefinicionVersionDesgloses.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogDefinicionVersionDesgloses.nif}"/>
+		<f:viewAction action="#{dialogDefinicionVersionDesgloses.init}" />
+	</f:metadata>
+	<h:form id="dialogDefinicionVersionDesgloses" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+					<div class="ui-g ui-datatable padding-left-18 padding-right-18" style="width:100%">
+						<div class="ui-g-12 ui-md-6 ui-lg-3 w-100">
+							<p:outputLabel for="nif" value="#{msg['dialogDefinicionVersionDesgloses.nif']}" styleClass="padding-right-8 ui-g-3"/>
+							<p:inputText id="nif" value="#{dialogDefinicionVersionDesgloses.desglose.nif}"  styleClass="ui-g-8" onblur="fullName(this)"  required="#{!dialogDefinicionVersionDesgloses.isConsulta &amp;&amp; !dialogDefinicionVersionDesgloses.isEdicion}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta || dialogDefinicionVersionDesgloses.isEdicion}">
+								<f:validateLength maximum="10"/>
+							</p:inputText>
+						</div>
+					</div>
+					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18" style="width:100%">
+						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
+							<p:outputLabel for="nombre" value="#{msg['dialogDefinicionVersionDesgloses.nombre']}" styleClass="padding-right-8 ui-g-3"/>
+							<p:inputText id="nombre" value="#{dialogDefinicionVersionDesgloses.desglose.nombre}"  styleClass="ui-g-8"  onblur="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta}">
+								<f:validateLength maximum="100"/>
+							</p:inputText>
+						</div>
+					</div>
+					<div class="ui-g ui-datatable padding-left-18 padding-right-18" style="width:100%">
+						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
+							<p:outputLabel for="apellido1" value="#{msg['dialogDefinicionVersionDesgloses.apellido1']}" styleClass="padding-right-8 ui-g-3"/>
+							<p:inputText id="apellido1" value="#{dialogDefinicionVersionDesgloses.desglose.apellido1}"  styleClass="ui-g-8"  onblur="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta}">
+								<f:validateLength maximum="100"/>
+							</p:inputText>
+						</div>
+					</div>
+					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18" style="width:100%">
+						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
+							<p:outputLabel for="apellido2" value="#{msg['dialogDefinicionVersionDesgloses.apellido2']}" styleClass="padding-right-8 ui-g-3"/>
+							<p:inputText id="apellido2" value="#{dialogDefinicionVersionDesgloses.desglose.apellido2}"  styleClass="ui-g-8"  onblur="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta}">
+								<f:validateLength maximum="100"/>
+							</p:inputText>
+						</div>
+					</div>
+					<div class="ui-g ui-datatable padding-left-18 padding-right-18" style="width:100%">
+						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
+							<p:outputLabel for="apellidoComp" value="#{msg['dialogDefinicionVersionDesgloses.apellidos']}" styleClass="padding-right-8 ui-g-3" />
+							<p:inputText id="apellidoComp" size="20" disabled="true" styleClass="ui-g-8"  value="#{dialogDefinicionVersionDesgloses.desglose.apellidoComp}"/>
+						</div>
+					</div>
+					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18" style="width:100%">
+						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
+							<p:outputLabel for="nombreComp" value="#{msg['dialogDefinicionVersionDesgloses.nombreCto']}" styleClass="padding-right-8 ui-g-3" />
+							<p:inputText id="nombreComp" size="30" disabled="true"  styleClass="ui-g-8"  value="#{dialogDefinicionVersionDesgloses.desglose.nombreCompleto}"/>
+						</div>
+					</div>
+					<div class="ui-g ui-datatable padding-left-18 padding-right-18" style="width:100%">
+						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
+							<p:outputLabel for="fechaCreacion" value="#{msg['dialogDefinicionVersionDesgloses.fechaCreacion']}" styleClass="padding-right-8 ui-g-3" />
+							<p:inputText id="fechaCreacion" size="20" disabled="true" styleClass="ui-g-8"  value="#{dialogDefinicionVersionDesgloses.desglose.fechaCreacion}" />
+						</div>
+					</div>
+				</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right"  >
+						<p:commandButton value="#{msg['botones.guardar']}" actionListener="#{dialogDefinicionVersionDesgloses.aceptar()}" style="margin-right:5px"  process="@form" update="@form growlDialog"  styleClass="boton-azul" rendered="#{!dialogDefinicionVersionDesgloses.isConsulta}"/>
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogDefinicionVersionDesgloses.cerrar}" process="@this"/>
+						<p:spacer width="10px"></p:spacer>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+	<h:outputScript library="js" name="common.js" />
+</h:body>
+
+</f:view>
+</html>

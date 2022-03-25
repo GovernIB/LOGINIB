@@ -62,6 +62,8 @@ public final class DatosSesionData {
 	/** Params app **/
 	private Map<String, String> paramsApp;
 
+	/** Tipo Test **/
+	private boolean tipoTest;
 	/**
 	 * Gets the fecha.
 	 *
@@ -316,6 +318,20 @@ public final class DatosSesionData {
 
 	public void setParamsApp(final Map<String, String> paramsApp) {
 		this.paramsApp = paramsApp;
+	}
+
+	/**
+	 * @return the tipoTest
+	 */
+	public boolean isTipoTest() {
+		return tipoTest;
+	}
+
+	/**
+	 * @param tipoTest the tipoTest to set
+	 */
+	public void setTipoTest(boolean tipoTest) {
+		this.tipoTest = tipoTest;
 	}
 
 }

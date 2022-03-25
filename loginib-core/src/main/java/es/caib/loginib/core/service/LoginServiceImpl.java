@@ -49,6 +49,7 @@ import es.caib.loginib.core.api.model.login.DatosLogoutSesion;
 import es.caib.loginib.core.api.model.login.DatosPersona;
 import es.caib.loginib.core.api.model.login.DatosSesion;
 import es.caib.loginib.core.api.model.login.DatosSesionData;
+import es.caib.loginib.core.api.model.login.DesgloseApellidos;
 import es.caib.loginib.core.api.model.login.EvidenciasAutenticacion;
 import es.caib.loginib.core.api.model.login.EvidenciasLista;
 import es.caib.loginib.core.api.model.login.PersonalizacionEntidad;
@@ -56,7 +57,9 @@ import es.caib.loginib.core.api.model.login.PeticionClave;
 import es.caib.loginib.core.api.model.login.PeticionClaveLogout;
 import es.caib.loginib.core.api.model.login.PropiedadAutenticacion;
 import es.caib.loginib.core.api.model.login.RespuestaClaveLogout;
+import es.caib.loginib.core.api.model.login.SesionLogin;
 import es.caib.loginib.core.api.model.login.TicketClave;
+import es.caib.loginib.core.api.model.login.TicketDesglose;
 import es.caib.loginib.core.api.model.login.ValidacionUsuarioPassword;
 import es.caib.loginib.core.api.model.login.types.TypeIdp;
 import es.caib.loginib.core.api.model.login.types.TypePropiedad;
@@ -66,6 +69,7 @@ import es.caib.loginib.core.interceptor.NegocioInterceptor;
 import es.caib.loginib.core.service.model.ConfiguracionAuditoria;
 import es.caib.loginib.core.service.model.ConfiguracionKeycloak;
 import es.caib.loginib.core.service.model.ConfiguracionProcesos;
+import es.caib.loginib.core.service.repository.dao.DesgloseApellidosDao;
 import es.caib.loginib.core.service.repository.dao.LoginDao;
 import es.caib.loginib.core.service.util.AFirmaUtil;
 import es.caib.loginib.core.service.util.ConvertUtil;
@@ -111,6 +115,10 @@ public final class LoginServiceImpl implements LoginService {
 	@Autowired
 	private LoginDao loginDao;
 
+	/** Dao. */
+	@Autowired
+	DesgloseApellidosDao desgloseDao;
+
 	@Override
 	@NegocioInterceptor
 	public String iniciarSesionLogin(final String entidad, final String pUrlCallback, final String pUrlCallbackError,
@@ -146,7 +154,7 @@ public final class LoginServiceImpl implements LoginService {
 		}
 
 		final String idSesion = loginDao.crearSesionLogin(entidad, pUrlCallback, pUrlCallbackError, idioma, idps, qaa,
-				iniClaAuto, forceAuth, aplicacion, auditar, paramsApp);
+				iniClaAuto, forceAuth, aplicacion, auditar, paramsApp, false);
 		log.debug(" Creada sesion clave:  [idSesion = " + idSesion + "] [idps = " + idps + "] [urlCallback = "
 				+ pUrlCallback + "]");
 		return idSesion;
@@ -169,6 +177,8 @@ public final class LoginServiceImpl implements LoginService {
 		return recuperarDatosSesionLogin(idSesion);
 	}
 
+
+
 	@Override
 	@NegocioInterceptor
 	public PeticionClave generarPeticionLoginClave(final String idSesion) {
@@ -189,6 +199,10 @@ public final class LoginServiceImpl implements LoginService {
 			res.setSimulado(true);
 		} else {
 			res = generarPeticionClaveReal(datosSesion);
+		}
+
+		if (datosSesion.getSesion().isTipoTest()) {
+			loginDao.updateSesionSamlResponse(idSesion, res.getSamlRequestB64());
 		}
 		return res;
 	}
@@ -257,7 +271,8 @@ public final class LoginServiceImpl implements LoginService {
 
 		// Almacenar en tabla y generar ticket sesion (OTP)
 		log.debug(" Datos obtenidos clave [idSesion = " + pIdSesion + "]: " + datosAutenticacion.print());
-		final TicketClave respuesta = loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias);
+		final TicketClave respuesta = loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias, config.isOmitirDesglose());
+		respuesta.setPersonalizacion(datosSesion.getPersonalizacionEntidad());
 		log.debug(" Ticket generado [idSesion = " + pIdSesion + "]: " + respuesta.getTicket());
 
 		return respuesta;
@@ -293,7 +308,11 @@ public final class LoginServiceImpl implements LoginService {
 					evidenciasMetodo);
 		}
 
-		return loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias);
+		TicketClave ticket = loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias, config.isOmitirDesglose());
+		if (ticket.isTest()) {
+			ticket.setPersonalizacion(datosSesion.getPersonalizacionEntidad());
+		}
+		return ticket;
 	}
 
 	@Override
@@ -319,7 +338,7 @@ public final class LoginServiceImpl implements LoginService {
 			// TODO VER SI SE METE ALGO MAS
 			evidencias = generarEvidenciasAutenticacion(datosAutenticacion, headers, ipAddressFrom, evidenciasMetodo);
 		}
-		return loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias);
+		return loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias, config.isOmitirDesglose());
 	}
 
 	@Override
@@ -337,6 +356,15 @@ public final class LoginServiceImpl implements LoginService {
 	@Override
 	@NegocioInterceptor
 	public DatosAutenticacion obtenerDatosAutenticacion(final String pTicket) {
+		final ConfiguracionProcesos configuracionProcesos = config.getConfiguracionProcesos();
+		final DatosAutenticacion t = loginDao.consumirTicketSesionLoginAll(pTicket,
+				configuracionProcesos.getTimeoutTicketAutenticacion());
+		return t;
+	}
+
+	@Override
+	@NegocioInterceptor
+	public DatosAutenticacion obtenerDatosAutenticacionAll(final String pTicket) {
 		final ConfiguracionProcesos configuracionProcesos = config.getConfiguracionProcesos();
 		final DatosAutenticacion t = loginDao.consumirTicketSesionLogin(pTicket,
 				configuracionProcesos.getTimeoutTicketAutenticacion());
@@ -504,7 +532,7 @@ public final class LoginServiceImpl implements LoginService {
 		// Almacenar en tabla y generar ticket sesion (OTP)
 		log.debug(" Datos obtenidos [idSesion = " + pIdSesion + "]: " + datosAutenticacion.print());
 
-		final TicketClave respuesta = loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias);
+		final TicketClave respuesta = loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias, config.isOmitirDesglose());
 
 		log.debug(" Ticket generado [idSesion = " + pIdSesion + "]: " + respuesta.getTicket());
 
@@ -582,7 +610,7 @@ public final class LoginServiceImpl implements LoginService {
 
 			// Almacenar en tabla y generar ticket sesion (OTP)
 			log.debug(" Datos obtenidos clave [idSesion = " + idSesion + "]: " + datosAutenticacion.print());
-			final TicketClave ticket = loginDao.generateTicketSesionLogin(idSesion, datosAutenticacion, evidencias);
+			final TicketClave ticket = loginDao.generateTicketSesionLogin(idSesion, datosAutenticacion, evidencias, config.isOmitirDesglose());
 			log.debug(" Ticket generado [idSesion = " + idSesion + "]: " + ticket.getTicket());
 
 			res.setUsuarioValido(true);
@@ -736,7 +764,7 @@ public final class LoginServiceImpl implements LoginService {
 		final EidasAuthenticationRequestNoMetadata buildRequest = reqBuilder.build();
 		IRequestMessageNoMetadata message = null;
 		try {
-			message = engine.generateRequestMessage(buildRequest);
+			message = engine.generateRequestMessage(buildRequest, true);
 		} catch (final EIDASSAMLEngineException e) {
 			throw new GenerarPeticionClaveException(e);
 		}
@@ -818,6 +846,14 @@ public final class LoginServiceImpl implements LoginService {
 				.setPersonalizacionEntidad(getPersonalizacionEntidad(sesionData.getEntidad(), sesionData.getIdioma()));
 		datosSesion.setAccesosPermitidos(calcularAccesosPermitidos(sesionData.getIdps(), sesionData.getQaa()));
 		return datosSesion;
+	}
+
+
+
+	@Override
+	public PersonalizacionEntidad obtenerDatosPersonalizacionEntidad(String idSesion) {
+		final DatosSesionData sesionData = loginDao.obtenerDatosSesionLogin(idSesion, false);
+		return getPersonalizacionEntidad(sesionData.getEntidad(), sesionData.getIdioma());
 	}
 
 	/**
@@ -1258,5 +1294,105 @@ public final class LoginServiceImpl implements LoginService {
 		}
 		return keycloakConfig;
 	}
+
+	public SesionLogin loginByTicket(String ticket, boolean activa) {
+		SesionLogin sl = loginDao.getSesionLoginByTicketModel(ticket, activa);
+		return sl;
+	}
+
+	public void mergeDesglose(SesionLogin sl) {
+		loginDao.update(sl);
+	}
+
+	@Override
+	public String iniciarSesionTest(String iIdioma, String url, boolean forzarDesglose) {
+		final String entidad = "A04003003";
+		final String urlCallback = url ;
+		final String urlCallbackError = url;
+
+		final String idioma;
+		if (iIdioma == null || iIdioma.isEmpty()) {
+			idioma = "es";
+		} else {
+			idioma = iIdioma;
+		}
+		final List<TypeIdp> idps = new ArrayList<>();
+		idps.add(TypeIdp.CERTIFICADO);
+		idps.add(TypeIdp.CLAVE_PERMANENTE);
+		idps.add(TypeIdp.CLAVE_PIN);
+		idps.add(TypeIdp.CLIENTCERT);
+		final Integer qaa = 1;
+		final boolean iniClaAuto = false;
+		final boolean forceAuth = false;
+		final String aplicacion = "TESTAP";
+		final boolean auditar = false;
+		final Map<String, String> paramsApp = new HashMap<>();
+		if (forzarDesglose) {
+			paramsApp.put(DatosAutenticacion.PARAM_FORZAR_DESGLOSE, DatosAutenticacion.PARAM_FORZAR_DESGLOSE_VALOR);
+		}
+
+		final String idSesion = loginDao.crearSesionLogin(entidad, urlCallback , urlCallbackError, idioma, idps, qaa,
+				iniClaAuto, forceAuth, aplicacion, auditar, paramsApp, true);
+		log.debug(" Creada sesion clave:  [idSesion = " + idSesion + "] [idps = " + idps + "] [urlCallback = "
+				+ urlCallback + "]");
+		return idSesion;
+	}
+
+	@Override
+	public TicketDesglose procesarRespuestaDesglose(DesgloseApellidos desglose) {
+		final SesionLogin sesion =  loginDao.getSesionLoginByTicketModel(desglose.getTicket(), false);
+		final String nif;
+
+		//El nif es el propio o el del representante.
+		//IMPORTANTE: SE TIENE QUE COGER EL NIF DE LA SESION/TICKET, NO DE LO QUE NOS VENGA SINO EL USUARIO PUEDE HACER TRIQUIÑUELAS
+		boolean isRepresentante;
+		if (sesion.getRepresentanteNombre() != null && !sesion.getRepresentanteNombre().isEmpty()) {
+			nif = sesion.getRepresentanteNif();
+			isRepresentante = true;
+		} else {
+			nif = sesion.getNif();
+			isRepresentante = false;
+		}
+
+		DesgloseApellidos desgloseApellidos = desgloseDao.getByNif(nif);
+		if (desgloseApellidos == null) {
+			//Si no existe, crearlo
+			desgloseApellidos = new DesgloseApellidos();
+			desgloseApellidos.setNif(nif);
+			desgloseApellidos.setNombre(desglose.getNombre());
+			desgloseApellidos.setApellido1(desglose.getApellido1());
+			desgloseApellidos.setApellido2(desglose.getApellido2());
+			desgloseApellidos.setApellidoComp(desglose.getApellido1() + ' ' + desglose.getApellido2());
+			desgloseApellidos.setNombreCompleto(desglose.getNombre() + ' ' + desglose.getApellido1() + ' ' + desglose.getApellido2());
+			desgloseApellidos.setFechaCreacion(new Date());
+			desgloseDao.add(desgloseApellidos);
+
+		} else {
+			//Si ya existe, solo actualizar
+			desgloseApellidos.setNombre(desglose.getNombre());
+			desgloseApellidos.setApellido1(desglose.getApellido1());
+			desgloseApellidos.setApellido2(desglose.getApellido2());
+			desgloseApellidos.setApellidoComp(desglose.getApellido1() + ' ' + desglose.getApellido2());
+			desgloseApellidos.setNombreCompleto(desglose.getNombre() + ' ' + desglose.getApellido1() + ' ' + desglose.getApellido2());
+			desgloseApellidos.setFechaActualizacion(new Date());
+			desgloseDao.update(desgloseApellidos);
+		}
+
+		//IMPORTANTE, DEPENDIENDO DE SI ES REPRESENTANTE, SE ACTUALIZA UN NOMBRE U OTRO
+		loginDao.updateNombre(sesion.getId(), isRepresentante, desglose.getNombre() , desglose.getApellido1() , desglose.getApellido2());
+
+		TicketDesglose ticketDesglose = new TicketDesglose();
+		ticketDesglose.setIdioma(sesion.getIdioma());
+		ticketDesglose.setTicket(sesion.getTicket());
+		ticketDesglose.setUrlCallback(sesion.getUrlCallback());
+		ticketDesglose.setNif(nif);
+
+		if (ticketDesglose.isForzarDesglose()) {
+			PersonalizacionEntidad personalizacion= getPersonalizacionEntidad(sesion.getEntidad(), sesion.getIdioma());
+			ticketDesglose.setPersonalizacion(personalizacion);
+		}
+		return ticketDesglose;
+	}
+
 
 }

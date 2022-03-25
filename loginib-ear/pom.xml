@@ -3,7 +3,7 @@
   <parent>
     <groupId>es.caib.loginib</groupId>
     <artifactId>loginib</artifactId>
-    <version>2.3.2</version>
+    <version>2.4.0</version>
   </parent>
   <artifactId>loginib-ear</artifactId>
   <packaging>ear</packaging>
@@ -33,6 +33,12 @@
 			<version>${loginib.version}</version>
 			<type>war</type>
 		</dependency>
+		<dependency>
+			<groupId>es.caib.loginib</groupId>
+			<artifactId>loginib-backend</artifactId>
+			<version>${loginib.version}</version>
+			<type>war</type>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -54,6 +60,12 @@
 							<artifactId>loginib-frontend</artifactId>
 							<contextRoot>/loginibfront</contextRoot>
 							<bundleFileName>loginibfront.war</bundleFileName>
+						</webModule>
+						<webModule>
+							<groupId>es.caib.loginib</groupId>
+							<artifactId>loginib-backend</artifactId>
+							<contextRoot>/loginibback</contextRoot>
+							<bundleFileName>loginibback.war</bundleFileName>
 						</webModule>
 						<webModule>
 							<groupId>es.caib.loginib</groupId>

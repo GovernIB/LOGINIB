@@ -77,6 +77,10 @@ public final class RLoginParams {
 	 */
 	@ApiModelProperty(value = "Parametros extras de la peticion", required = false)
 	private RParamsApp paramsApp;
+	/** Parametro para forzar el desglose **/
+	public static String PARAM_FORZAR_DESGLOSE = "forzarDesglose";
+	/** Valor para el parametro de forzar el desglose **/
+	public static String PARAM_FORZAR_DESGLOSE_VALOR = "S";
 
 	/**
 	 * Método de acceso a urlCallbackLogin.

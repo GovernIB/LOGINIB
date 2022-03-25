@@ -33,6 +33,8 @@ public final class DatosAutenticacion {
 
 	/** Params app **/
 	private Map<String, String> paramsApp;
+	public static String PARAM_FORZAR_DESGLOSE = "forzarDesglose";
+	public static String PARAM_FORZAR_DESGLOSE_VALOR = "S";
 
 	/**
 	 * Constructor.

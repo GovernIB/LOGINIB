@@ -86,6 +86,17 @@ public final class ModuleConfig {
 		return propiedades.getProperty("clave.loginCallbackClave");
 	}
 
+	public boolean isOmitirDesglose() {
+		String omitir =propiedades.getProperty("desglose.omitirDesglose");
+		boolean retorno;
+		if (omitir == null || omitir.isEmpty()) {
+			retorno = false;
+		} else {
+			retorno = Boolean.parseBoolean(omitir);
+		}
+		return retorno;
+	}
+
 	/**
 	 * Método de acceso a logoutCallbackClave.
 	 *
@@ -388,7 +399,7 @@ public final class ModuleConfig {
 
 	/**
 	 * Obtiene propiedades que empiezan con un prefijo.
-	 * 
+	 *
 	 * @param prefix
 	 *                   Prefijo
 	 * @return propiedades

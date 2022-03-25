@@ -3,7 +3,7 @@
   <parent>
     <groupId>es.caib.loginib</groupId>
     <artifactId>loginib</artifactId>
-    <version>2.3.2</version>
+    <version>2.4.0</version>
   </parent>
   <artifactId>loginib-lib</artifactId>
   <packaging>pom</packaging>
@@ -94,6 +94,14 @@
 		    <artifactId>commons-lang3</artifactId>
 		    <version>${commons-lang3.version}</version>
 		</dependency>
+
+		<!-- paso a nuevo kit integracion inicio-->
+		<dependency>
+		    <groupId>commons-lang</groupId>
+		    <artifactId>commons-lang</artifactId>
+		    <version>${commons-lang.version}</version>
+		</dependency>
+		<!-- paso a nuevo kit integracion FIN-->
 
 
 		<!-- CXF -->

@@ -7,8 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import es.caib.loginib.core.api.model.login.SesionLogin;
 
 /**
  * Ticket sesion Clave para aplicacion externa.
@@ -154,6 +157,16 @@ public final class JSesionLogin {
 	/** Params. */
 	@Column(name = "LGI_PARAPP")
 	private String params;
+
+	/** Params. */
+	@Column(name = "LGI_ISTEST")
+	private Boolean tipoTest;
+
+	/** Params. */
+	@Lob
+	@Column(name = "LGI_SAMLRQ")
+	private String samlRequestB64;
+
 
 	/**
 	 * Gets the ticket.
@@ -721,4 +734,117 @@ public final class JSesionLogin {
 		this.params = params;
 	}
 
+	/**
+	 * @return the tipoTest
+	 */
+	public Boolean isTipoTest() {
+		return tipoTest;
+	}
+
+	/**
+	 * @param tipoTest the tipoTest to set
+	 */
+	public void setTipoTest(Boolean tipoTest) {
+		this.tipoTest = tipoTest;
+	}
+
+	/**
+	 * @return the samlRequestB64
+	 */
+	public String getSamlRequestB64() {
+		return samlRequestB64;
+	}
+
+	/**
+	 * @param samlRequestB64 the samlRequestB64 to set
+	 */
+	public void setSamlRequestB64(String samlRequestB64) {
+		this.samlRequestB64 = samlRequestB64;
+	}
+
+	/**
+	 * @return the tipoTest
+	 */
+	public Boolean getTipoTest() {
+		return tipoTest;
+	}
+
+	/** FromModel **/
+	public void fromModel(final SesionLogin sl) {
+		if (sl != null) {
+			this.setId(sl.getId());
+			this.setEntidad(sl.getEntidad());
+			this.setFechaInicioSesion(sl.getFechaInicioSesion());
+			this.setIdioma(sl.getIdioma());
+			this.setIdps(sl.getIdps());
+			this.setUrlCallback(sl.getUrlCallback());
+			this.setUrlCallbackError(sl.getUrlCallbackError());
+			this.setTicket(sl.getTicket());
+			this.setFechaTicket(sl.getFechaTicket());
+			this.setIdp(sl.getIdp());
+			this.setNif(sl.getNif());
+			this.setNombre(sl.getNombre());
+			this.setApellidos(sl.getApellidos());
+			this.setApellido1(sl.getApellido1());
+			this.setApellido2(sl.getApellido2());
+			this.setRepresentanteNif(sl.getRepresentanteNif());
+			this.setRepresentanteNombre(sl.getRepresentanteNombre());
+			this.setRepresentanteApellidos(sl.getRepresentanteApellidos());
+			this.setRepresentanteApellido1(sl.getRepresentanteApellido1());
+			this.setRepresentanteApellido2(sl.getRepresentanteApellido2());
+			this.setSesion(sl.getSesion());
+			this.setQaa(sl.getQaa());
+			this.setQaaAutenticacion(sl.getQaaAutenticacion());
+			this.setInicioClaveAutomatico(sl.isInicioClaveAutomatico());
+			this.setForceAuthentication(sl.isForceAuthentication());
+			this.setSamlIdPeticion(sl.getSamlIdPeticion());
+			this.setAplicacion(sl.getAplicacion());
+			this.setCheckPurga(sl.isCheckPurga());
+			this.setAuditar(sl.isAuditar());
+			this.setEvidenciasJson(sl.getEvidenciasJson());
+			this.setEvidenciasHash(sl.getEvidenciasHash());
+			this.setEvidenciasAlgoritmoHash(sl.getEvidenciasAlgoritmoHash());
+			this.setTipoTest(sl.isTipoTest());
+		}
+	}
+
+	/** toModel **/
+	public SesionLogin toModel() {
+		final SesionLogin sl = new SesionLogin();
+		sl.setId(this.getId());
+		sl.setEntidad(this.getEntidad());
+		sl.setFechaInicioSesion(this.getFechaInicioSesion());
+		sl.setIdioma(this.getIdioma());
+		sl.setIdps(this.getIdps());
+		sl.setUrlCallback(this.getUrlCallback());
+		sl.setUrlCallbackError(this.getUrlCallbackError());
+		sl.setTicket(this.getTicket());
+		sl.setFechaTicket(this.getFechaTicket());
+		sl.setIdp(this.getIdp());
+		sl.setNif(this.getNif());
+		sl.setNombre(this.getNombre());
+		sl.setApellidos(this.getApellidos());
+		sl.setApellido1(this.getApellido1());
+		sl.setApellido2(this.getApellido2());
+		sl.setRepresentanteNif(this.getRepresentanteNif());
+		sl.setRepresentanteNombre(this.getRepresentanteNombre());
+		sl.setRepresentanteApellidos(this.getRepresentanteApellidos());
+		sl.setRepresentanteApellido1(this.getRepresentanteApellido1());
+		sl.setRepresentanteApellido2(this.getRepresentanteApellido2());
+		sl.setSesion(this.getSesion());
+		sl.setQaa(this.getQaa());
+		sl.setQaaAutenticacion(this.getQaaAutenticacion());
+		sl.setInicioClaveAutomatico(this.isInicioClaveAutomatico());
+		sl.setForceAuthentication(this.isForceAuthentication());
+		sl.setSamlIdPeticion(this.getSamlIdPeticion());
+		sl.setAplicacion(this.getAplicacion());
+		sl.setCheckPurga(this.isCheckPurga());
+		sl.setAuditar(this.isAuditar());
+		sl.setEvidenciasJson(this.getEvidenciasJson());
+		sl.setEvidenciasHash(this.getEvidenciasHash());
+		sl.setEvidenciasAlgoritmoHash(this.getEvidenciasAlgoritmoHash());
+		sl.setTipoTest(this.isTipoTest());
+		sl.setSamlRequestB64(this.getSamlRequestB64());
+		return sl;
+	}
 }

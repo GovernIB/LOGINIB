@@ -1,16 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>es.caib.loginib</groupId>
-	<artifactId>loginib</artifactId>
-	<version>2.3.2</version>
-	<packaging>pom</packaging>
-	<name>Loginib</name>
-	<description>Loginib</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>es.caib.loginib</groupId>
+  <artifactId>loginib</artifactId>
+  <version>2.4.0</version>
+  <packaging>pom</packaging>
+  <name>Loginib</name>
+  <description>Loginib</description>
 
 	<properties>
-		<loginib.version>2.3.2</loginib.version>
+		<loginib.version>2.4.0</loginib.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<maven.compiler.version>3.7.0</maven.compiler.version>
@@ -49,27 +47,36 @@
 
 		<eidas.version>1.4.3-clave</eidas.version>
 
+		<!-- paso a nuevo kit integracion inicio-->
+		<clave-j20068.version>2.7</clave-j20068.version>
+		<openws.version>1.5.5</openws.version>
+		<xmltooling.version>1.4.5</xmltooling.version>
+		<opensaml.version>2.6.5-eidas_1</opensaml.version>
+		<xmlsec.version>2.0.5</xmlsec.version>
+		<!-- paso a nuevo kit integracion fin-->
+
 		<cxf.version>3.1.4</cxf.version>
 		<pluginsib-validatecertificate-afirmacxf-jboss7.version>2.0.2</pluginsib-validatecertificate-afirmacxf-jboss7.version>
 		<keycloak.version>6.0.1</keycloak.version>
 	</properties>
 
 	<repositories>
-		<repository>
-			<id>governIB</id>
-			<url>https://governIB.github.io/maven/maven/</url>
-		</repository>
-	</repositories>
+	    <repository>
+	      <id>governIB</id>
+	      <url>https://governIB.github.io/maven/maven/</url>
+   		</repository>
+   	</repositories>
 
-	<modules>
-		<module>loginib-lib</module>
-		<module>loginib-core-api</module>
-		<module>loginib-core</module>
-		<module>loginib-frontend</module>
-		<module>loginib-rest-api</module>
-		<module>loginib-rest-ws</module>
-		<module>loginib-ear</module>
-	</modules>
+  <modules>
+  	<module>loginib-lib</module>
+    <module>loginib-core-api</module>
+  	<module>loginib-core</module>
+  	<module>loginib-frontend</module>
+  	<module>loginib-backend</module>
+	<module>loginib-rest-api</module>
+  	<module>loginib-rest-ws</module>
+  	<module>loginib-ear</module>
+  </modules>
 
 
 	<build>
@@ -95,16 +102,16 @@
 				</executions>
 			</plugin>
 
-			<!-- Lo siguiente es para hacer un deploy del proyecto. -->
-			<plugin>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.8.1</version>
-				<configuration>
-					<altDeploymentRepository>
-						internal.repo::default::file://${project.build.directory}/mvn-repo
-					</altDeploymentRepository>
-				</configuration>
-			</plugin>
+			<!--  Lo siguiente es para hacer un deploy del proyecto.  -->
+            <plugin>
+		        <artifactId>maven-deploy-plugin</artifactId>
+		        <version>2.8.1</version>
+		        <configuration>
+		          <altDeploymentRepository>
+		            internal.repo::default::file://${project.build.directory}/mvn-repo
+		          </altDeploymentRepository>
+		        </configuration>
+		      </plugin>
 			<plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>site-maven-plugin</artifactId>
@@ -139,9 +146,9 @@
 			</plugin>
 		</plugins>
 
-	</build>
+  	</build>
 
-	<profiles>
+  	<profiles>
 		<!-- Profile para obtener commit GIT -->
 		<profile>
 			<id>git-commit</id>
@@ -290,10 +297,10 @@
 	</profiles>
 
 	<distributionManagement>
-		<repository>
-			<id>github-governib-maven-repos</id>
-			<name>GitHub GovernIB Maven Repository</name>
-			<url>https://governib.github.io/maven/maven/</url>
-		</repository>
+	         <repository>
+	           <id>github-governib-maven-repos</id>
+	           <name>GitHub GovernIB Maven Repository</name>
+	           <url>https://governib.github.io/maven/maven/</url>
+	         </repository>
 	</distributionManagement>
 </project>

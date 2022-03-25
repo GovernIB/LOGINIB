@@ -63,5 +63,8 @@
         <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
-
+	<jee:local-slsb
+			id="contextService"
+			jndi-name="java:app/loginib-core/ContextServiceBean"
+			business-interface="es.caib.loginib.core.api.service.ContextService"/>
 </beans>

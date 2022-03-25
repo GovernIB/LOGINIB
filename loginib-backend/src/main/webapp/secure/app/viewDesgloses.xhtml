@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+
+
+	<f:metadata>
+		<f:viewAction action="#{viewDesgloses.init}" />
+	</f:metadata>
+
+	<ui:define name="content">
+		<p:importEnum type="es.caib.loginib.core.api.model.login.types.TypeFiltroFecha" var="TypeFiltroFecha" />
+		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+
+		<h:form id="form" style="height: 100%">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+			<!-- Toolbar -->
+			<p:toolbar id="toolbar">
+		        <f:facet name="left">
+		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+		        	<h:panelGrid id="panelFiltro" columns="6" cellspacing="5">
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewDesgloses.filtro}"/>
+						<p:spacer width="20px"/>
+						<p:calendar placeholder="#{msg['viewDesgloses.fechaDesde']}" id="fechaDesde" value="#{viewDesgloses.filtroFechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+						<p:calendar placeholder="#{msg['viewDesgloses.fechaHasta']}" id="fechaHasta" value="#{viewDesgloses.filtroFechaHasta}" size="15" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+
+
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewDesgloses.filtrar()}" process="panelFiltro" update="panelBotones dataTable growl" />
+	           		</h:panelGrid>
+		        </f:facet>
+
+		        <f:facet name="right">
+		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
+    					<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewDesgloses.consultar}" process="@this" update="growl" />
+    					<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewDesgloses.nuevo}" process="@this">
+    						<p:ajax event="dialogReturn" listener="#{viewDesgloses.returnDialogo}" update="@form"  />
+    					</p:commandButton>
+    					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewDesgloses.editar}" process="@this" update="growl">
+    						<p:ajax event="dialogReturn" listener="#{viewDesgloses.returnDialogo}" update="@form"  />
+    					</p:commandButton>
+    					<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewDesgloses.eliminar}" process="@this" update="growl dataTable">
+    						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+    					</p:commandButton>
+
+						<!-- dialogo para confirmar -->
+					    <p:confirmDialog global="true" >
+							<p:outputPanel styleClass="confirmar_botonera">
+					        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+					        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+							</p:outputPanel>
+					    </p:confirmDialog>
+			        </h:panelGrid>
+		        </f:facet>
+		    </p:toolbar>
+
+
+
+
+			<!-- Data table -->
+			<p:dataTable  id="dataTable" var="td" value="#{viewDesgloses.listaDatos}"
+						 rows="10" emptyMessage="#{msg['info.emptyRows']}"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewDesgloses.desgloseSeleccionado}" rowKey="#{td.nif}">
+
+
+				<!-- Necesario para actualizar en controlador la fila seleccionada -->
+				<p:ajax event="rowSelect" global="false"/>
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
+
+				<!-- Columnas -->
+				<p:column headerText="#{msg['viewDesgloses.nif']}">
+			        <h:outputText value="#{td.nif}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewDesgloses.nombre']}">
+			        <h:outputText value="#{td.nombre}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewDesgloses.apellido1']}">
+			        <h:outputText value="#{td.apellido1}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewDesgloses.apellido2']}">
+			        <h:outputText value="#{td.apellido2}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewDesgloses.apellidos']}">
+			        <h:outputText value="#{td.apellidoComp}" />
+			    </p:column>
+			   	 <p:column headerText="#{msg['viewDesgloses.nomCto']}">
+			        <h:outputText value="#{td.nombreCompleto}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewDesgloses.fechaCreacion']}">
+			        <h:outputText value="#{td.fechaCreacion}" >
+ 			        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
+			        </h:outputText>
+			    </p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<h:outputScript >
+	      function triggerDblClick() {
+	        	$('#form\\:btnConsultar').click();
+	      }
+	    </h:outputScript>
+
+	</ui:define>
+
+</ui:composition>

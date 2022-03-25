@@ -23,7 +23,9 @@ public enum ErrorCodes {
 	/** No se envía certificado. */
 	NO_CERT("error.noCertificado"),
 	/** Tipo certificado no permitido. */
-	CERT_NO_PERMITIDO("error.certificadoNoPermitido");
+	CERT_NO_PERMITIDO("error.certificadoNoPermitido"),
+	/** Usuario/password no valido. */
+	DESGLOSE_APELLIDOS_INCORRECTO("error.errorApellidosDesglose");
 
 	/**
 	 * Valor como string.
