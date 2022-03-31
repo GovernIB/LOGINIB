@@ -9,14 +9,29 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title>Desglose Representante</title>
+    <c:if test="${empty personalizacion.title}">
+    	<title>GOIB</title>
+	</c:if>
+	<c:if test="${not empty personalizacion.title}">
+    	<title><c:out value = "${datos.personalizacion.title}" escapeXml="false"/></title>
+	</c:if>
 
 	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" type="image/x-icon" /><![endif]-->
 	<link rel="apple-touch-icon-precomposed" href="imgs/favicon/favicon-apple.png" />
 
-    <link rel="icon" href="imgs/favicon/favicon.png" />
+    <c:if test="${empty personalizacion.favicon}">
+    	<link rel="icon" href="imgs/favicon/favicon.png" />
+	</c:if>
+	<c:if test="${not empty personalizacion.favicon}">
+    	<link rel="icon" href="<c:out value = "${personalizacion.favicon}"/>"  escapeXml="false"/>
+	</c:if>
 
 	<link rel="stylesheet" media="screen" href="../estilos/imc-loginib.css" />
+
+	<style type="text/css">
+		/* Personalización */
+		<c:out value = "${personalizacion.css}"  escapeXml="false"/>
+	</style>
 
 	<script type="text/javascript">
 
@@ -138,7 +153,7 @@
 								  	<input id="razonSocial" type="text" name="razonSocial" value="<c:out value="${razonSocialDef}"/>" onfocus="cambiarBorde(this)" readonly>
 								  	<label for="nombre"><span><fmt:message key="datosCertificado.nombreRepresentante"/></span> *: </label>
 								  	<input id="nombre" type="text" name="nombre" value="<c:out value="${nombre}"/>" onfocus="cambiarBorde(this)">
-								  	<label for="apellido1"><span><fmt:message key="datosCertificado.apellido1Representante"/></span> : </label>
+								  	<label for="apellido1"><span><fmt:message key="datosCertificado.apellido1Representante"/></span>: </label>
 								  	<input id="apellido1" type="text" name="apellido1" value="<c:out value="${apellido1}"/>" onfocus="cambiarBorde(this)">
 								  	<label for="apellido2"><span><fmt:message key="datosCertificado.apellido2Representante"/></span>: </label>
 								  	<input id="apellido2" type="text" name="apellido2" value="<c:out value="${apellido2}"/>" onfocus="cambiarBorde(this)">
@@ -150,7 +165,7 @@
 								  	<input type="hidden" id="apellido1Def" value="<c:out value="${apellido1Def}"/>">
 								  	<input type="hidden" id="apellido2Def" value="<c:out value="${apellido2Def}"/>">
 								  	<input type="hidden" id="ticket" name="ticket" value="<c:out value="${ticket}"/>">
-								  	<button id="enviar" type ="submit"><fmt:message key="datosCertificado.btnContinuar"/></button>
+								  	<button id="enviar" type ="submit"><fmt:message key="datosCertificado.btnGuardarCambios"/></button>
 								  </form>
 							</div>
 						</li>
