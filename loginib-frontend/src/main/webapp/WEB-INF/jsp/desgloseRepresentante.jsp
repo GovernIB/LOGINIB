@@ -65,18 +65,22 @@
 			let particulas = nombreCert.split(' ');
 			/* Nombre completo introducido por el ciudadano */
 			let nombreCompleto = document.getElementById("nombreCompleto").value;
-			console.log("Nombre Completo: " + nombreCompleto);
+			//console.log("Nombre Completo: " + nombreCompleto);
 			/* Se divide el nombre completo introducido por partículas */
 			let particulasIntroducidas = nombreCompleto.split(' ');
-			console.log("Partículas: " + particulasIntroducidas);
+			//console.log("Partículas: " + particulasIntroducidas);
 
 			/* Validamos que los nombres contienen las mismas partículas */
 			let particulasOrdenadas = particulas.sort().join(' ');
 			console.log("PArticulas Ordenadas: " + particulasOrdenadas);
 			let particulasIntroducidasOrdenadas = particulasIntroducidas.sort().join(' ');
 			console.log("PArticulas Ordenadas: " + particulasIntroducidasOrdenadas);
+			let validacions = document.getElementById("validacions");
 			let list = document.getElementById("listVal");
 			list.innerHTML="";
+
+			/*Check para verificar que el ciudadano se fija*/
+			let check = document.getElementById('checkDesglo');
 
 
 			/* Validaciones */
@@ -99,9 +103,15 @@
 				list.innerHTML = list.innerHTML + "<li><p><fmt:message key="desgloseApellidos.msgValParticulas"/> " +particulas.join(', ') +  "</p></li>";
 			}
 
+			if(!check.checked) {
+				error = true;
+				list.innerHTML = list.innerHTML + "<li><p><fmt:message key="desgloseApellidos.msgCheck"/></p></li>";
+			}
+
 			if(error){
-				list.classList.add('lib-desglose-val');
-				list.innerHTML = "<li id='errores'><p><fmt:message key="desgloseApellidos.errores"/></p></li>" + list.innerHTML;
+				validacions.classList.add('lib-desglose-val');
+				validacions.classList.add('lib-desglose-err');
+				list.innerHTML = "<li><h2 id='errores'><fmt:message key="desgloseApellidos.errores"/></h2></li>" + list.innerHTML;
 			}
 			return !error;
 		}
@@ -139,25 +149,28 @@
 			<div class="imc--c">
 					<ul>
 						<li class="lib-desglose-list">
+							<h1 id="titulo"><fmt:message key="desgloseApellidos.titulo"/></h1>
 							<div class="lib-desglose-info">
 								<p>
 									<fmt:message key="desgloseApellidos.msgRepresentante"/>
 								</p>
 							</div>
-							<ul id="listVal" class=""></ul>
+							<div id="validacions">
+								<ul id="listVal" class=""></ul>
+							</div>
 							<div class="lib-desglose-form lib-desglose-repr">
 								<form method="post" id="desgloseNombre"  action="${callback}" onsubmit="return validate()">
-								  	<label for="nombreCompletoCert"><span><fmt:message key="datosCertificado.nombreCompletoCert"/></span> :</label>
+								  	<label for="nombreCompletoCert"><span><fmt:message key="datosCertificado.nombreCompletoCert"/></span>:</label>
 								  	<input id="nombreCompletoCert" type="text" name="nombreCert" value="<c:out value="${nombreDef}"/> <c:out value="${apellido1Def}"/> <c:out value="${apellido2Def}"/>" readonly>
-								  	<label for="razonSocial"><span><fmt:message key="datosCertificado.razonSocial"/></span> *: </label>
-								  	<input id="razonSocial" type="text" name="razonSocial" value="<c:out value="${razonSocialDef}"/>" onfocus="cambiarBorde(this)" readonly>
-								  	<label for="nombre"><span><fmt:message key="datosCertificado.nombreRepresentante"/></span> *: </label>
-								  	<input id="nombre" type="text" name="nombre" value="<c:out value="${nombre}"/>" onfocus="cambiarBorde(this)">
-								  	<label for="apellido1"><span><fmt:message key="datosCertificado.apellido1Representante"/></span>: </label>
-								  	<input id="apellido1" type="text" name="apellido1" value="<c:out value="${apellido1}"/>" onfocus="cambiarBorde(this)">
-								  	<label for="apellido2"><span><fmt:message key="datosCertificado.apellido2Representante"/></span>: </label>
-								  	<input id="apellido2" type="text" name="apellido2" value="<c:out value="${apellido2}"/>" onfocus="cambiarBorde(this)">
-								  	<label for="nombreCompleto"><span><fmt:message key="datosCertificado.nombreCompleto"/></span>: </label>
+								  	<label for="razonSocial"><span><fmt:message key="datosCertificado.razonSocial"/></span>: </label>
+								  	<input id="razonSocial" type="text" name="razonSocial" value="<c:out value="${razonSocialDef}"/>" onfocus="cambiarBorde(this)" readonly/>
+								  	<label for="nombre"><span><fmt:message key="datosCertificado.nombreRepresentante"/></span>*:</label>
+								  	<input id="nombre" type="text" name="nombre" value="<c:out value="${nombre}"/>" onfocus="cambiarBorde(this)" onblur="capitalize(this)" onchange="fullName()"/>
+								  	<label for="apellido1"><span><fmt:message key="datosCertificado.apellido1Representante"/></span>:</label>
+								  	<input id="apellido1" type="text" name="apellido1" value="<c:out value="${apellido1}"/>" onfocus="cambiarBorde(this)" onblur="capitalize(this)" onchange="fullName()"/>
+								  	<label for="apellido2"><span><fmt:message key="datosCertificado.apellido2Representante"/></span>:</label>
+								  	<input id="apellido2" type="text" name="apellido2" value="<c:out value="${apellido2}"/>" onfocus="cambiarBorde(this)" onblur="capitalize(this)" onchange="fullName()"/>
+								  	<label for="nombreCompleto"><span><fmt:message key="datosCertificado.nombreCompleto"/></span>:</label>
 								  	<input id="nombreCompleto" type="text" name="nombreCompleto" value="<c:out value="${nombre} ${apellido1} ${apellido2}"/>" readonly >
 								  	<input type="hidden" name="nif" value="<c:out value="${nif}"/>">
 								  	<input type="hidden" id="razonSocialDef" value="<c:out value="${razonSocialDef}"/>">
@@ -165,6 +178,13 @@
 								  	<input type="hidden" id="apellido1Def" value="<c:out value="${apellido1Def}"/>">
 								  	<input type="hidden" id="apellido2Def" value="<c:out value="${apellido2Def}"/>">
 								  	<input type="hidden" id="ticket" name="ticket" value="<c:out value="${ticket}"/>">
+								  	<div class="lib-desglose-check">
+								  		<div class="imc-check">
+								  			<input id="checkDesglo" type="checkbox" />
+								  			<span></span>
+								  		</div>
+								  		<span><fmt:message key="datosCertificado.textoCheck"/></span>
+								  	</div>
 								  	<button id="enviar" type ="submit"><fmt:message key="datosCertificado.btnGuardarCambios"/></button>
 								  </form>
 							</div>

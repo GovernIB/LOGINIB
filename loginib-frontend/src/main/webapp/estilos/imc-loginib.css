@@ -243,6 +243,10 @@ div[aria-hidden="false"] { visibility: visible; opacity: 1; }
     margin:auto;
 }
 
+.lib-desglose-list #titulo{
+	font-size: 1.1em;
+}
+
 
 .lib-desglose .lib-desglose-list div:hover {
 	box-shadow:none;
@@ -266,28 +270,42 @@ div[aria-hidden="false"] { visibility: visible; opacity: 1; }
 
 
 .lib-desglose-info p{
-    font-size: .9em;
+    font-size: 1.1em;
     text-align: justify;
+}
+
+.lib-desglose-err {
+	background: #fdd url(../imgs/ico_error.svg) no-repeat .75em .5em / auto 1.8em;
 }
 
 .lib-desglose .lib-desglose-val {
 	align-items: center;
     width:90% !important;
     margin-bottom:1em;
-	border: 1.5px solid red;
+	/* border: 1.5px solid red; */
+}
+
+.lib-desglose-val #listVal {
+	padding: 0.5em 0.3em;
 }
 
 .lib-desglose-val #errores {
 	font-weight: bold;
-    text-align: center;
+    /* text-align: center; */
     margin-bottom: .2em;
+    font-size: 1.1em;
 }
 
-.lib-desglose-val li, span, p {
-	font-size: .9em;
+.lib-desglose-val li{
     margin-bottom: .1em;
     padding: 0 .2em;
+    margin-left: 2.5em;
 }
+
+.lib-desglose-val li>p{
+	font-size:.8em;
+}
+
 
 .lib-desglose-form input, label{
     display: block;
@@ -301,24 +319,28 @@ div[aria-hidden="false"] { visibility: visible; opacity: 1; }
     border: 1px solid;
 }
 
+.lib-desglose-form input:hover{
+	background-color:#fff;
+}
+
 .lib-desglose-form #nombreCompleto, #nombreCompletoCert, #razonSocial{
 	background-color:#c5c5c5;
     margin-bottom:1em;
 }
 
 .lib-desglose-form #enviar {
-	color: #3b8e5d;
+	color: #fff;
 	border: 1px #3b8e5d solid;
     margin-top: 1em;
-    background-color: #fff;
+    background-color: #3b8e5d;
     width: 100%;
     text-align:center;
     padding:0;
+    font-size: 1em;
 }
 
 .lib-desglose-form #enviar:hover {
-	background-color: #3b8e5d;
-	color: #fff;
+	background-color: #000;
 }
 
 .lib-desglose .lib-desglose-copiar {
@@ -375,7 +397,7 @@ div[aria-hidden="false"] { visibility: visible; opacity: 1; }
 	height: 3em;
     /*! text-align:center; */
     display: grid;
-    grid-template-columns: 5em 1fr;
+    grid-template-columns: 6em 1fr;
     gap: .5em;
 }
 
@@ -387,12 +409,101 @@ div[aria-hidden="false"] { visibility: visible; opacity: 1; }
 	font-weight: bold;
 }
 
+.lib-desglose-check {
+	display: flex;
+    align-items: center;
+    gap: .4em;
+
+
+	/*! border-radius: .3em; */
+}
+
+
+/* input check */
+
+.imc-check {
+	display: inline-block;
+	position: relative;
+	width: 1.3em;
+	height: 1.3em;
+	border-radius: .3em;
+	vertical-align: middle;
+	margin-right: .4em;
+}
+
+.imc-check input[type=checkbox] {
+	 cursor: pointer;
+      height: 100%;
+ 		left: 0;
+  		margin: 0;
+ 		opacity: 0;
+ 		position: absolute;
+ 		top: 0;
+ 		width: 100%;
+ 		z-index: 1;
+}
+
+.imc-check span {
+	position: absolute;
+	width: 1.1em;
+	height: 1.1em;
+	background: #fff;
+	border: .2em solid #959595;
+	border-radius: .3em;
+	left: 0;
+	top: 0;
+	cursor: pointer;
+}
+
+.imc-check span:after {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	filter: alpha(opacity = 0);
+	opacity: 0;
+	content: '';
+	position: absolute;
+	width: .6em;
+	height: .3em;
+	background: transparent;
+	top: 3px;
+	left: 2px;
+	border: 3px solid #fff;
+	border-top: none;
+	border-right: none;
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+}
+
+.imc-check input[type=checkbox]:checked+span {
+	background-color: #265d3c;
+	border-color: #265d3c;
+}
+
+.imc-check input[type=checkbox]:focus+span {
+	background-color: #000 !important;
+	border-color: #000 !important;
+}
+
+.imc-check input[type=checkbox]:disabled+span {
+	background-color: #959595;
+	border-color: #959595;
+}
+
+.imc-check input[type=checkbox]:checked+span:after {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+	filter: alpha(opacity = 100);
+	opacity: 1;
+}
+
 
 /* media */
 
 @media only screen and (max-width : 1024px) {
 	.imc-cabecera { font-size:0.8em}
 	.imc-contingut { font-size: 1em; }
+	.lib-desglose {width: 80% !important; }
 }
 
 @media only screen and (max-width : 670px) {
@@ -427,6 +538,7 @@ div[aria-hidden="false"] { visibility: visible; opacity: 1; }
 	.imc-contingut { width: 100%; font-size: .9em; }
 
 	.imc-contingut ul { gap: 1em 1em; }
+	.lib-desglose {width: 90% !important; }
 	.imc--c .lib-desglose-list .lib-desglose-form { width: 80% !important;}
     .lib-desglose-list-cert{width: 100% !important;}
     .lib-desglose .lib-desglose-copiar {height: 12em;}
