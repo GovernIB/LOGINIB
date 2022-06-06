@@ -3,7 +3,9 @@
 <%@ page isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<html lang="es">
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<!doctype html>
+<html lang="<c:out value="${idioma}"/>">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>

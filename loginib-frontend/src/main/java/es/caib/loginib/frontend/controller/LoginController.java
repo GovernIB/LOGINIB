@@ -431,6 +431,7 @@ public final class LoginController {
 			map.addAttribute("nombreDef", ticket.getPersonaRepresentante().getNombre());
 			map.addAttribute("apellido1Def", ticket.getPersonaRepresentante().getApellido1());
 			map.addAttribute("apellido2Def", ticket.getPersonaRepresentante().getApellido2());
+			map.addAttribute("idioma", ticket.getIdioma());
 			map.addAttribute("callback", "desgloseNombre.html");
 
 		} else {
@@ -443,6 +444,7 @@ public final class LoginController {
 			map.addAttribute("nombreDef", ticket.getPersonaAutenticado().getNombre());
 			map.addAttribute("apellido1Def", ticket.getPersonaAutenticado().getApellido1());
 			map.addAttribute("apellido2Def", ticket.getPersonaAutenticado().getApellido2());
+			map.addAttribute("idioma", ticket.getIdioma());
 			map.addAttribute("callback", "desgloseNombre.html");
 		}
 		map.addAttribute("ticket",ticket.getTicket());
