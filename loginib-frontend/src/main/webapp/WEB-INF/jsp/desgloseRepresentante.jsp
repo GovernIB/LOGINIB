@@ -15,7 +15,7 @@
     	<title>GOIB</title>
 	</c:if>
 	<c:if test="${not empty personalizacion.title}">
-    	<title><c:out value = "${-personalizacion.title}" escapeXml="false"/></title>
+    	<title><c:out value = "${personalizacion.title}" escapeXml="false"/></title>
 	</c:if>
 
 	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" type="image/x-icon" /><![endif]-->
