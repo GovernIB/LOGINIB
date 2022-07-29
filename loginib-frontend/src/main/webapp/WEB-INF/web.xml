@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-  
-  <display-name>loginib-frontend</display-name>   
-       
+
+  <display-name>loginib-frontend</display-name>
+
    <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/loginib-ac-frontend-jboss.xml</param-value>
-  </context-param> 
-  
-    <!--  Charset enconding -->  	
+  </context-param>
+
+    <!--  Charset enconding -->
   <filter>
     <filter-name>CharacterEncoding</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -21,36 +21,43 @@
       <param-value>true</param-value>
     </init-param>
   </filter>
-  
-   <!-- Mappings -->  
+
+   <!-- Mappings -->
   <filter-mapping>
     <filter-name>CharacterEncoding</filter-name>
     <url-pattern>*</url-pattern>
   </filter-mapping>
-  
+
   <!--  Dispatcher servlet Spring -->
 	<servlet>
 		<servlet-name>loginib-frontend</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
-	</servlet>		
-	
+	</servlet>
+
 	<listener>
       <listener-class>
          org.springframework.web.context.ContextLoaderListener
       </listener-class>
-   </listener> 
-	
+   </listener>
+
+   <!-- JSesssionID in Cookie -->
+    <session-config>
+    	<tracking-mode>COOKIE</tracking-mode>
+	</session-config>
+
+
 	<!--  Servlet mappings -->
 	<servlet-mapping>
 		<servlet-name>loginib-frontend</servlet-name>
 		<url-pattern>*.html</url-pattern>
-	</servlet-mapping>	    
-     
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>    
-  </welcome-file-list>
-  
+	</servlet-mapping>
 
-  
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+
+
+
 </web-app>

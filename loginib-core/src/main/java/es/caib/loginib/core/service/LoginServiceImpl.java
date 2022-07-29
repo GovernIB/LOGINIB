@@ -177,8 +177,6 @@ public final class LoginServiceImpl implements LoginService {
 		return recuperarDatosSesionLogin(idSesion);
 	}
 
-
-
 	@Override
 	@NegocioInterceptor
 	public PeticionClave generarPeticionLoginClave(final String idSesion) {
@@ -271,7 +269,8 @@ public final class LoginServiceImpl implements LoginService {
 
 		// Almacenar en tabla y generar ticket sesion (OTP)
 		log.debug(" Datos obtenidos clave [idSesion = " + pIdSesion + "]: " + datosAutenticacion.print());
-		final TicketClave respuesta = loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias, config.isOmitirDesglose());
+		final TicketClave respuesta = loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias,
+				config.isOmitirDesglose());
 		respuesta.setPersonalizacion(datosSesion.getPersonalizacionEntidad());
 		log.debug(" Ticket generado [idSesion = " + pIdSesion + "]: " + respuesta.getTicket());
 
@@ -308,7 +307,8 @@ public final class LoginServiceImpl implements LoginService {
 					evidenciasMetodo);
 		}
 
-		TicketClave ticket = loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias, config.isOmitirDesglose());
+		TicketClave ticket = loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias,
+				config.isOmitirDesglose());
 		if (ticket.isTest()) {
 			ticket.setPersonalizacion(datosSesion.getPersonalizacionEntidad());
 		}
@@ -532,7 +532,8 @@ public final class LoginServiceImpl implements LoginService {
 		// Almacenar en tabla y generar ticket sesion (OTP)
 		log.debug(" Datos obtenidos [idSesion = " + pIdSesion + "]: " + datosAutenticacion.print());
 
-		final TicketClave respuesta = loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias, config.isOmitirDesglose());
+		final TicketClave respuesta = loginDao.generateTicketSesionLogin(pIdSesion, datosAutenticacion, evidencias,
+				config.isOmitirDesglose());
 
 		log.debug(" Ticket generado [idSesion = " + pIdSesion + "]: " + respuesta.getTicket());
 
@@ -610,7 +611,8 @@ public final class LoginServiceImpl implements LoginService {
 
 			// Almacenar en tabla y generar ticket sesion (OTP)
 			log.debug(" Datos obtenidos clave [idSesion = " + idSesion + "]: " + datosAutenticacion.print());
-			final TicketClave ticket = loginDao.generateTicketSesionLogin(idSesion, datosAutenticacion, evidencias, config.isOmitirDesglose());
+			final TicketClave ticket = loginDao.generateTicketSesionLogin(idSesion, datosAutenticacion, evidencias,
+					config.isOmitirDesglose());
 			log.debug(" Ticket generado [idSesion = " + idSesion + "]: " + ticket.getTicket());
 
 			res.setUsuarioValido(true);
@@ -816,7 +818,7 @@ public final class LoginServiceImpl implements LoginService {
 
 		// Acceso ClientCert
 		// - Solo si nivel qaa <= 2
-		if (ClaveLoginUtil.permiteAccesoClave(idps) && !config.isAccesoClientCertDeshabilitado()
+		if (ClaveLoginUtil.permiteAccesoClientCert(idps) && !config.isAccesoClientCertDeshabilitado()
 				&& qaa.intValue() <= 2) {
 			res.setAccesoClientCert(true);
 			res.setAccesoClientCertLink("link".equals(config.getClientCertVisualizacion()));
@@ -847,8 +849,6 @@ public final class LoginServiceImpl implements LoginService {
 		datosSesion.setAccesosPermitidos(calcularAccesosPermitidos(sesionData.getIdps(), sesionData.getQaa()));
 		return datosSesion;
 	}
-
-
 
 	@Override
 	public PersonalizacionEntidad obtenerDatosPersonalizacionEntidad(String idSesion) {
@@ -1305,9 +1305,9 @@ public final class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public String iniciarSesionTest(String iIdioma, String url, boolean forzarDesglose) {
-		final String entidad = "A04003003";
-		final String urlCallback = url ;
+	public String iniciarSesionTest(String iIdioma, String Ientidad, Integer Iqaa, String url, boolean forzarDesglose) {
+		final String entidad = Ientidad;
+		final String urlCallback = url;
 		final String urlCallbackError = url;
 
 		final String idioma;
@@ -1321,7 +1321,7 @@ public final class LoginServiceImpl implements LoginService {
 		idps.add(TypeIdp.CLAVE_PERMANENTE);
 		idps.add(TypeIdp.CLAVE_PIN);
 		idps.add(TypeIdp.CLIENTCERT);
-		final Integer qaa = 1;
+		final Integer qaa = Iqaa;
 		final boolean iniClaAuto = false;
 		final boolean forceAuth = false;
 		final String aplicacion = "TESTAP";
@@ -1331,7 +1331,7 @@ public final class LoginServiceImpl implements LoginService {
 			paramsApp.put(DatosAutenticacion.PARAM_FORZAR_DESGLOSE, DatosAutenticacion.PARAM_FORZAR_DESGLOSE_VALOR);
 		}
 
-		final String idSesion = loginDao.crearSesionLogin(entidad, urlCallback , urlCallbackError, idioma, idps, qaa,
+		final String idSesion = loginDao.crearSesionLogin(entidad, urlCallback, urlCallbackError, idioma, idps, qaa,
 				iniClaAuto, forceAuth, aplicacion, auditar, paramsApp, true);
 		log.debug(" Creada sesion clave:  [idSesion = " + idSesion + "] [idps = " + idps + "] [urlCallback = "
 				+ urlCallback + "]");
@@ -1340,11 +1340,12 @@ public final class LoginServiceImpl implements LoginService {
 
 	@Override
 	public TicketDesglose procesarRespuestaDesglose(DesgloseApellidos desglose) {
-		final SesionLogin sesion =  loginDao.getSesionLoginByTicketModel(desglose.getTicket(), false);
+		final SesionLogin sesion = loginDao.getSesionLoginByTicketModel(desglose.getTicket(), false);
 		final String nif;
 
-		//El nif es el propio o el del representante.
-		//IMPORTANTE: SE TIENE QUE COGER EL NIF DE LA SESION/TICKET, NO DE LO QUE NOS VENGA SINO EL USUARIO PUEDE HACER TRIQUIÑUELAS
+		// El nif es el propio o el del representante.
+		// IMPORTANTE: SE TIENE QUE COGER EL NIF DE LA SESION/TICKET, NO DE LO QUE NOS
+		// VENGA SINO EL USUARIO PUEDE HACER TRIQUIÑUELAS
 		boolean isRepresentante;
 		if (sesion.getRepresentanteNombre() != null && !sesion.getRepresentanteNombre().isEmpty()) {
 			nif = sesion.getRepresentanteNif();
@@ -1356,30 +1357,33 @@ public final class LoginServiceImpl implements LoginService {
 
 		DesgloseApellidos desgloseApellidos = desgloseDao.getByNif(nif);
 		if (desgloseApellidos == null) {
-			//Si no existe, crearlo
+			// Si no existe, crearlo
 			desgloseApellidos = new DesgloseApellidos();
 			desgloseApellidos.setNif(nif);
 			desgloseApellidos.setNombre(desglose.getNombre());
 			desgloseApellidos.setApellido1(desglose.getApellido1());
 			desgloseApellidos.setApellido2(desglose.getApellido2());
 			desgloseApellidos.setApellidoComp(desglose.getApellido1() + ' ' + desglose.getApellido2());
-			desgloseApellidos.setNombreCompleto(desglose.getNombre() + ' ' + desglose.getApellido1() + ' ' + desglose.getApellido2());
+			desgloseApellidos.setNombreCompleto(
+					desglose.getNombre() + ' ' + desglose.getApellido1() + ' ' + desglose.getApellido2());
 			desgloseApellidos.setFechaCreacion(new Date());
 			desgloseDao.add(desgloseApellidos);
 
 		} else {
-			//Si ya existe, solo actualizar
+			// Si ya existe, solo actualizar
 			desgloseApellidos.setNombre(desglose.getNombre());
 			desgloseApellidos.setApellido1(desglose.getApellido1());
 			desgloseApellidos.setApellido2(desglose.getApellido2());
 			desgloseApellidos.setApellidoComp(desglose.getApellido1() + ' ' + desglose.getApellido2());
-			desgloseApellidos.setNombreCompleto(desglose.getNombre() + ' ' + desglose.getApellido1() + ' ' + desglose.getApellido2());
+			desgloseApellidos.setNombreCompleto(
+					desglose.getNombre() + ' ' + desglose.getApellido1() + ' ' + desglose.getApellido2());
 			desgloseApellidos.setFechaActualizacion(new Date());
 			desgloseDao.update(desgloseApellidos);
 		}
 
-		//IMPORTANTE, DEPENDIENDO DE SI ES REPRESENTANTE, SE ACTUALIZA UN NOMBRE U OTRO
-		loginDao.updateNombre(sesion.getId(), isRepresentante, desglose.getNombre() , desglose.getApellido1() , desglose.getApellido2());
+		// IMPORTANTE, DEPENDIENDO DE SI ES REPRESENTANTE, SE ACTUALIZA UN NOMBRE U OTRO
+		loginDao.updateNombre(sesion.getId(), isRepresentante, desglose.getNombre(), desglose.getApellido1(),
+				desglose.getApellido2());
 
 		TicketDesglose ticketDesglose = new TicketDesglose();
 		ticketDesglose.setIdioma(sesion.getIdioma());
@@ -1388,11 +1392,10 @@ public final class LoginServiceImpl implements LoginService {
 		ticketDesglose.setNif(nif);
 
 		if (ticketDesglose.isForzarDesglose()) {
-			PersonalizacionEntidad personalizacion= getPersonalizacionEntidad(sesion.getEntidad(), sesion.getIdioma());
+			PersonalizacionEntidad personalizacion = getPersonalizacionEntidad(sesion.getEntidad(), sesion.getIdioma());
 			ticketDesglose.setPersonalizacion(personalizacion);
 		}
 		return ticketDesglose;
 	}
-
 
 }

@@ -72,13 +72,6 @@
 					</p>
 				</c:if>
 
-				<c:if test="${not empty datos.mensajeErrorDetalle}">
-					<br/>
-					<p>
-						<span><fmt:message key="errorDetalle"/><i>${datos.mensajeErrorDetalle}</i></span>
-					</p>
-				</c:if>
-
 
 				<c:if test="${not empty datos.urlCallback}">
 				    <br/>
@@ -87,6 +80,12 @@
 					</p>
 				</c:if>
 
+				<c:if test="${not empty datos.mensajeErrorDetalle}">
+					<br/>
+					<p>
+						<span style="font-size:0.5em"><fmt:message key="errorDetalle"/><i>${datos.mensajeErrorDetalle}</i></span>
+					</p>
+				</c:if>
 			</div>
 		</div>
 

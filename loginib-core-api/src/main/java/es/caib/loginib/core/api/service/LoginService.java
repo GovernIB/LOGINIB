@@ -210,7 +210,7 @@ public interface LoginService {
 	void mergeDesglose(SesionLogin sl);
 
 	/** Crea session para test. Se pasa la url y si se desea forzar el desglose **/
-	String iniciarSesionTest(String iIdioma, String url, boolean forzarDesglose);
+	String iniciarSesionTest(String iIdioma, String entidad, Integer qaa, String url, boolean forzarDesglose);
 
 	PersonalizacionEntidad obtenerDatosPersonalizacionEntidad(String idSesion);
 

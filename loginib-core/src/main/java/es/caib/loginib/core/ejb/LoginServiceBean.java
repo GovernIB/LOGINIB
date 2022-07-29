@@ -117,8 +117,8 @@ public class LoginServiceBean implements LoginService {
 
 	@Override
 	@PermitAll
-	public String iniciarSesionTest(String iIdioma,String url, boolean forzarDesglose) {
-		return loginService.iniciarSesionTest(iIdioma, url, forzarDesglose);
+	public String iniciarSesionTest(String iIdioma, String entidad, Integer qaa, String url, boolean forzarDesglose) {
+		return loginService.iniciarSesionTest(iIdioma, entidad, qaa, url, forzarDesglose);
 	}
 
 	@Override
@@ -193,6 +193,5 @@ public class LoginServiceBean implements LoginService {
 	public TicketDesglose procesarRespuestaDesglose(DesgloseApellidos desglose) {
 		return loginService.procesarRespuestaDesglose(desglose);
 	}
-
 
 }

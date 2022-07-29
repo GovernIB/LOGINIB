@@ -105,8 +105,13 @@
 				         		</div>
 
 				         		<div>
-				         			<span class="lib-desglose-cert-head"></b><fmt:message key="datosCertificado.qaa"/>:</span>
-									<span class="lib-desglose-cert-data"><c:out value="${qaa}"/></span>
+				         			<span class="lib-desglose-cert-head"></b><fmt:message key="datosCertificado.qaaPeticion"/>:</span>
+									<span class="lib-desglose-cert-data"><c:out value="${qaaPeticion}"/></span>
+				         		</div>
+
+				         		<div>
+				         			<span class="lib-desglose-cert-head"></b><fmt:message key="datosCertificado.qaaAutenticacion"/>:</span>
+									<span class="lib-desglose-cert-data"><c:out value="${qaaAutenticacion}"/></span>
 				         		</div>
 
 				         		<div>

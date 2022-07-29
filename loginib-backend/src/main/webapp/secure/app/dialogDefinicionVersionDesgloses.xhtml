@@ -39,24 +39,27 @@
 					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18" style="width:100%">
 						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
 							<p:outputLabel for="nombre" value="#{msg['dialogDefinicionVersionDesgloses.nombre']}" styleClass="padding-right-8 ui-g-3"/>
-							<p:inputText id="nombre" value="#{dialogDefinicionVersionDesgloses.desglose.nombre}"  styleClass="ui-g-8"  onblur="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta}">
+							<p:inputText id="nombre" value="#{dialogDefinicionVersionDesgloses.desglose.nombre}"  styleClass="ui-g-8"  onkeyup="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta}">
 								<f:validateLength maximum="100"/>
+								<p:ajax event="blur" listener="#{dialogDefinicionVersionDesgloses.nombreCompuesto}"/>
 							</p:inputText>
 						</div>
 					</div>
 					<div class="ui-g ui-datatable padding-left-18 padding-right-18" style="width:100%">
 						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
 							<p:outputLabel for="apellido1" value="#{msg['dialogDefinicionVersionDesgloses.apellido1']}" styleClass="padding-right-8 ui-g-3"/>
-							<p:inputText id="apellido1" value="#{dialogDefinicionVersionDesgloses.desglose.apellido1}"  styleClass="ui-g-8"  onblur="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta}">
+							<p:inputText id="apellido1" value="#{dialogDefinicionVersionDesgloses.desglose.apellido1}"  styleClass="ui-g-8"  onkeyup="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta}">
 								<f:validateLength maximum="100"/>
+								<p:ajax event="blur" listener="#{dialogDefinicionVersionDesgloses.nombreCompuesto}" />
 							</p:inputText>
 						</div>
 					</div>
 					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18" style="width:100%">
 						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
 							<p:outputLabel for="apellido2" value="#{msg['dialogDefinicionVersionDesgloses.apellido2']}" styleClass="padding-right-8 ui-g-3"/>
-							<p:inputText id="apellido2" value="#{dialogDefinicionVersionDesgloses.desglose.apellido2}"  styleClass="ui-g-8"  onblur="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta}">
+							<p:inputText id="apellido2" value="#{dialogDefinicionVersionDesgloses.desglose.apellido2}"  styleClass="ui-g-8"  onkeyup="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta}">
 								<f:validateLength maximum="100"/>
+								<p:ajax event="blur" listener="#{dialogDefinicionVersionDesgloses.nombreCompuesto}"/>
 							</p:inputText>
 						</div>
 					</div>

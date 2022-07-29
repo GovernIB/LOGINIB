@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>es.caib.loginib</groupId>
 		<artifactId>loginib</artifactId>
-		<version>2.4.0</version>
+		<version>2.4.1</version>
 	</parent>
 	<artifactId>loginib-rest-ws</artifactId>
 	<packaging>war</packaging>
