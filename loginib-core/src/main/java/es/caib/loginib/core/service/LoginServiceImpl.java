@@ -1306,13 +1306,13 @@ public final class LoginServiceImpl implements LoginService {
 
 	@Override
 	public String iniciarSesionTest(String iIdioma, String Ientidad, Integer Iqaa, String url, boolean forzarDesglose) {
-		final String entidad = Ientidad;
+		final String entidad = (Ientidad != null) ? Ientidad : "A04003003";
 		final String urlCallback = url;
 		final String urlCallbackError = url;
 
 		final String idioma;
 		if (iIdioma == null || iIdioma.isEmpty()) {
-			idioma = "es";
+			idioma = "ca";
 		} else {
 			idioma = iIdioma;
 		}
@@ -1321,7 +1321,7 @@ public final class LoginServiceImpl implements LoginService {
 		idps.add(TypeIdp.CLAVE_PERMANENTE);
 		idps.add(TypeIdp.CLAVE_PIN);
 		idps.add(TypeIdp.CLIENTCERT);
-		final Integer qaa = Iqaa;
+		final Integer qaa = (Iqaa != null) ? Iqaa : 1;
 		final boolean iniClaAuto = false;
 		final boolean forceAuth = false;
 		final String aplicacion = "TESTAP";

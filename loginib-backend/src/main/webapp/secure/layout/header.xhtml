@@ -16,14 +16,19 @@
   					   header-color wpx270,
   					   header-color">
 
-			<c:if test="#{sessionBean.hayLogo}">
-				<h:graphicImage value="#{sessionBean.logo}" height="65" styleClass="va-middle" />
-			</c:if>
+			<c:choose>
+			    <c:when test="#{sessionBean.hayLogo}">
+			       <h:graphicImage value="#{sessionBean.logo}" height="65" styleClass="va-middle" />
+			    </c:when>
+			    <c:otherwise>
+			        <p:outputPanel styleClass="h100">
+						<span class="center-vertical"></span>
+						<h:graphicImage value="/resources/images/null.png" height="45" styleClass="va-middle"/>
+					</p:outputPanel>
+			    </c:otherwise>
+			</c:choose>
 
-			<p:outputPanel styleClass="h100">
-				<span class="center-vertical"></span>
-				<h:graphicImage value="/resources/images/null.png" height="45" styleClass="va-middle"/>
-			</p:outputPanel>
+
 
 			<p:outputPanel styleClass="h100">
 				<span class="center-vertical"></span>

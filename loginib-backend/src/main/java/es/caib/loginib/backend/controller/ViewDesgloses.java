@@ -13,6 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.loginib.backend.model.DialogResult;
@@ -115,13 +116,19 @@ public class ViewDesgloses extends ViewControllerBase {
 		UtilJSF.openDialog(DialogDefinicionVersionDesgloses.class, modoAcceso, params, true, 550, 370);
 	}
 
+	public void avisoEliminar() {
+		if(!verificarFilaSeleccionada()) {
+			return;
+		}
+
+		final RequestContext contextReq = RequestContext.getCurrentInstance();
+		contextReq.execute("PF('dlgConfirmar').show();");
+	}
+
 	/**
 	 * Elimina dato seleccionado.
 	 */
 	public void eliminar() {
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada())
-			return;
 		// Eliminamos
 		if (desgloseService.removeDesglose(this.desgloseSeleccionado.getNif())) {
 			// Refrescamos datos

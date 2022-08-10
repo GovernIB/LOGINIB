@@ -32,7 +32,7 @@
 						<p:calendar placeholder="#{msg['viewDesgloses.fechaHasta']}" id="fechaHasta" value="#{viewDesgloses.filtroFechaHasta}" size="15" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 
 
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewDesgloses.filtrar()}" process="panelFiltro" update="panelBotones dataTable growl" />
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewDesgloses.filtrar()}" process="panelFiltro" update="dataTable growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
@@ -45,15 +45,14 @@
     					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewDesgloses.editar}" process="@this" update="growl">
     						<p:ajax event="dialogReturn" listener="#{viewDesgloses.returnDialogo}" update="@form"  />
     					</p:commandButton>
-    					<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewDesgloses.eliminar}" process="@this" update="growl dataTable">
-    						<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.borrado']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+    					<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewDesgloses.avisoEliminar}" process="@this" update="growl dataTable">
     					</p:commandButton>
 
 						<!-- dialogo para confirmar -->
-					    <p:confirmDialog global="true" >
+					    <p:confirmDialog header="#{msg['confirm.titulo']}" global="true" id="dlgConfirmar" widgetVar="dlgConfirmar" message="#{msg['confirm.borrado']}" >
 							<p:outputPanel styleClass="confirmar_botonera">
-					        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-					        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+					        	<p:commandButton value="#{msg['botones.si']}" actionListener="#{viewDesgloses.eliminar}" onclick="PF('dlgConfirmar').hide();" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@this" update="dataTable"/>
+					        	<p:commandButton value="#{msg['botones.no']}" styleClass="ui-confirmdialog-no" onclick="PF('dlgConfirmar').hide();" icon="fa fa-close" process="@this"/>
 							</p:outputPanel>
 					    </p:confirmDialog>
 			        </h:panelGrid>

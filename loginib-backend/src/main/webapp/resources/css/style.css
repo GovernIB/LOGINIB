@@ -99,6 +99,10 @@ body{
     display:none;
 }
 
+.ui-dialog-content > .ui-icon {
+    display: none;
+}
+
 /* pantalla de error*/
 .error_panel_container,.panel_container {
   position: fixed;

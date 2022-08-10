@@ -96,8 +96,8 @@ public final class LoginController {
 	 */
 	@RequestMapping("/test.html")
 	public ModelAndView test(@RequestParam(value = "idioma", required = false) final String idioma,
-			@RequestParam(value = "entidad", required = true) final String entidad,
-			@RequestParam(value = "qaa", required = false) final Integer qaa) {
+			@RequestParam(value = "entidad", required=false) final String entidad,
+			@RequestParam(value = "qaa", required=false) final Integer qaa) {
 
 		// Generamos el id sesion
 		String idSesion = loginService.iniciarSesionTest(idioma, entidad, qaa, "desgloseCertificado.html", false);
@@ -111,8 +111,8 @@ public final class LoginController {
 	 */
 	@RequestMapping("/forzarDesglose.html")
 	public ModelAndView forzarDesglose(@RequestParam(value = "idioma", required = false) final String idioma,
-			@RequestParam(value = "entidad", required = true) final String entidad,
-			@RequestParam(value = "qaa", required = false) final Integer qaa) {
+			@RequestParam(value = "entidad", required=false) final String entidad,
+			@RequestParam(value = "qaa", required=false) final Integer qaa) {
 
 		// Generamos el id sesion
 		String idSesion = loginService.iniciarSesionTest(idioma, entidad, qaa,
