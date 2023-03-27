@@ -57,6 +57,10 @@ public class ViewDesgloses extends ViewControllerBase {
 	 */
 	private List<DesgloseApellidos> listaDatos;
 
+	private String portapapeles;
+
+	private String errorCopiar;
+
 	/**
 	 * Inicializacion.
 	 */
@@ -202,6 +206,52 @@ public class ViewDesgloses extends ViewControllerBase {
 			filaSeleccionada = false;
 		}
 		return filaSeleccionada;
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.copiar"));
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**

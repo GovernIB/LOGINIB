@@ -31,6 +31,11 @@ body{
 	white-space: nowrap;
 }
 
+.ui-datatable table{
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
 #header .ui-menu-parent .ui-submenu-link .ui-icon {background-image: url(#{resource["primefaces-custom:images/ui-icons_ffffff_256x240.png"]});}
 
 /* quitamos los iconos de los submenus del menu de la cabecera*/
@@ -531,3 +536,11 @@ label.ui-state-disabled {
 
 .confirmar_botonera {float:right !important;}
 .confirmar_icono {height: auto !important;width: auto !important;}
+
+.resaltar{
+	border: #0a95ff 2px dotted !important;
+}
+
+.d-none{
+	display: none !important;
+}

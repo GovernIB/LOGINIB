@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.plugins.certificate.ICertificatePlugin;
@@ -288,7 +289,8 @@ public final class LoginServiceImpl implements LoginService {
 				|| !datosSesion.getAccesosPermitidos().isAccesoClaveSimulado()) {
 			throw new ValidateClaveException("No se permite acceso mediante Clave simulado", pIdSesion);
 		}
-
+		//Normalizamos NIF persona
+		persona.setNif(normalizarNif(persona.getNif()));
 		final DatosAutenticacion datosAutenticacion = new DatosAutenticacion(pIdSesion, new Date(), 2, pIdp, persona,
 				null, datosSesion.getSesion().getParamsApp());
 
@@ -967,7 +969,7 @@ public final class LoginServiceImpl implements LoginService {
 		// FamilyName, FirstName, PersonIdentifier, FirstSurname, PartialAfirma,
 		// RelayState]
 		final TypeIdp idp = ClaveLoginUtil.convertIssuerToIdp(attrMap.get("SelectedIdP"));
-		String nif = ClaveLoginUtil.extraerDatoClave(attrMap.get("PersonIdentifier"));
+		String nif = normalizarNif(ClaveLoginUtil.extraerDatoClave(attrMap.get("PersonIdentifier")));
 		String nombre = ClaveLoginUtil.extraerDatoClave(attrMap.get("FirstName"));
 		String apellidos = ClaveLoginUtil.extraerDatoClave(attrMap.get("FamilyName"));
 		String apellido1 = ClaveLoginUtil.extraerDatoClave(attrMap.get("FirstSurname"));
@@ -1018,7 +1020,7 @@ public final class LoginServiceImpl implements LoginService {
 				representante.setApellido2(apellido2);
 
 				// Datos persona juridica
-				nif = infoCertificado.get("NIF-CIF");
+				nif = normalizarNif(infoCertificado.get("NIF-CIF"));
 				nombre = infoCertificado.get("razonSocial");
 				apellidos = null;
 				apellido1 = null;
@@ -1072,7 +1074,7 @@ public final class LoginServiceImpl implements LoginService {
 		case 0:
 		case 5:
 			// Certificados persona fisica
-			nif = infoCert.getInformacioCertificat().getNifResponsable();
+			nif = normalizarNif(infoCert.getInformacioCertificat().getNifResponsable());
 			nombre = infoCert.getInformacioCertificat().getNomResponsable();
 			apellidos = infoCert.getInformacioCertificat().getLlinatgesResponsable();
 			apellido1 = infoCert.getInformacioCertificat().getPrimerLlinatgeResponsable();
@@ -1080,7 +1082,7 @@ public final class LoginServiceImpl implements LoginService {
 			break;
 		case 1:
 			// Certificados persona juridica (a extinguir)
-			nif = infoCert.getInformacioCertificat().getUnitatOrganitzativaNifCif();
+			nif = normalizarNif(infoCert.getInformacioCertificat().getUnitatOrganitzativaNifCif());
 			nombre = infoCert.getInformacioCertificat().getRaoSocial();
 			break;
 		case 11:
@@ -1088,13 +1090,13 @@ public final class LoginServiceImpl implements LoginService {
 			// Certificados representacion
 			// - Datos representante
 			representante = new DatosPersona();
-			representante.setNif(infoCert.getInformacioCertificat().getNifResponsable());
+			representante.setNif(normalizarNif(infoCert.getInformacioCertificat().getNifResponsable()));
 			representante.setNombre(infoCert.getInformacioCertificat().getNomResponsable());
 			representante.setApellidos(infoCert.getInformacioCertificat().getLlinatgesResponsable());
 			representante.setApellido1(infoCert.getInformacioCertificat().getPrimerLlinatgeResponsable());
 			representante.setApellido2(infoCert.getInformacioCertificat().getSegonLlinatgeResponsable());
 			// - Datos persona juridica
-			nif = infoCert.getInformacioCertificat().getUnitatOrganitzativaNifCif();
+			nif = normalizarNif(infoCert.getInformacioCertificat().getUnitatOrganitzativaNifCif());
 			nombre = infoCert.getInformacioCertificat().getRaoSocial();
 			break;
 
@@ -1125,7 +1127,7 @@ public final class LoginServiceImpl implements LoginService {
 		final String nombreCompleto = accessToken.getName();
 		final String apellidos = StringUtils.defaultString(accessToken.getFamilyName());
 		final String nombre = nombreCompleto.substring(0, nombreCompleto.length() - apellidos.length());
-		final String nif = (String) accessToken.getOtherClaims().get(keycloakConfig.getAtributoNif());
+		final String nif = normalizarNif((String) accessToken.getOtherClaims().get(keycloakConfig.getAtributoNif()));
 		final String apellido1 = (String) accessToken.getOtherClaims().get(keycloakConfig.getAtributoApellido1());
 		final String apellido2 = (String) accessToken.getOtherClaims().get(keycloakConfig.getAtributoApellido2());
 
@@ -1396,6 +1398,42 @@ public final class LoginServiceImpl implements LoginService {
 			ticketDesglose.setPersonalizacion(personalizacion);
 		}
 		return ticketDesglose;
+	}
+
+	/**
+	 * Normalizar nif/cif pasando a mayusculas, rellenando con 0 hasta tamaño 9 y
+	 * quitando espacios,/,\ y -.
+	 *
+	 * @param nif
+	 *                nif/cif
+	 * @return nif/cif normalizado
+	 */
+	private String normalizarNif(final String nif) {
+		String doc = null;
+		if (nif != null) {
+			// Quitamos espacios y otros caracteres
+			doc = nif.toUpperCase();
+			doc = doc.replaceAll("[\\/\\s\\-]", "");
+			// Rellenamos con 0
+			if (doc.length() > 1) {
+				final String primerCaracter = doc.substring(0, 1);
+				if (Pattern.matches("[^A-Z]", primerCaracter)) {
+					// Es nif
+					doc = StringUtils.leftPad(doc, 9, '0');
+				} else {
+					// es cif o nie
+					final String letraInicio = doc.substring(0, 1);
+					final String resto = doc.substring(1);
+
+					doc = letraInicio + StringUtils.leftPad(resto, 8, '0');
+
+				}
+			} else {
+				doc = nif;
+			}
+
+		}
+		return doc;
 	}
 
 }

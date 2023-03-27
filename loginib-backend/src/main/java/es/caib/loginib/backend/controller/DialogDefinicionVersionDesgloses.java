@@ -38,6 +38,10 @@ public class DialogDefinicionVersionDesgloses extends DialogControllerBase {
 	 */
 	private DesgloseApellidos desglose;
 
+	private String portapapeles;
+
+	private String errorCopiar;
+
 	/**
 	 * Inicialización.
 	 */
@@ -111,7 +115,7 @@ public class DialogDefinicionVersionDesgloses extends DialogControllerBase {
 	/**
 	 * Método que comprueba si está todo correcto. Es decir, las particulas de
 	 * nombre, apellido1 y apellido2 están en nombreCompleto.
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean isCorrecto() {
@@ -165,6 +169,52 @@ public class DialogDefinicionVersionDesgloses extends DialogControllerBase {
 
 		// Si no esta vacio, es que no se han usado todas las particulas
 		return nombreCompleto.isEmpty();
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.copiar"));
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
