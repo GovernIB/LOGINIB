@@ -314,7 +314,7 @@ public final class LoginDaoImpl implements LoginDao {
         respuesta.setYaDesglosado(yaDesglosado);
         respuesta.setUrlDesglose(urlDesglose);
         respuesta.setRepresentante(representante);
-        respuesta.setNif(nif);
+        respuesta.setNif(sesionLogin.getNif());
 
         if (!respuesta.isTest() && !respuesta.isYaDesglosado()) {
         	DatosPersona datos = new DatosPersona();

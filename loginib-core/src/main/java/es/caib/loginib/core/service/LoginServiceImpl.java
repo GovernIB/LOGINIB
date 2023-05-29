@@ -291,6 +291,13 @@ public final class LoginServiceImpl implements LoginService {
 		}
 		//Normalizamos NIF persona
 		persona.setNif(normalizarNif(persona.getNif()));
+
+		//Normalizamos textos de nombre y apellidos
+		persona.setNombre(normalizarTexto(persona.getNombre()));
+		persona.setApellidos(normalizarTexto(persona.getApellidos()));
+		persona.setApellido1(normalizarTexto(persona.getApellido1()));
+		persona.setApellido2(normalizarTexto(persona.getApellido2()));
+
 		final DatosAutenticacion datosAutenticacion = new DatosAutenticacion(pIdSesion, new Date(), 2, pIdp, persona,
 				null, datosSesion.getSesion().getParamsApp());
 
@@ -970,9 +977,9 @@ public final class LoginServiceImpl implements LoginService {
 		// RelayState]
 		final TypeIdp idp = ClaveLoginUtil.convertIssuerToIdp(attrMap.get("SelectedIdP"));
 		String nif = normalizarNif(ClaveLoginUtil.extraerDatoClave(attrMap.get("PersonIdentifier")));
-		String nombre = ClaveLoginUtil.extraerDatoClave(attrMap.get("FirstName"));
-		String apellidos = ClaveLoginUtil.extraerDatoClave(attrMap.get("FamilyName"));
-		String apellido1 = ClaveLoginUtil.extraerDatoClave(attrMap.get("FirstSurname"));
+		String nombre = this.normalizarTexto(ClaveLoginUtil.extraerDatoClave(attrMap.get("FirstName")));
+		String apellidos = this.normalizarTexto(ClaveLoginUtil.extraerDatoClave(attrMap.get("FamilyName")));
+		String apellido1 = this.normalizarTexto(ClaveLoginUtil.extraerDatoClave(attrMap.get("FirstSurname")));
 		String apellido2 = null;
 		final String afirmaResponse = attrMap.get("PartialAfirma");
 		final String relayState = ClaveLoginUtil.extraerDatoClave(attrMap.get("RelayState"));
@@ -1021,7 +1028,7 @@ public final class LoginServiceImpl implements LoginService {
 
 				// Datos persona juridica
 				nif = normalizarNif(infoCertificado.get("NIF-CIF"));
-				nombre = infoCertificado.get("razonSocial");
+				nombre = this.normalizarTexto(infoCertificado.get("razonSocial"));
 				apellidos = null;
 				apellido1 = null;
 				apellido2 = null;
@@ -1434,6 +1441,15 @@ public final class LoginServiceImpl implements LoginService {
 
 		}
 		return doc;
+	}
+
+
+	private String normalizarTexto(final String texto) {
+		String textoNormalizado = texto.replace("´", "'");
+		textoNormalizado = StringUtils.replace(texto, "`", "'");
+		textoNormalizado = StringUtils.replace(texto, "‘", "'");
+		textoNormalizado = StringUtils.replace(texto, "’", "'");
+		return textoNormalizado;
 	}
 
 }
