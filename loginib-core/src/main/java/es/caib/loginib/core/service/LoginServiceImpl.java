@@ -735,6 +735,12 @@ public final class LoginServiceImpl implements LoginService {
 				.xmlType("http://www.w3.org/2001/XMLSchema", "EIDASIdP", "cl")
 				.attributeValueMarshaller(new StringAttributeValueMarshaller()).build());
 
+		// De momento CL@VE MOVIL siempre deshabilitado
+		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://es.minhafp.clave/CLVMOVILIdP")
+				.friendlyName("CLVMOVILIdP").personType(PersonType.NATURAL_PERSON).required(false).uniqueIdentifier(true)
+				.xmlType("http://www.w3.org/2001/XMLSchema", "CLVMOVILIdP", "cl")
+				.attributeValueMarshaller(new StringAttributeValueMarshaller()).build());
+
 		final String relayState = SecureRandomXmlIdGenerator.INSTANCE.generateIdentifier(8);
 
 		reqAttrMapBuilder.putPrimaryValues(
