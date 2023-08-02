@@ -289,10 +289,10 @@ public final class LoginServiceImpl implements LoginService {
 				|| !datosSesion.getAccesosPermitidos().isAccesoClaveSimulado()) {
 			throw new ValidateClaveException("No se permite acceso mediante Clave simulado", pIdSesion);
 		}
-		//Normalizamos NIF persona
+		// Normalizamos NIF persona
 		persona.setNif(normalizarNif(persona.getNif()));
 
-		//Normalizamos textos de nombre y apellidos
+		// Normalizamos textos de nombre y apellidos
 		persona.setNombre(normalizarTexto(persona.getNombre()));
 		persona.setApellidos(normalizarTexto(persona.getApellidos()));
 		persona.setApellido1(normalizarTexto(persona.getApellido1()));
@@ -737,8 +737,8 @@ public final class LoginServiceImpl implements LoginService {
 
 		// De momento CL@VE MOVIL siempre deshabilitado
 		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://es.minhafp.clave/CLVMOVILIdP")
-				.friendlyName("CLVMOVILIdP").personType(PersonType.NATURAL_PERSON).required(false).uniqueIdentifier(true)
-				.xmlType("http://www.w3.org/2001/XMLSchema", "CLVMOVILIdP", "cl")
+				.friendlyName("CLVMOVILIdP").personType(PersonType.NATURAL_PERSON).required(false)
+				.uniqueIdentifier(true).xmlType("http://www.w3.org/2001/XMLSchema", "CLVMOVILIdP", "cl")
 				.attributeValueMarshaller(new StringAttributeValueMarshaller()).build());
 
 		final String relayState = SecureRandomXmlIdGenerator.INSTANCE.generateIdentifier(8);
@@ -1417,8 +1417,7 @@ public final class LoginServiceImpl implements LoginService {
 	 * Normalizar nif/cif pasando a mayusculas, rellenando con 0 hasta tamaño 9 y
 	 * quitando espacios,/,\ y -.
 	 *
-	 * @param nif
-	 *                nif/cif
+	 * @param nif nif/cif
 	 * @return nif/cif normalizado
 	 */
 	private String normalizarNif(final String nif) {
@@ -1449,12 +1448,14 @@ public final class LoginServiceImpl implements LoginService {
 		return doc;
 	}
 
-
 	private String normalizarTexto(final String texto) {
-		String textoNormalizado = texto.replace("´", "'");
-		textoNormalizado = StringUtils.replace(texto, "`", "'");
-		textoNormalizado = StringUtils.replace(texto, "‘", "'");
-		textoNormalizado = StringUtils.replace(texto, "’", "'");
+		String textoNormalizado = texto;
+		if (texto != null && !texto.isEmpty()) {
+			textoNormalizado = texto.replace("´", "'");
+			textoNormalizado = StringUtils.replace(texto, "`", "'");
+			textoNormalizado = StringUtils.replace(texto, "‘", "'");
+			textoNormalizado = StringUtils.replace(texto, "’", "'");
+		}
 		return textoNormalizado;
 	}
 
