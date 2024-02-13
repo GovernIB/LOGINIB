@@ -23,7 +23,7 @@ public final class RDatosAutenticacion {
 	 * Metodo autenticacion.
 	 *
 	 */
-	@ApiModelProperty(value = "Metodo autenticacion (Valores: ANONIMO;CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE;USUARIO_PASSWORD)", required = true)
+	@ApiModelProperty(value = "Metodo autenticacion (Valores: ANONIMO;CLAVE_CERTIFICADO;CLAVE_PIN;CLAVE_PERMANENTE;CLAVE_MOVIL;CLIENTCERT;USUARIO_PASSWORD)", required = true)
 	private String metodoAutenticacion;
 
 	/**

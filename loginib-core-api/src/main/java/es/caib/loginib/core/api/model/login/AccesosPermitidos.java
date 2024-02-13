@@ -12,7 +12,13 @@ public class AccesosPermitidos {
 	 * Acceso anónimo automático (si está habilitado acceso anónimo auto y no hay
 	 * otro método).
 	 */
-	private boolean accesoAnonimoAuto;
+	//private boolean accesoAnonimoAuto;
+
+	/**
+	 * Acceso autenticación única (si está habilitada autenticación única y sólo hay
+	 * un método de autenticación, incluido el anónimo).
+	 */
+	private boolean accesoAuto;
 
 	/**
 	 * Acceso Anonimo.
@@ -49,9 +55,9 @@ public class AccesosPermitidos {
 	 *
 	 * @return accesoAnonimoAuto
 	 */
-	public boolean isAccesoAnonimoAuto() {
-		return accesoAnonimoAuto;
-	}
+	//public boolean isAccesoAnonimoAuto() {
+	//	return accesoAnonimoAuto;
+	//}
 
 	/**
 	 * Método para establecer accesoAnonimoAuto.
@@ -59,9 +65,9 @@ public class AccesosPermitidos {
 	 * @param accesoAnonimoAuto
 	 *                              accesoAnonimoAuto a establecer
 	 */
-	public void setAccesoAnonimoAuto(final boolean accesoAnonimoAuto) {
-		this.accesoAnonimoAuto = accesoAnonimoAuto;
-	}
+	// public void setAccesoAnonimoAuto(final boolean accesoAnonimoAuto) {
+	//	this.accesoAnonimoAuto = accesoAnonimoAuto;
+	//}
 
 	/**
 	 * Método de acceso a accesoAnonimo.
@@ -160,7 +166,7 @@ public class AccesosPermitidos {
 
 	/**
 	 * Método de acceso a accesoClientCertLink.
-	 * 
+	 *
 	 * @return accesoClientCertLink
 	 */
 	public boolean isAccesoClientCertLink() {
@@ -169,12 +175,26 @@ public class AccesosPermitidos {
 
 	/**
 	 * Método para establecer accesoClientCertLink.
-	 * 
+	 *
 	 * @param accesoClientCertLink
 	 *                                 accesoClientCertLink a establecer
 	 */
 	public void setAccesoClientCertLink(final boolean accesoClientCertLink) {
 		this.accesoClientCertLink = accesoClientCertLink;
+	}
+
+	/**
+	 * @return the accesoAutenticacionUnica
+	 */
+	public boolean isAccesoAuto() {
+		return accesoAuto;
+	}
+
+	/**
+	 * @param accesoAuto the accesoAutenticacionUnica to set
+	 */
+	public void setAccesoAuto(boolean accesoAuto) {
+		this.accesoAuto = accesoAuto;
 	}
 
 }

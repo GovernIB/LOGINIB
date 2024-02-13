@@ -193,16 +193,20 @@ public final class LoginController {
 
 		ModelAndView modelAndView = null;
 
-		// Si esta activado anonimo auto redirigimos si solo existe idp anonimo
-		if (sesion.getAccesosPermitidos().isAccesoAnonimoAuto()) {
-			modelAndView = new ModelAndView("redirect:loginAnonimo.html?idSesion=" + idSesion);
-		} else {
-			// Si se indica por parametro inicio de Cl@ve automatico: se redirige a Cl@ve
-			if (sesion.getSesion().isIniClaAuto()) {
+		if (sesion.getSesion().isIniClaAuto()) {
+			modelAndView = new ModelAndView("redirect:redirigirLoginClave.html?idSesion=" + idSesion);
+		} else if (sesion.getAccesosPermitidos().isAccesoAuto()) {
+			if (sesion.getAccesosPermitidos().isAccesoAnonimo()) {
+				modelAndView = new ModelAndView("redirect:loginAnonimo.html?idSesion=" + idSesion);
+			} else if (sesion.getAccesosPermitidos().isAccesoClave()) {
 				modelAndView = new ModelAndView("redirect:redirigirLoginClave.html?idSesion=" + idSesion);
+			} else if (sesion.getAccesosPermitidos().isAccesoClientCert()) {
+				modelAndView = new ModelAndView("redirect:client-cert/login.html?idSesion=" + idSesion);
 			} else {
 				modelAndView = new ModelAndView("seleccionAutenticacion", "datos", datos);
 			}
+		} else {
+			modelAndView = new ModelAndView("seleccionAutenticacion", "datos", datos);
 		}
 		return modelAndView;
 	}

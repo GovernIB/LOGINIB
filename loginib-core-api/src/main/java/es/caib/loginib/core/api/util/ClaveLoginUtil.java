@@ -108,7 +108,8 @@ public final class ClaveLoginUtil {
 	public static boolean permiteAccesoClave(final List<TypeIdp> idps) {
 		boolean res = false;
 		for (final TypeIdp idp : idps) {
-			if (idp != TypeIdp.ANONIMO) {
+			if (idp.equals(TypeIdp.CERTIFICADO) || idp.equals(TypeIdp.CLAVE_MOVIL) ||
+							idp.equals(TypeIdp.CLAVE_PERMANENTE) || idp.equals(TypeIdp.CLAVE_PIN)) {
 				res = true;
 				break;
 			}
@@ -123,7 +124,7 @@ public final class ClaveLoginUtil {
 	 *                 idps
 	 * @return boolean
 	 */
-	public static boolean permiteSoloAnonimo(final List<TypeIdp> idps) {
+/*	public static boolean permiteSoloAnonimo(final List<TypeIdp> idps) {
 		boolean res = permiteAccesoAnonimo(idps);
 		if (res) {
 			for (final TypeIdp idp : idps) {
@@ -134,7 +135,7 @@ public final class ClaveLoginUtil {
 			}
 		}
 		return res;
-	}
+	}*/
 
 	/**
 	 * Traduce a valores clave.
@@ -175,6 +176,9 @@ public final class ClaveLoginUtil {
 		case CLAVE_PIN:
 			res = "AEAT";
 			break;
+		case CLAVE_MOVIL:
+			res = "MOVIL";
+			break;
 		default:
 			res = null;
 			break;
@@ -202,6 +206,9 @@ public final class ClaveLoginUtil {
 				break;
 			case "AEAT":
 				res = TypeIdp.CLAVE_PIN;
+				break;
+			case "MOVIL":
+				res = TypeIdp.CLAVE_MOVIL;
 				break;
 			default:
 				res = null;
@@ -368,6 +375,9 @@ public final class ClaveLoginUtil {
 			}
 			if (issuer.endsWith("[SEGSOC]")) {
 				idp = TypeIdp.CLAVE_PERMANENTE;
+			}
+			if (issuer.contains("[IDP_MOVIL]")) {
+				idp = TypeIdp.CLAVE_MOVIL;
 			}
 			// TODO STORK
 		}

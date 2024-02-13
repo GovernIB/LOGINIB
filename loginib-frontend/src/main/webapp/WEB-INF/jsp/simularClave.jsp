@@ -14,7 +14,7 @@
 </head>
 <body>
 	<form id="loginClave" action="loginClaveSimulado.html" method="post">
-		IDP (ANONIMO/CLAVE_CERTIFICADO/CLAVE_PIN/CLAVE_PERMANENTE): <input type="text" name="idp" value="CLAVE_CERTIFICADO"/><br/>
+		IDP (ANONIMO/CLAVE_CERTIFICADO/CLAVE_PIN/CLAVE_PERMANENTE/CLAVE_MOVIL): <input type="text" name="idp" value="CLAVE_CERTIFICADO"/><br/>
 		NIF: <input type="text" name="nif" value="00000000T"/><br/>
 		NOMBRE: <input type="text" name="nombre" value="PRUEBASPF"/><br/>
 		APELLIDOS: <input type="text" name="apellidos" value="APELLIDOUNOPF APELLIDODOSPF"/><br/>

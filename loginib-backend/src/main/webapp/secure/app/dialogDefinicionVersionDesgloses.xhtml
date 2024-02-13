@@ -136,7 +136,7 @@
 					<div class="ui-g ui-datatable padding-left-18 padding-right-18" style="width:100%">
 						<div class="ui-g-12 ui-md-6 ui-lg-3 w-100">
 							<p:outputLabel for="nif" value="#{msg['dialogDefinicionVersionDesgloses.nif']}" styleClass="padding-right-8 ui-g-3"/>
-							<p:inputText id="nif" value="#{dialogDefinicionVersionDesgloses.desglose.nif}"  styleClass="ui-g-8" onblur="fullName(this)"  required="#{!dialogDefinicionVersionDesgloses.isConsulta &amp;&amp; !dialogDefinicionVersionDesgloses.isEdicion}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta || dialogDefinicionVersionDesgloses.isEdicion}">
+							<p:inputText id="nif" value="#{dialogDefinicionVersionDesgloses.desglose.nif}"  styleClass="ui-g-8" onblur="fullName(this)"  required="#{!dialogDefinicionVersionDesgloses.isConsulta &amp;&amp; !dialogDefinicionVersionDesgloses.isEdicion}" readonly="#{dialogDefinicionVersionDesgloses.isConsulta || dialogDefinicionVersionDesgloses.isEdicion}">
 								<f:validateLength maximum="10"/>
 							</p:inputText>
 						</div>
@@ -144,7 +144,7 @@
 					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18" style="width:100%">
 						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
 							<p:outputLabel for="nombre" value="#{msg['dialogDefinicionVersionDesgloses.nombre']}" styleClass="padding-right-8 ui-g-3"/>
-							<p:inputText id="nombre" value="#{dialogDefinicionVersionDesgloses.desglose.nombre}"  styleClass="ui-g-8"  onkeyup="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta}">
+							<p:inputText id="nombre" value="#{dialogDefinicionVersionDesgloses.desglose.nombre}"  styleClass="ui-g-8"  onkeyup="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" readonly="#{dialogDefinicionVersionDesgloses.isConsulta}">
 								<f:validateLength maximum="100"/>
 								<p:ajax event="blur" listener="#{dialogDefinicionVersionDesgloses.nombreCompuesto}"/>
 							</p:inputText>
@@ -153,7 +153,7 @@
 					<div class="ui-g ui-datatable padding-left-18 padding-right-18" style="width:100%">
 						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
 							<p:outputLabel for="apellido1" value="#{msg['dialogDefinicionVersionDesgloses.apellido1']}" styleClass="padding-right-8 ui-g-3"/>
-							<p:inputText id="apellido1" value="#{dialogDefinicionVersionDesgloses.desglose.apellido1}"  styleClass="ui-g-8"  onkeyup="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta}">
+							<p:inputText id="apellido1" value="#{dialogDefinicionVersionDesgloses.desglose.apellido1}"  styleClass="ui-g-8"  onkeyup="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" readonly="#{dialogDefinicionVersionDesgloses.isConsulta}">
 								<f:validateLength maximum="100"/>
 								<p:ajax event="blur" listener="#{dialogDefinicionVersionDesgloses.nombreCompuesto}" />
 							</p:inputText>
@@ -162,7 +162,7 @@
 					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18" style="width:100%">
 						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
 							<p:outputLabel for="apellido2" value="#{msg['dialogDefinicionVersionDesgloses.apellido2']}" styleClass="padding-right-8 ui-g-3"/>
-							<p:inputText id="apellido2" value="#{dialogDefinicionVersionDesgloses.desglose.apellido2}"  styleClass="ui-g-8"  onkeyup="fullName(this)" size="20" required="#{!dialogDefinicionVersionDesgloses.isConsulta}" disabled="#{dialogDefinicionVersionDesgloses.isConsulta}">
+							<p:inputText id="apellido2" value="#{dialogDefinicionVersionDesgloses.desglose.apellido2}"  styleClass="ui-g-8"  onkeyup="fullName(this)" size="20" required="false" readonly="#{dialogDefinicionVersionDesgloses.isConsulta}">
 								<f:validateLength maximum="100"/>
 								<p:ajax event="blur" listener="#{dialogDefinicionVersionDesgloses.nombreCompuesto}"/>
 							</p:inputText>
@@ -171,22 +171,22 @@
 					<div class="ui-g ui-datatable padding-left-18 padding-right-18" style="width:100%">
 						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
 							<p:outputLabel for="apellidoComp" value="#{msg['dialogDefinicionVersionDesgloses.apellidos']}" styleClass="padding-right-8 ui-g-3" />
-							<p:inputText id="apellidoComp" size="20" disabled="true" styleClass="ui-g-8"  value="#{dialogDefinicionVersionDesgloses.desglose.apellidoComp}"/>
+							<p:inputText id="apellidoComp" size="20" readonly="true" styleClass="ui-g-8"  value="#{dialogDefinicionVersionDesgloses.desglose.apellidoComp}"/>
 						</div>
 					</div>
 					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18" style="width:100%">
 						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
 							<p:outputLabel for="nombreComp" value="#{msg['dialogDefinicionVersionDesgloses.nombreCto']}" styleClass="padding-right-8 ui-g-3" />
-							<p:inputText id="nombreComp" size="30" disabled="true"  styleClass="ui-g-8"  value="#{dialogDefinicionVersionDesgloses.desglose.nombreCompleto}"/>
+							<p:inputText id="nombreComp" size="30" readonly="true"  styleClass="ui-g-8"  value="#{dialogDefinicionVersionDesgloses.desglose.nombreCompleto}"/>
 						</div>
 					</div>
 					<div class="ui-g ui-datatable padding-left-18 padding-right-18" style="width:100%">
 						<div class="ui-g-12 ui-md-6 ui-lg-3" style="width:100%">
 							<p:outputLabel for="fechaCreacion" value="#{msg['dialogDefinicionVersionDesgloses.fechaCreacion']}" styleClass="padding-right-8 ui-g-3" />
-							<p:inputText id="fechaCreacion" size="20" disabled="true" styleClass="ui-g-8"  value="#{dialogDefinicionVersionDesgloses.desglose.fechaCreacion}" />
+							<p:inputText id="fechaCreacion" size="20" readonly="true" styleClass="ui-g-8"  value="#{dialogDefinicionVersionDesgloses.desglose.fechaCreacion}" />
 						</div>
 					</div>
-					<p:contextMenu >
+					<p:contextMenu id="mainCm" widgetVar="mainCm">
 		       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :dialogDefinicionVersionDesgloses:auxCopiar" update="growlDialog" />
 				    </p:contextMenu>
 				    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">

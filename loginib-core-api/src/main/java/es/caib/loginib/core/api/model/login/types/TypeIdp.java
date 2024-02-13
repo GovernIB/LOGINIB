@@ -24,6 +24,10 @@ public enum TypeIdp {
 	 */
 	CLAVE_PERMANENTE("CLAVE_PERMANENTE"),
 	/**
+	 * Clave movil.
+	 */
+	CLAVE_MOVIL("CLAVE_MOVIL"),
+	/**
 	 * ClientCert.
 	 */
 	CLIENTCERT("CLIENTCERT"),

@@ -728,17 +728,17 @@ public final class LoginServiceImpl implements LoginService {
 					.uniqueIdentifier(true).xmlType("http://www.w3.org/2001/XMLSchema", "AEATIdPType", "cl")
 					.attributeValueMarshaller(new StringAttributeValueMarshaller()).build());
 		}
+		if (!datosSesion.getSesion().getIdps().contains(TypeIdp.CLAVE_MOVIL)) {
+			reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://es.minhafp.clave/CLVMOVILIdP")
+					.friendlyName("CLVMOVILIdP").personType(PersonType.NATURAL_PERSON).required(false)
+					.uniqueIdentifier(true).xmlType("http://www.w3.org/2001/XMLSchema", "CLVMOVILIdP", "cl")
+					.attributeValueMarshaller(new StringAttributeValueMarshaller()).build());
+		}
 
 		// De momento EIDAS siempre deshabilitado
 		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://es.minhafp.clave/EIDASIdP")
 				.friendlyName("EIDASIdP").personType(PersonType.NATURAL_PERSON).required(false).uniqueIdentifier(true)
 				.xmlType("http://www.w3.org/2001/XMLSchema", "EIDASIdP", "cl")
-				.attributeValueMarshaller(new StringAttributeValueMarshaller()).build());
-
-		// De momento CL@VE MOVIL siempre deshabilitado
-		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://es.minhafp.clave/CLVMOVILIdP")
-				.friendlyName("CLVMOVILIdP").personType(PersonType.NATURAL_PERSON).required(false)
-				.uniqueIdentifier(true).xmlType("http://www.w3.org/2001/XMLSchema", "CLVMOVILIdP", "cl")
 				.attributeValueMarshaller(new StringAttributeValueMarshaller()).build());
 
 		final String relayState = SecureRandomXmlIdGenerator.INSTANCE.generateIdentifier(8);
@@ -815,21 +815,28 @@ public final class LoginServiceImpl implements LoginService {
 	 * @param qaa  qaa
 	 * @return accesos permitidos en la sesión.
 	 */
-	private AccesosPermitidos calcularAccesosPermitidos(final List<TypeIdp> idps, final Integer qaa) {
+	private AccesosPermitidos calcularAccesosPermitidos(final String entidad, final List<TypeIdp> idps, final Integer qaa) {
 
 		final AccesosPermitidos res = new AccesosPermitidos();
+		int numAccesos =0;
 
 		// Acceso anonimo
 		// - Si acceso anonimo auto está habilitado y solo se establece anonimo, se
 		// marca inicio automatico
 		res.setAccesoAnonimo(ClaveLoginUtil.permiteAccesoAnonimo(idps));
-		if (config.isAnonimoInicioAuto() && ClaveLoginUtil.permiteSoloAnonimo(idps)) {
-			res.setAccesoAnonimoAuto(true);
+		if(res.isAccesoAnonimo()) {
+			numAccesos++;
 		}
+		//if (config.isAnonimoInicioAuto() && ClaveLoginUtil.permiteSoloAnonimo(idps)) {
+		//	res.setAccesoAnonimoAuto(true);
+		//}
 
 		// Acceso clave
 		res.setAccesoClave(ClaveLoginUtil.permiteAccesoClave(idps));
 		res.setAccesoClaveSimulado(config.isAccesoClaveSimulado());
+		if(res.isAccesoClave()) {
+			numAccesos++;
+		}
 
 		// Acceso ClientCert
 		// - Solo si nivel qaa <= 2
@@ -837,6 +844,7 @@ public final class LoginServiceImpl implements LoginService {
 				&& qaa.intValue() <= 2) {
 			res.setAccesoClientCert(true);
 			res.setAccesoClientCertLink("link".equals(config.getClientCertVisualizacion()));
+			numAccesos++;
 		}
 
 		// Acceso usuario/password
@@ -844,6 +852,13 @@ public final class LoginServiceImpl implements LoginService {
 		if (ClaveLoginUtil.permiteAccesoUsuarioPassword(idps) && !config.isAccesoUsuarioPasswordDeshabilitado()
 				&& qaa.intValue() <= 1) {
 			res.setAccesoUsuarioPassword(true);
+			numAccesos++;
+		}
+
+		// Acceso con la autenticaión única configurada
+		// y cuando sólo hay un método de autenticación configurado
+		if (numAccesos == 1 && ("true".equals(config.getPropiedadPersonalizacion(entidad, "acceso.auto")) || (config.isAnonimoInicioAuto() && res.isAccesoAnonimo()))) {
+			res.setAccesoAuto(true);
 		}
 
 		return res;
@@ -861,7 +876,7 @@ public final class LoginServiceImpl implements LoginService {
 		datosSesion.setSesion(sesionData);
 		datosSesion
 				.setPersonalizacionEntidad(getPersonalizacionEntidad(sesionData.getEntidad(), sesionData.getIdioma()));
-		datosSesion.setAccesosPermitidos(calcularAccesosPermitidos(sesionData.getIdps(), sesionData.getQaa()));
+		datosSesion.setAccesosPermitidos(calcularAccesosPermitidos(sesionData.getEntidad(), sesionData.getIdps(), sesionData.getQaa()));
 		return datosSesion;
 	}
 
@@ -1254,6 +1269,9 @@ public final class LoginServiceImpl implements LoginService {
 		case CLAVE_PIN:
 			res = "Cl@ve Pin";
 			break;
+		case CLAVE_MOVIL:
+			res = "Cl@ve Movil";
+			break;
 		case USUARIO_PASSWORD:
 			res = "Usuario / Contraseña";
 			break;
@@ -1335,6 +1353,7 @@ public final class LoginServiceImpl implements LoginService {
 		idps.add(TypeIdp.CERTIFICADO);
 		idps.add(TypeIdp.CLAVE_PERMANENTE);
 		idps.add(TypeIdp.CLAVE_PIN);
+		idps.add(TypeIdp.CLAVE_MOVIL);
 		idps.add(TypeIdp.CLIENTCERT);
 		final Integer qaa = (Iqaa != null) ? Iqaa : 1;
 		final boolean iniClaAuto = false;
