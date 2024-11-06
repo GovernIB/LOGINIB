@@ -1,8 +1,5 @@
 package es.caib.loginib.backend.controller;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.loginib.backend.model.DialogResult;
@@ -117,7 +114,7 @@ public class ViewDesgloses extends ViewControllerBase {
 		if (desglose != null) {
 			params.put(TypeParametroVentana.ID.toString(), String.valueOf(desglose.getNif()));
 		}
-		UtilJSF.openDialog(DialogDefinicionVersionDesgloses.class, modoAcceso, params, true, 550, 370);
+		UtilJSF.openDialog(DialogDefinicionVersionDesgloses.class, modoAcceso, params, true, 650, 430);
 	}
 
 	public void avisoEliminar() {
@@ -125,8 +122,7 @@ public class ViewDesgloses extends ViewControllerBase {
 			return;
 		}
 
-		final RequestContext contextReq = RequestContext.getCurrentInstance();
-		contextReq.execute("PF('dlgConfirmar').show();");
+		PrimeFaces.current().executeScript("PF('dlgConfirmar').show();");
 	}
 
 	/**

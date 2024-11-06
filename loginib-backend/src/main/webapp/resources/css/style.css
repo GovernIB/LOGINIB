@@ -544,3 +544,61 @@ label.ui-state-disabled {
 .d-none{
 	display: none !important;
 }
+
+.opcionesFull {
+	flex-grow: 1;
+}
+.opcionesFull div {
+	display: flex; justify-content: flex-end;
+}
+
+
+.claseTitulo {
+	color: white;                    /* Texto blanco */
+    background-color: #726F6B;       /* Fondo gris oscuro */
+    padding: 10px 20px;               /* Espacio alrededor del texto */
+    border-radius: 15px;              /* Bordes redondeados */
+    text-align: center;               /* AlineaciÃ³n centrada del texto dentro del h2 */
+    margin: 5px !important;
+}
+.ui-icon-triangle-1-s {
+	-webkit-filter: brightness(0) invert(1); /* Invertir colores para que el icono sea blanco */
+    filter: brightness(0) invert(1); /* Para navegadores compatibles */
+}
+
+.ui-menu .ui-menuitem-text {
+    color: white;
+}
+.panelCabecera div{
+	background-color: #CC073C;
+}
+.pi-user, .pi-id-card {
+	-webkit-filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1);
+    padding-right: 4px;
+}
+
+.ui-icon-triangle-1-s{
+	-webkit-filter: brightness(0) invert(1) !important;
+    filter: brightness(0) invert(1) !important;
+}
+.colorNegro span{
+	color: #000  !important;
+}
+.backgroundGris {
+	background-color: #f0f0f0 !important;
+}
+.colorNegro span{
+	color: #000  !important;
+}
+#form\:cMenuTabla .ui-menuitem-text {
+	color: black !important;
+}
+.ui-menu .ui-menuitem-icon-left {
+    color: black !important;
+}
+@media  (max-width: 400px) {
+  div.ui-g {
+    display: block;
+  }
+}

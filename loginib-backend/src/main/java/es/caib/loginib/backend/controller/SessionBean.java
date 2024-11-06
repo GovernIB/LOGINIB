@@ -196,14 +196,20 @@ public class SessionBean {
 	public MenuModel getMenuModel() {
 		final MenuModel model = new DefaultMenuModel();
 
-		final DefaultSubMenu firstSubmenu = new DefaultSubMenu(getUserName());
-		firstSubmenu.setIcon("fa-li fa fa-user-o");
-		final DefaultMenuItem item = new DefaultMenuItem(UtilJSF.getLiteral(getChangeLang()));
+		final DefaultSubMenu firstSubmenu = new DefaultSubMenu();
+		firstSubmenu.setLabel(getUserName());
+		firstSubmenu.setIcon("fa-li pi pi-user");
+		final DefaultMenuItem item = new DefaultMenuItem();
+		String sIdioma = UtilJSF.getLiteral(getChangeLang());
+		item.setAriaLabel(sIdioma);
+		item.setTitle(sIdioma);
+		item.setValue(sIdioma);
 		item.setCommand("#{sessionBean.cambiarIdioma(sessionBean.getChangeLang())}");
-		item.setIcon("fa-li fa fa-flag");
-		firstSubmenu.addElement(item);
+		item.setIcon("fa-li pi pi-flag");
+		item.setStyleClass("colorNegro");
+		firstSubmenu.getElements().add(item);
 
-		model.addElement(firstSubmenu);
+		model.getElements().add(firstSubmenu);
 
 		model.generateUniqueIds();
 		return model;

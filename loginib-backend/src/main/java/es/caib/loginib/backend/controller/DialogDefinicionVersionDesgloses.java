@@ -123,16 +123,19 @@ public class DialogDefinicionVersionDesgloses extends DialogControllerBase {
 				Arrays.asList(desglose.getNombreCompleto().split(" ")));
 
 		// Se comprueba que la particula nombre esta en el nombreCompleto y se quita
-		if (nombreCompleto.contains(desglose.getNombre())) {
-			nombreCompleto.remove(desglose.getNombre());
-		} else {
-			// Lanzar error porque no existe la particula
-			String[] param = new String[2];
-			param[0] = desglose.getNombre();
-			param[1] = desglose.getNombreCompleto();
-			UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
-					UtilJSF.getLiteral("error.tipo.particulaInexistente", param));
-			return false;
+		String[] nombres = desglose.getNombre().split(" ");
+		for (String nombre : nombres) {
+			if (nombreCompleto.contains(nombre)) {
+				nombreCompleto.remove(nombre);
+			} else {
+				// Lanzar error porque no existe la particula
+				String[] param = new String[2];
+				param[0] = desglose.getNombre();
+				param[1] = desglose.getNombreCompleto();
+				UtilJSF.addMessageContext(TypeNivelGravedad.ERROR,
+						UtilJSF.getLiteral("error.tipo.particulaInexistente", param));
+				return false;
+			}
 		}
 
 		// Se comprueba que la particula apellido1 esta en el nombreCompleto y se quita

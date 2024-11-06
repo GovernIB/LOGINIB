@@ -134,31 +134,31 @@
 		        	<h:panelGrid id="panelFiltro" columns="6" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewDesgloses.filtro}"/>
 						<p:spacer width="20px"/>
-						<p:calendar placeholder="#{msg['viewDesgloses.fechaDesde']}" id="fechaDesde" value="#{viewDesgloses.filtroFechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
-						<p:calendar placeholder="#{msg['viewDesgloses.fechaHasta']}" id="fechaHasta" value="#{viewDesgloses.filtroFechaHasta}" size="15" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+						<p:datePicker showIcon="true" placeholder="#{msg['viewDesgloses.fechaDesde']}" id="fechaDesde" value="#{viewDesgloses.filtroFechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+						<p:datePicker showIcon="true" placeholder="#{msg['viewDesgloses.fechaHasta']}" id="fechaHasta" value="#{viewDesgloses.filtroFechaHasta}" size="15" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 
 
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewDesgloses.filtrar()}" process="panelFiltro" update="dataTable growl" />
+	           			<p:commandButton icon="pi pi-search" actionListener="#{viewDesgloses.filtrar()}" process="panelFiltro" update="dataTable growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
-    					<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewDesgloses.consultar}" process="@this" update="growl" />
-    					<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="fa fa-file" actionListener="#{viewDesgloses.nuevo}" process="@this">
+    					<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="pi pi-eye" actionListener="#{viewDesgloses.consultar}" process="@this" update="growl" />
+    					<p:commandButton id="btnNuevo" value="#{msg['botones.nuevo']}" icon="pi pi-file" actionListener="#{viewDesgloses.nuevo}" process="@this">
     						<p:ajax event="dialogReturn" listener="#{viewDesgloses.returnDialogo}" update="@form"  />
     					</p:commandButton>
-    					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="fa fa-edit" actionListener="#{viewDesgloses.editar}" process="@this" update="growl">
+    					<p:commandButton id="btnEditar" value="#{msg['botones.editar']}" icon="pi pi-pencil" actionListener="#{viewDesgloses.editar}" process="@this" update="growl">
     						<p:ajax event="dialogReturn" listener="#{viewDesgloses.returnDialogo}" update="@form"  />
     					</p:commandButton>
-    					<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" actionListener="#{viewDesgloses.avisoEliminar}" process="@this" update="growl dataTable">
+    					<p:commandButton id="btnEliminar" value="#{msg['botones.eliminar']}" icon="pi pi-trash" actionListener="#{viewDesgloses.avisoEliminar}" process="@this" update="growl dataTable">
     					</p:commandButton>
 
 						<!-- dialogo para confirmar -->
 					    <p:confirmDialog header="#{msg['confirm.titulo']}" global="true" id="dlgConfirmar" widgetVar="dlgConfirmar" message="#{msg['confirm.borrado']}" >
 							<p:outputPanel styleClass="confirmar_botonera">
-					        	<p:commandButton value="#{msg['botones.si']}" actionListener="#{viewDesgloses.eliminar}" onclick="PF('dlgConfirmar').hide();" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@this" update="dataTable"/>
-					        	<p:commandButton value="#{msg['botones.no']}" styleClass="ui-confirmdialog-no" onclick="PF('dlgConfirmar').hide();" icon="fa fa-close" process="@this"/>
+					        	<p:commandButton value="#{msg['botones.si']}" actionListener="#{viewDesgloses.eliminar}" onclick="PF('dlgConfirmar').hide();" styleClass="ui-confirmdialog-yes boton-azul" icon="pi pi-check"  process="@this" update="dataTable"/>
+					        	<p:commandButton value="#{msg['botones.no']}" styleClass="ui-confirmdialog-no" onclick="PF('dlgConfirmar').hide();" icon="pi pi-times" process="@this"/>
 							</p:outputPanel>
 					    </p:confirmDialog>
 			        </h:panelGrid>
@@ -171,7 +171,7 @@
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewDesgloses.listaDatos}"
 						 rows="10" emptyMessage="#{msg['info.emptyRows']}"
-						 scrollable="true" scrollHeight="90%"
+						 scrollable="true" scrollHeight="75%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
@@ -211,7 +211,7 @@
 			</p:dataTable>
 
 			<p:contextMenu id="mainCm" widgetVar="mainCm"  for=":work">
-                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
+                <p:menuitem id="mnuCopy" value="#{msg['botones.copiar']}" icon="pi pi-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{viewDesgloses.copiadoCorr}" process="@this" update="@this growl"/>
@@ -219,12 +219,12 @@
             </pe:clipboard>
 
 			<p:contextMenu for="dataTable" id="cMenuTabla" widgetVar="cMenuTablaWV" beforeShow="return true;">
-                <p:menuitem id="mnuCopyTabla" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
+                <p:menuitem id="mnuCopyTabla" value="#{msg['botones.copiar']}" icon="pi pi-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
                 <p:separator/>
-                <p:menuitem id="mnuConsultarTabla" value="#{msg['botones.consultar']}" icon="fa fa-eye" process="@this" onclick="document.getElementById('form:btnConsultar').click();" />
-				<p:menuitem id="mnuNuevoTabla" value="#{msg['botones.nuevo']}" icon="fa fa-file" process="@this" onclick="document.getElementById('form:btnNuevo').click();" />
-				<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="fa fa-edit" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
-				<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="fa fa-trash-o" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
+                <p:menuitem id="mnuConsultarTabla" value="#{msg['botones.consultar']}" icon="pi pi-eye" process="@this" onclick="document.getElementById('form:btnConsultar').click();" />
+				<p:menuitem id="mnuNuevoTabla" value="#{msg['botones.nuevo']}" icon="pi pi-file" process="@this" onclick="document.getElementById('form:btnNuevo').click();" />
+				<p:menuitem id="mnuEditarTabla" value="#{msg['botones.editar']}" icon="pi pi-pencil" process="@this" onclick="document.getElementById('form:btnEditar').click();"/>
+				<p:menuitem id="mnuEliminarTabla" value="#{msg['botones.eliminar']}" icon="pi pi-trash" process="@this" onclick="document.getElementById('form:btnEliminar').click();" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopyTabla" trigger="mnuCopyTabla" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{viewDesgloses.copiadoCorr}" process="@this" update="@this growl"/>
@@ -232,7 +232,7 @@
             </pe:clipboard>
 
             <p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
-                <p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
+                <p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="pi pi-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{viewDesgloses.copiadoCorr}" process="@this" update="@this growl"/>
@@ -240,7 +240,7 @@
             </pe:clipboard>
 
              <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
-                <p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
+                <p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="pi pi-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
             </p:contextMenu>
             <pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
                 <p:ajax event="success" listener="#{viewDesgloses.copiadoCorr}" process="@this" update="@this growl"/>

@@ -10,15 +10,17 @@
 <h:body>
   <ui:composition>
   	<h:form>
-  		<p:panelGrid columns="4" styleClass="ui-noborder w100 h100"
-  		columnClasses="logo-color grid-center noPadding-bottom noPadding-top h100 wpx120 ,
-  					   header-color grid-left wpx200,
+  		<p:panelGrid id="panelCabecera" columns="4" styleClass="panelCabecera ui-noborder w100 h100 backgroundGris"
+  		columnClasses="header-color grid-left wpx200 backgroundGris,
   					   header-color wpx270,
-  					   header-color">
+  					   header-color opcionesFull">
 
 			<c:choose>
 			    <c:when test="#{sessionBean.hayLogo}">
-			       <h:graphicImage value="#{sessionBean.logo}" height="65" styleClass="va-middle" />
+			    		<p:outputPanel styleClass="h100" style="display: flex; justify-content: center; align-items: center;background-color: #f0f0f0;">
+						<span class="center-vertical"></span>
+			       			<h:graphicImage value="#{sessionBean.logo}" height="65" styleClass="va-middle" />
+			       		</p:outputPanel>
 			    </c:when>
 			    <c:otherwise>
 			        <p:outputPanel styleClass="h100">
@@ -28,20 +30,19 @@
 			    </c:otherwise>
 			</c:choose>
 
-
-
 			<p:outputPanel styleClass="h100">
 				<span class="center-vertical"></span>
-				<h:outputText value="LOGINIB" styleClass="titulo-color va-middle" />
+				<h:outputText value="LOGINB" styleClass="titulo-color va-middle" />
 			</p:outputPanel>
 
-			<p:panelGrid columns="1" styleClass="ui-noborder botonera-menu" columnClasses="header-color">
+			<p:panelGrid columns="1" styleClass="ui-noborder botonera-menu" columnClasses="header-color" style="margin-top: 6px;">
 				<p:row>
 					<p:column>
-	 		    		<p:menubar styleClass="header-color" model="#{sessionBean.menuModel}" autoDisplay="false"/>
+	 		    		<p:menubar id="menuBar" styleClass="header-color" model="#{sessionBean.menuModel}" autoDisplay="false"/>
 	 		    	</p:column>
 	 		    </p:row>
     		</p:panelGrid>
+
 		</p:panelGrid>
 	</h:form>
   </ui:composition>
