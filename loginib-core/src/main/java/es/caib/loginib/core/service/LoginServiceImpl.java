@@ -143,6 +143,11 @@ public final class LoginServiceImpl implements LoginService {
 		if (idps == null || idps.isEmpty()) {
 			throw new ErrorParametroException("No se han especificado idps");
 		}
+		if (idps.contains(TypeIdp.CLAVE_PIN) && idps.size() > 1) {
+			// Si hay más de un idp, quitamos el CLAVE_PIN
+			idps.remove(TypeIdp.CLAVE_PIN);
+		}
+
 		boolean idpAutenticado = false;
 		for (final TypeIdp i : idps) {
 			if (i != TypeIdp.ANONIMO) {

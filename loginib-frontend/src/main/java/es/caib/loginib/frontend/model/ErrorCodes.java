@@ -12,6 +12,8 @@ public enum ErrorCodes {
 	ERROR_GENERAL("error.errorGeneral"),
 	/** Error validacion login. */
 	ERROR_LOGIN("error.errorLogin"),
+	/** Error validacion idp CLAVE_PIN. */
+	ERROR_SOLO_CLAVE_PIN("error.errorIdpSoloContieneClavePin"),
 	/** Usuario/password no valido. */
 	USUARIOPASSWORD_NO_VALIDO("error.usuarioPasswordNovalido"),
 	/** Nivel QAA insuficiente. */

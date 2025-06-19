@@ -5,6 +5,7 @@ import java.util.Base64;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.ejb.EJBException;
@@ -174,6 +175,14 @@ public final class LoginController {
 	public ModelAndView seleccionAutenticacion(@RequestParam("idSesion") final String idSesion) {
 
 		final DatosSesion sesion = loginService.obtenerDatosSesionLogin(idSesion);
+
+		List<TypeIdp> idps = sesion.getSesion().getIdps();
+		if (idps.contains(TypeIdp.CLAVE_PIN) && idps.size() == 1) {
+			// Si es el único idp, redirigimos a pantalla de error
+			return new ModelAndView("redirect:/error.html?code="
+					+ ErrorCodes.ERROR_SOLO_CLAVE_PIN.toString());
+		}
+
 		final DatosSeleccionAutenticacion datos = new DatosSeleccionAutenticacion();
 		datos.setIdSesion(idSesion);
 		datos.setIdioma(sesion.getSesion().getIdioma());
